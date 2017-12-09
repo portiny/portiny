@@ -3,7 +3,7 @@ language: php
 matrix:
   include:
     - php: 7.1
-      env: PHPUNIT_FLAGS="--coverage-clover coverage.xml"
+      env: PHPUNIT_FLAGS="--coverage-clover=coverage.xml"
     - php: 7.1
       env: CODING_STANDARD=true
     - php: 7.1
@@ -12,14 +12,8 @@ matrix:
 install:
   - composer install
 
-before_script:
-  # disable xdebug if not coverage
-  - if [[ $PHPUNIT_FLAGS = "" ]]; then phpenv config-rm xdebug.ini; fi
-
 script:
   - vendor/bin/phpunit $PHPUNIT_FLAGS
-  # disable xdebug
-  - phpenv config-rm xdebug.ini || return 0
 
   # static analysis
   - if [[ $CODING_STANDARD != "" ]]; then vendor/bin/ecs check packages; fi

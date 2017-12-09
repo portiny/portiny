@@ -8,7 +8,7 @@ php:
 matrix:
   include:
     - php: 7.1
-      env: PHPUNIT_FLAGS="--coverage-clover=coverage.xml" CHECK_CS=false
+      env: PHPUNIT_FLAGS="--coverage-clover=coverage.xml"
 
 install:
   # install composer dependencies
@@ -17,8 +17,6 @@ install:
 script:
   # run tests
   - vendor/bin/phpunit $PHPUNIT_FLAGS
-  # check coding standard (defined in composer.json "scripts" section)
-  #- if [[ "$CHECK_CS" != "" ]]; then composer check-cs; fi
 
 after_script:
   # upload coverage.xml file to Scrutinizer to analyze it
