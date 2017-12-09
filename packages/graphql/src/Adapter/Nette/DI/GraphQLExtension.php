@@ -14,14 +14,13 @@ use Portiny\GraphQL\GraphQL\RequestProcessor;
 use Portiny\GraphQL\Provider\MutationFieldsProvider;
 use Portiny\GraphQL\Provider\QueryFieldsProvider;
 
-
 final class GraphQLExtension extends CompilerExtension
 {
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function loadConfiguration()
+	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
 		$config = $this->loadFromFile(__DIR__ . '/../config/config.neon');
@@ -32,15 +31,15 @@ final class GraphQLExtension extends CompilerExtension
 	/**
 	 * {@inheritdoc}
 	 */
-	public function beforeCompile()
+	public function beforeCompile(): void
 	{
 		$this->setupMutationFieldProvider();
 		$this->setupQueryFieldProvider();
-		$this->setupGraphQLProcessor();
+		$this->setupRequestProcessor();
 	}
 
 
-	private function setupMutationFieldProvider()
+	private function setupMutationFieldProvider(): void
 	{
 		$containerBuilder = $this->getContainerBuilder();
 
@@ -56,7 +55,7 @@ final class GraphQLExtension extends CompilerExtension
 	}
 
 
-	private function setupQueryFieldProvider()
+	private function setupQueryFieldProvider(): void
 	{
 		$containerBuilder = $this->getContainerBuilder();
 
@@ -72,7 +71,7 @@ final class GraphQLExtension extends CompilerExtension
 	}
 
 
-	private function setupGraphQLProcessor()
+	private function setupRequestProcessor(): void
 	{
 		$containerBuilder = $this->getContainerBuilder();
 
@@ -81,5 +80,4 @@ final class GraphQLExtension extends CompilerExtension
 			->addSetup('setMutationFieldsProvider', ['@' . MutationFieldsProviderInterface::class])
 			->addSetup('setQueryFieldsProvider', ['@' . QueryFieldsProviderInterface::class]);
 	}
-
 }

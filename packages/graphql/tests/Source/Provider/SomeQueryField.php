@@ -5,8 +5,7 @@ namespace Portiny\GraphQL\Tests\Source\Provider;
 use GraphQL\Type\Definition\Type;
 use Portiny\GraphQL\Contract\Field\QueryFieldInterface;
 
-
-class SomeQueryField implements QueryFieldInterface
+final class SomeQueryField implements QueryFieldInterface
 {
 
 	/**
@@ -54,5 +53,4 @@ class SomeQueryField implements QueryFieldInterface
 	{
 		return 'resolved ' . $args['someArg'];
 	}
-
 }

@@ -12,24 +12,23 @@ use Portiny\GraphQL\Tests\AbstractContainerTestCase;
 use Portiny\GraphQL\Tests\Source\Provider\SomeMutationField;
 use Portiny\GraphQL\Tests\Source\Provider\SomeQueryField;
 
-
-class RequestProcessorTest extends AbstractContainerTestCase
+final class RequestProcessorTest extends AbstractContainerTestCase
 {
 
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
-
 	}
 
 
-	public function testProcess()
+	public function testProcess(): void
 	{
 		// test query
-		$rawData = '{"query": "query Test($someArg: String) {someQueryName(someArg: $someArg)}", "variables": {"someArg": "someValue"}}';
+		$rawData = '{"query": "query Test($someArg: String) {'
+			. 'someQueryName(someArg: $someArg)}", "variables": {"someArg": "someValue"}}';
 		$output = $this->createRequestFactory($rawData)
 			->process();
 
@@ -37,7 +36,8 @@ class RequestProcessorTest extends AbstractContainerTestCase
 		$this->assertSame('resolved someValue', $output['data']['someQueryName']);
 
 		// test mutation
-		$rawData = '{"query": "mutation Test($someArg: String) {someMutationName(someArg: $someArg)}", "variables": {"someArg": "someValue"}}';
+		$rawData = '{"query": "mutation Test($someArg: String) {'
+			. 'someMutationName(someArg: $someArg)}", "variables": {"someArg": "someValue"}}';
 		$output = $this->createRequestFactory($rawData)
 			->process();
 
@@ -68,5 +68,4 @@ class RequestProcessorTest extends AbstractContainerTestCase
 
 		return $requestProcessor;
 	}
-
 }

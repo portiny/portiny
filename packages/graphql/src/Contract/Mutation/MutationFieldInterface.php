@@ -4,23 +4,20 @@ declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Contract\Mutation;
 
-
 use GraphQL\Type\Definition\Type;
-
 
 interface MutationFieldInterface
 {
-
-	function getName(): string;
-
-
-	function getType(): Type;
+	public function getName(): string;
 
 
-	function getDescription(): string;
+	public function getType(): Type;
 
 
-	function getArgs(): array;
+	public function getDescription(): string;
+
+
+	public function getArgs(): array;
 
 
 	/**
@@ -29,6 +26,5 @@ interface MutationFieldInterface
 	 * @param mixed|NULL $context
 	 * @return mixed
 	 */
-	function resolve(array $root, array $args, $context = NULL);
-
+	public function resolve(array $root, array $args, $context = NULL);
 }

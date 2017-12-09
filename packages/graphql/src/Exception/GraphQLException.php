@@ -6,8 +6,6 @@ namespace Portiny\GraphQL\Exception;
 
 use Exception;
 
-
 class GraphQLException extends Exception
 {
-
 }

@@ -13,7 +13,7 @@ final class JsonRequestParser implements RequestParserInterface
 {
 
 	/**
-	 * @var string[]
+	 * @var array
 	 */
 	private $data;
 

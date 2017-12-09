@@ -6,26 +6,25 @@ namespace Portiny\GraphQL\Contract\Field;
 
 use GraphQL\Type\Definition\Type;
 
-
 interface QueryFieldInterface
 {
 
 	/**
 	 * @return string
 	 */
-	function getName(): string;
+	public function getName(): string;
 
 
-	function getType(): Type;
+	public function getType(): Type;
 
 
-	function getDescription(): string;
+	public function getDescription(): string;
 
 
 	/**
 	 * @return array
 	 */
-	function getArgs(): array;
+	public function getArgs(): array;
 
 
 	/**
@@ -34,6 +33,5 @@ interface QueryFieldInterface
 	 * @param mixed|NULL $context
 	 * @return mixed
 	 */
-	function resolve(array $root, array $args, $context = NULL);
-
+	public function resolve(array $root, array $args, $context = NULL);
 }

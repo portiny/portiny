@@ -8,11 +8,9 @@ use Portiny\GraphQL\Contract\Field\QueryFieldInterface;
 use Portiny\GraphQL\Converter\QueryFieldConverter;
 use Portiny\GraphQL\Tests\AbstractContainerTestCase;
 
-
-class QueryFieldConverterTest extends AbstractContainerTestCase
+final class QueryFieldConverterTest extends AbstractContainerTestCase
 {
-
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$queryField = $this->getQueryField();
 		$output = QueryFieldConverter::toArray($queryField);
@@ -29,7 +27,7 @@ class QueryFieldConverterTest extends AbstractContainerTestCase
 	}
 
 
-	public function testToObject()
+	public function testToObject(): void
 	{
 		$queryField = $this->getQueryField();
 		$queryFieldAsArray = QueryFieldConverter::toArray($queryField);
@@ -47,8 +45,7 @@ class QueryFieldConverterTest extends AbstractContainerTestCase
 
 	private function getQueryField(): QueryFieldInterface
 	{
-		return (new class () implements QueryFieldInterface
-		{
+		return (new class() implements QueryFieldInterface {
 
 			/**
 			 * {@inheritdoc}
@@ -95,8 +92,6 @@ class QueryFieldConverterTest extends AbstractContainerTestCase
 			{
 				return 'resolved';
 			}
-
 		});
 	}
-
 }

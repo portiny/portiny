@@ -8,11 +8,9 @@ use Portiny\GraphQL\Contract\Mutation\MutationFieldInterface;
 use Portiny\GraphQL\Converter\MutationFieldConverter;
 use Portiny\GraphQL\Tests\AbstractContainerTestCase;
 
-
 final class MutationFieldConverterTest extends AbstractContainerTestCase
 {
-
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$mutationField = $this->getMutationField();
 		$output = MutationFieldConverter::toArray($mutationField);
@@ -29,7 +27,7 @@ final class MutationFieldConverterTest extends AbstractContainerTestCase
 	}
 
 
-	public function testToObject()
+	public function testToObject(): void
 	{
 		$mutationField = $this->getMutationField();
 		$mutationFieldAsArray = MutationFieldConverter::toArray($mutationField);
@@ -47,8 +45,7 @@ final class MutationFieldConverterTest extends AbstractContainerTestCase
 
 	private function getMutationField(): MutationFieldInterface
 	{
-		return (new class () implements MutationFieldInterface
-		{
+		return (new class() implements MutationFieldInterface {
 
 			/**
 			 * {@inheritdoc}
@@ -95,8 +92,6 @@ final class MutationFieldConverterTest extends AbstractContainerTestCase
 			{
 				return 'resolved';
 			}
-
 		});
 	}
-
 }

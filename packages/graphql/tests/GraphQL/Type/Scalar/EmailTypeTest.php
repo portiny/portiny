@@ -8,18 +8,16 @@ use PHPUnit\Framework\TestCase;
 use Portiny\GraphQL\GraphQL\Type\Scalar\EmailType;
 use UnexpectedValueException;
 
-
-class EmailTypeTest extends TestCase
+final class EmailTypeTest extends TestCase
 {
-
-	public function testSerialize()
+	public function testSerialize(): void
 	{
 		$emailType = new EmailType;
 
 		$this->assertSame('test@test.test', $emailType->serialize('test@test.test'));
 	}
 
-	public function testParseValue()
+	public function testParseValue(): void
 	{
 		$emailType = new EmailType;
 
@@ -31,7 +29,7 @@ class EmailTypeTest extends TestCase
 	 * @expectedException UnexpectedValueException
 	 * @expectedExceptionMessage Cannot represent value as email: "test"
 	 */
-	public function testParseValueNotValidEmail()
+	public function testParseValueNotValidEmail(): void
 	{
 		$emailType = new EmailType;
 
@@ -39,7 +37,7 @@ class EmailTypeTest extends TestCase
 	}
 
 
-	public function testParseLiteral()
+	public function testParseLiteral(): void
 	{
 		$emailType = new EmailType;
 		$stringValueNode = new StringValueNode(['value' => 'test@test.test']);
@@ -52,7 +50,7 @@ class EmailTypeTest extends TestCase
 	 * @expectedException \GraphQL\Error\Error
 	 * @expectedExceptionMessage Not a valid email
 	 */
-	public function testParseLiteralNotValidEmail()
+	public function testParseLiteralNotValidEmail(): void
 	{
 		$emailType = new EmailType;
 		$stringValueNode = new StringValueNode(['value' => 'test']);
@@ -65,12 +63,11 @@ class EmailTypeTest extends TestCase
 	 * @expectedException \GraphQL\Error\Error
 	 * @expectedExceptionMessage Can only parse strings got: BooleanValue
 	 */
-	public function testParseLiteralNotValidNode()
+	public function testParseLiteralNotValidNode(): void
 	{
 		$emailType = new EmailType;
 		$booleanValueNode = new BooleanValueNode(['value' => FALSE]);
 
 		$this->assertSame('test', $emailType->parseLiteral($booleanValueNode));
 	}
-
 }

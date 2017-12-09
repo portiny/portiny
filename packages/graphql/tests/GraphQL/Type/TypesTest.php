@@ -6,11 +6,9 @@ use PHPUnit\Framework\TestCase;
 use Portiny\GraphQL\GraphQL\Type\Scalar\EmailType;
 use Portiny\GraphQL\GraphQL\Type\Types;
 
-
-class TypesTest extends TestCase
+final class TypesTest extends TestCase
 {
-
-	public function testGet()
+	public function testGet(): void
 	{
 		$emailType = Types::get(EmailType::class);
 		$sameEmailType = Types::get(EmailType::class);
@@ -19,5 +17,4 @@ class TypesTest extends TestCase
 		$this->assertInstanceOf(EmailType::class, $sameEmailType);
 		$this->assertSame($emailType, $sameEmailType);
 	}
-
 }

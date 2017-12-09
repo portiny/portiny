@@ -5,8 +5,7 @@ namespace Portiny\GraphQL\Tests\Source\Provider;
 use GraphQL\Type\Definition\Type;
 use Portiny\GraphQL\Contract\Mutation\MutationFieldInterface;
 
-
-class SomeMutationField implements MutationFieldInterface
+final class SomeMutationField implements MutationFieldInterface
 {
 
 	/**
@@ -54,5 +53,4 @@ class SomeMutationField implements MutationFieldInterface
 	{
 		return $args['someArg'] . ' resolved';
 	}
-
 }

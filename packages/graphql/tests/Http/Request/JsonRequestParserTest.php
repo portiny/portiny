@@ -7,11 +7,9 @@ use Nette\Http\UrlScript;
 use PHPUnit\Framework\TestCase;
 use Portiny\GraphQL\Http\Request\JsonRequestParser;
 
-
-class JsonRequestParserTest extends TestCase
+final class JsonRequestParserTest extends TestCase
 {
-
-	public function testGetQuery()
+	public function testGetQuery(): void
 	{
 		$url = new UrlScript('https://portiny.org');
 		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () {
@@ -23,7 +21,7 @@ class JsonRequestParserTest extends TestCase
 	}
 
 
-	public function testGetVariables()
+	public function testGetVariables(): void
 	{
 		$url = new UrlScript('https://portiny.org');
 		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () {
@@ -35,7 +33,7 @@ class JsonRequestParserTest extends TestCase
 	}
 
 
-	public function testEmptyData()
+	public function testEmptyData(): void
 	{
 		$url = new UrlScript('https://portiny.org');
 		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () {
@@ -46,5 +44,4 @@ class JsonRequestParserTest extends TestCase
 		$this->assertSame('', $jsonRequestParser->getQuery());
 		$this->assertSame([], $jsonRequestParser->getVariables());
 	}
-
 }

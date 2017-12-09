@@ -10,7 +10,6 @@ use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
 use UnexpectedValueException;
 
-
 final class EmailType extends ScalarType
 {
 
@@ -28,7 +27,7 @@ final class EmailType extends ScalarType
 	 */
 	public function parseValue($value)
 	{
-		if ( ! filter_var($value, FILTER_VALIDATE_EMAIL)) {
+		if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
 			throw new UnexpectedValueException('Cannot represent value as email: ' . Utils::printSafe($value));
 		}
 
@@ -41,14 +40,14 @@ final class EmailType extends ScalarType
 	 */
 	public function parseLiteral($valueNode)
 	{
-		if ( ! $valueNode instanceof StringValueNode) {
+		if (! $valueNode instanceof StringValueNode) {
 			throw new Error('Can only parse strings got: ' . $valueNode->kind, [$valueNode]);
 		}
-		if ( ! filter_var($valueNode->value, FILTER_VALIDATE_EMAIL)) {
+
+		if (! filter_var($valueNode->value, FILTER_VALIDATE_EMAIL)) {
 			throw new Error('Not a valid email', [$valueNode]);
 		}
 
 		return $valueNode->value;
 	}
-
 }
