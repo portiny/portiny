@@ -1,6 +1,11 @@
 <phpunit
-        bootstrap="vendor/autoload.php"
+        bootstrap="tests/bootstrap.php"
         colors="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        convertErrorsToExceptions="true"
+        syntaxCheck="true"
+        stderr="true"
         verbose="true"
 >
     <testsuite>
