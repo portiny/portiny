@@ -11,6 +11,7 @@ use GraphQL\Type\Schema;
 use Portiny\GraphQL\Contract\Http\Request\RequestParserInterface;
 use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
 use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
+use Throwable;
 use Tracy\Debugger;
 
 final class RequestProcessor
