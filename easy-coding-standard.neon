@@ -31,3 +31,11 @@ parameters:
 		- Symplify\CodingStandard\Sniffs\DependencyInjection\NoClassInstantiationSniff
 		- Symplify\CodingStandard\Sniffs\Property\DynamicPropertySniff
 		- SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff
+
+	skip:
+		Symplify\CodingStandard\Fixer\Solid\FinalInterfaceFixer:
+			# contains anonymous class
+			- packages/graphql/src/Converter/MutationFieldConverter.php
+			- packages/graphql/tests/Converter/QueryFieldConverterTest.php
+			- packages/graphql/tests/Provider/QueryFieldsProviderTest.php
+			- packages/graphql/tests/Provider/MutationFieldsProviderTest.php

@@ -43,7 +43,7 @@ final class QueryFieldConverterTest extends AbstractContainerTestCase
 
 	private function getQueryField(): QueryFieldInterface
 	{
-		return new class implements QueryFieldInterface {
+		return new class() implements QueryFieldInterface {
 			/**
 			 * {@inheritdoc}
 			 */

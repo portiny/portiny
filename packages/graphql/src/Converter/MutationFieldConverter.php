@@ -25,8 +25,7 @@ class MutationFieldConverter
 
 	public static function toObject(array $data): MutationFieldInterface
 	{
-		return new class($data) implements MutationFieldInterface
-		{
+		return new class($data) implements MutationFieldInterface {
 			/**
 			 * @var string
 			 */

@@ -79,8 +79,7 @@ class QueryFieldsProviderTest extends TestCase
 
 	private function getQueryField(): QueryFieldInterface
 	{
-		return new class implements QueryFieldInterface
-		{
+		return new class() implements QueryFieldInterface {
 			/**
 			 * {@inheritdoc}
 			 */

@@ -79,8 +79,7 @@ class MutationFieldsProviderTest extends TestCase
 
 	private function getMutationField(): MutationFieldInterface
 	{
-		return new class implements MutationFieldInterface
-		{
+		return new class() implements MutationFieldInterface {
 			/**
 			 * {@inheritdoc}
 			 */
