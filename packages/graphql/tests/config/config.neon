@@ -1,0 +1,6 @@
+extensions:
+	- Portiny\GraphQL\Adapter\Nette\DI\GraphQLExtension
+
+services:
+	- Portiny\GraphQL\Tests\Source\Provider\SomeMutationField
+	- Portiny\GraphQL\Tests\Source\Provider\SomeQueryField
