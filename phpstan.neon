@@ -1,1 +1,3 @@
 parameters:
+	excludes_analyse:
+		- %rootDir%/packages/*/tests/temp/*
