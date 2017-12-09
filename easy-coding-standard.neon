@@ -29,4 +29,3 @@ parameters:
 		- PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\LowerCaseConstantSniff
 		- PhpCsFixer\Fixer\Casing\LowercaseConstantsFixer
 		- Symplify\CodingStandard\Sniffs\DependencyInjection\NoClassInstantiationSniff
-		- Symplify\CodingStandard\Sniffs\ControlStructures\NewClassSniff
