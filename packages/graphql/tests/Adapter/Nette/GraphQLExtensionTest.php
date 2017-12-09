@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Portiny\GraphQL\Tests\Adapter\Nette;
 

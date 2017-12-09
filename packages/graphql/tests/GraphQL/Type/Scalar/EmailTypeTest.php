@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Portiny\GraphQL\Tests\GraphQL\Type\Scalar;
 
@@ -12,18 +12,17 @@ final class EmailTypeTest extends TestCase
 {
 	public function testSerialize(): void
 	{
-		$emailType = new EmailType;
+		$emailType = new EmailType();
 
 		$this->assertSame('test@test.test', $emailType->serialize('test@test.test'));
 	}
 
 	public function testParseValue(): void
 	{
-		$emailType = new EmailType;
+		$emailType = new EmailType();
 
 		$this->assertSame('test@test.test', $emailType->parseValue('test@test.test'));
 	}
-
 
 	/**
 	 * @expectedException UnexpectedValueException
@@ -31,20 +30,18 @@ final class EmailTypeTest extends TestCase
 	 */
 	public function testParseValueNotValidEmail(): void
 	{
-		$emailType = new EmailType;
+		$emailType = new EmailType();
 
 		$this->assertSame('test', $emailType->parseValue('test'));
 	}
 
-
 	public function testParseLiteral(): void
 	{
-		$emailType = new EmailType;
+		$emailType = new EmailType();
 		$stringValueNode = new StringValueNode(['value' => 'test@test.test']);
 
 		$this->assertSame('test@test.test', $emailType->parseLiteral($stringValueNode));
 	}
-
 
 	/**
 	 * @expectedException \GraphQL\Error\Error
@@ -52,12 +49,11 @@ final class EmailTypeTest extends TestCase
 	 */
 	public function testParseLiteralNotValidEmail(): void
 	{
-		$emailType = new EmailType;
+		$emailType = new EmailType();
 		$stringValueNode = new StringValueNode(['value' => 'test']);
 
 		$this->assertSame('test', $emailType->parseLiteral($stringValueNode));
 	}
-
 
 	/**
 	 * @expectedException \GraphQL\Error\Error
@@ -65,7 +61,7 @@ final class EmailTypeTest extends TestCase
 	 */
 	public function testParseLiteralNotValidNode(): void
 	{
-		$emailType = new EmailType;
+		$emailType = new EmailType();
 		$booleanValueNode = new BooleanValueNode(['value' => FALSE]);
 
 		$this->assertSame('test', $emailType->parseLiteral($booleanValueNode));

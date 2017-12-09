@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Portiny\GraphQL\Tests\GraphQL;
 
@@ -14,7 +14,6 @@ use Portiny\GraphQL\Tests\Source\Provider\SomeQueryField;
 
 final class RequestProcessorTest extends AbstractContainerTestCase
 {
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -22,7 +21,6 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 	{
 		parent::setUp();
 	}
-
 
 	public function testProcess(): void
 	{
@@ -45,7 +43,6 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 		$this->assertSame('someValue resolved', $output['data']['someMutationName']);
 	}
 
-
 	protected function createRequestFactory(string $rawData): RequestProcessor
 	{
 		$url = new UrlScript('https://portiny.org');
@@ -54,12 +51,12 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 		});
 		$jsonRequestParser = new JsonRequestParser($httpRequest);
 
-		$queryField = new SomeQueryField;
-		$queryFieldProvider = new QueryFieldsProvider;
+		$queryField = new SomeQueryField();
+		$queryFieldProvider = new QueryFieldsProvider();
 		$queryFieldProvider->addField($queryField);
 
-		$mutationField = new SomeMutationField;
-		$mutationFieldProvider = new MutationFieldsProvider;
+		$mutationField = new SomeMutationField();
+		$mutationFieldProvider = new MutationFieldsProvider();
 		$mutationFieldProvider->addField($mutationField);
 
 		$requestProcessor = new RequestProcessor($jsonRequestParser);

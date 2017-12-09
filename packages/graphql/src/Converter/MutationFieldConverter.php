@@ -1,16 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Portiny\GraphQL\Converter;
 
 use GraphQL\Type\Definition\Type;
 use Portiny\GraphQL\Contract\Mutation\MutationFieldInterface;
 
-
 class MutationFieldConverter
 {
-
 	public static function toArray(MutationFieldInterface $mutationField): array
 	{
 		return [
@@ -20,17 +18,15 @@ class MutationFieldConverter
 				'args' => $mutationField->getArgs(),
 				'resolve' => function ($root, $args, $context) use ($mutationField) {
 					return call_user_func_array([$mutationField, 'resolve'], [$root, $args, $context]);
-				}
-			]
+				},
+			],
 		];
 	}
 
-
 	public static function toObject(array $data): MutationFieldInterface
 	{
-		return (new class ($data) implements MutationFieldInterface
+		return new class($data) implements MutationFieldInterface
 		{
-
 			/**
 			 * @var string
 			 */
@@ -39,15 +35,13 @@ class MutationFieldConverter
 			/**
 			 * @var array
 			 */
-			private $data;
-
+			private $data = [];
 
 			public function __construct(array $data)
 			{
 				$this->name = key($data);
 				$this->data = reset($data);
 			}
-
 
 			/**
 			 * {@inheritdoc}
@@ -57,7 +51,6 @@ class MutationFieldConverter
 				return $this->name;
 			}
 
-
 			/**
 			 * {@inheritdoc}
 			 */
@@ -65,7 +58,6 @@ class MutationFieldConverter
 			{
 				return $this->data['type'];
 			}
-
 
 			/**
 			 * {@inheritdoc}
@@ -75,7 +67,6 @@ class MutationFieldConverter
 				return $this->data['description'];
 			}
 
-
 			/**
 			 * {@inheritdoc}
 			 */
@@ -84,7 +75,6 @@ class MutationFieldConverter
 				return $this->data['args'];
 			}
 
-
 			/**
 			 * {@inheritdoc}
 			 */
@@ -92,8 +82,6 @@ class MutationFieldConverter
 			{
 				return $this->data['resolve']($root, $args, $context);
 			}
-
-		});
+		};
 	}
-
 }

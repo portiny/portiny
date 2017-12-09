@@ -1,16 +1,14 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Portiny\GraphQL\Converter;
 
 use GraphQL\Type\Definition\Type;
 use Portiny\GraphQL\Contract\Field\QueryFieldInterface;
 
-
 final class QueryFieldConverter
 {
-
 	public static function toArray(QueryFieldInterface $queryField): array
 	{
 		return [
@@ -20,17 +18,14 @@ final class QueryFieldConverter
 				'args' => $queryField->getArgs(),
 				'resolve' => function ($root, $args, $context) use ($queryField) {
 					return call_user_func_array([$queryField, 'resolve'], [$root, $args, $context]);
-				}
-			]
+				},
+			],
 		];
 	}
 
-
 	public static function toObject(array $data): QueryFieldInterface
 	{
-		return (new class ($data) implements QueryFieldInterface
-		{
-
+		return new class($data) implements QueryFieldInterface {
 			/**
 			 * @var string
 			 */
@@ -39,15 +34,13 @@ final class QueryFieldConverter
 			/**
 			 * @var array
 			 */
-			private $data;
-
+			private $data = [];
 
 			public function __construct(array $data)
 			{
 				$this->name = key($data);
 				$this->data = reset($data);
 			}
-
 
 			/**
 			 * {@inheritdoc}
@@ -57,7 +50,6 @@ final class QueryFieldConverter
 				return $this->name;
 			}
 
-
 			/**
 			 * {@inheritdoc}
 			 */
@@ -65,7 +57,6 @@ final class QueryFieldConverter
 			{
 				return $this->data['type'];
 			}
-
 
 			/**
 			 * {@inheritdoc}
@@ -75,7 +66,6 @@ final class QueryFieldConverter
 				return $this->data['description'];
 			}
 
-
 			/**
 			 * {@inheritdoc}
 			 */
@@ -84,7 +74,6 @@ final class QueryFieldConverter
 				return $this->data['args'];
 			}
 
-
 			/**
 			 * {@inheritdoc}
 			 */
@@ -92,8 +81,6 @@ final class QueryFieldConverter
 			{
 				return $this->data['resolve']($root, $args, $context);
 			}
-
-		});
+		};
 	}
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Portiny\GraphQL\Provider;
 
@@ -9,26 +9,22 @@ use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
 use Portiny\GraphQL\Converter\QueryFieldConverter;
 use Portiny\GraphQL\Exception\Provider\ExistingQueryFieldException;
 
-
 final class QueryFieldsProvider implements QueryFieldsProviderInterface
 {
-
 	/**
 	 * @var QueryFieldInterface[]
 	 */
 	private $fields = [];
 
-
 	/**
 	 * {@inheritdoc}
 	 */
-	public function addField(QueryFieldInterface $queryField)
+	public function addField(QueryFieldInterface $queryField): void
 	{
 		$this->ensureFieldIsNotRegistered($queryField);
 
 		$this->fields[$queryField->getName()] = $queryField;
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -38,11 +34,10 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 		return $this->fields;
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
-	public function convertFieldsToArray(array $allowedQueries = NULL): array
+	public function convertFieldsToArray(?array $allowedQueries = NULL): array
 	{
 		$fields = [];
 		foreach ($this->getFields() as $field) {
@@ -56,11 +51,10 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 		return $fields;
 	}
 
-
 	/**
 	 * @throws ExistingQueryFieldException
 	 */
-	private function ensureFieldIsNotRegistered(QueryFieldInterface $queryField)
+	private function ensureFieldIsNotRegistered(QueryFieldInterface $queryField): void
 	{
 		if (isset($this->fields[$queryField->getName()])) {
 			throw new ExistingQueryFieldException(
@@ -71,5 +65,4 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 			);
 		}
 	}
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Portiny\GraphQL\GraphQL\Type\Scalar;
 
@@ -12,7 +12,6 @@ use UnexpectedValueException;
 
 final class EmailType extends ScalarType
 {
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -20,7 +19,6 @@ final class EmailType extends ScalarType
 	{
 		return $value;
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -33,7 +31,6 @@ final class EmailType extends ScalarType
 
 		return $value;
 	}
-
 
 	/**
 	 * {@inheritdoc}

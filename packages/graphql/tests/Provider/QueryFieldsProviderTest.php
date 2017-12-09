@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Portiny\GraphQL\Tests\Provider;
 
@@ -10,23 +10,19 @@ use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
 use Portiny\GraphQL\Provider\QueryFieldsProvider;
 use Portiny\GraphQL\Tests\Source\Provider\SomeQueryField;
 
-
 class QueryFieldsProviderTest extends TestCase
 {
-
 	/**
 	 * @var QueryFieldsProviderInterface
 	 */
 	private $queryFieldsProvider;
 
-
-	protected function setUp()
+	protected function setUp(): void
 	{
-		$this->queryFieldsProvider = new QueryFieldsProvider;
+		$this->queryFieldsProvider = new QueryFieldsProvider();
 	}
 
-
-	public function testAddField()
+	public function testAddField(): void
 	{
 		$queryField = $this->getQueryField();
 
@@ -37,12 +33,11 @@ class QueryFieldsProviderTest extends TestCase
 		$this->assertCount(1, $this->queryFieldsProvider->getFields());
 	}
 
-
 	/**
 	 * @expectedException \Portiny\GraphQL\Exception\Provider\ExistingQueryFieldException
 	 * @expectedExceptionMessage Query field with name "Some name" is already registered.
 	 */
-	public function testAddFieldAlreadyExists()
+	public function testAddFieldAlreadyExists(): void
 	{
 		$queryField = $this->getQueryField();
 
@@ -52,8 +47,7 @@ class QueryFieldsProviderTest extends TestCase
 		$this->queryFieldsProvider->addField($queryField);
 	}
 
-
-	public function testGetFields()
+	public function testGetFields(): void
 	{
 		$queryField = $this->getQueryField();
 		$this->queryFieldsProvider->addField($queryField);
@@ -63,8 +57,7 @@ class QueryFieldsProviderTest extends TestCase
 		$this->assertSame($queryField, reset($fields));
 	}
 
-
-	public function testConvertFieldsToArray()
+	public function testConvertFieldsToArray(): void
 	{
 		$queryField = $this->getQueryField();
 		$this->queryFieldsProvider->addField($queryField);
@@ -84,12 +77,10 @@ class QueryFieldsProviderTest extends TestCase
 		$this->assertEmpty($output);
 	}
 
-
 	private function getQueryField(): QueryFieldInterface
 	{
-		return (new class () implements QueryFieldInterface
+		return new class implements QueryFieldInterface
 		{
-
 			/**
 			 * {@inheritdoc}
 			 */
@@ -97,7 +88,6 @@ class QueryFieldsProviderTest extends TestCase
 			{
 				return 'Some name';
 			}
-
 
 			/**
 			 * {@inheritdoc}
@@ -107,7 +97,6 @@ class QueryFieldsProviderTest extends TestCase
 				return Type::string();
 			}
 
-
 			/**
 			 * {@inheritdoc}
 			 */
@@ -116,17 +105,15 @@ class QueryFieldsProviderTest extends TestCase
 				return 'Some description';
 			}
 
-
 			/**
 			 * {@inheritdoc}
 			 */
 			public function getArgs(): array
 			{
 				return [
-					'someArg' => ['type' => Type::string()]
+					'someArg' => ['type' => Type::string()],
 				];
 			}
-
 
 			/**
 			 * {@inheritdoc}
@@ -135,8 +122,6 @@ class QueryFieldsProviderTest extends TestCase
 			{
 				return 'resolved';
 			}
-
-		});
+		};
 	}
-
 }

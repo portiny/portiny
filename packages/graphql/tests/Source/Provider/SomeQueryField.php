@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Portiny\GraphQL\Tests\Source\Provider;
 
@@ -7,7 +7,6 @@ use Portiny\GraphQL\Contract\Field\QueryFieldInterface;
 
 final class SomeQueryField implements QueryFieldInterface
 {
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -15,7 +14,6 @@ final class SomeQueryField implements QueryFieldInterface
 	{
 		return 'someQueryName';
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -25,7 +23,6 @@ final class SomeQueryField implements QueryFieldInterface
 		return Type::string();
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -34,17 +31,15 @@ final class SomeQueryField implements QueryFieldInterface
 		return 'Some description';
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
 	public function getArgs(): array
 	{
 		return [
-			'someArg' => ['type' => Type::string()]
+			'someArg' => ['type' => Type::string()],
 		];
 	}
-
 
 	/**
 	 * {@inheritdoc}

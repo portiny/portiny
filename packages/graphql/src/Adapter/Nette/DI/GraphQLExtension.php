@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Portiny\GraphQL\Adapter\Nette\DI;
 
@@ -16,7 +16,6 @@ use Portiny\GraphQL\Provider\QueryFieldsProvider;
 
 final class GraphQLExtension extends CompilerExtension
 {
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -27,7 +26,6 @@ final class GraphQLExtension extends CompilerExtension
 		Compiler::loadDefinitions($builder, $config['services'] ?: []);
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -37,7 +35,6 @@ final class GraphQLExtension extends CompilerExtension
 		$this->setupQueryFieldProvider();
 		$this->setupRequestProcessor();
 	}
-
 
 	private function setupMutationFieldProvider(): void
 	{
@@ -54,7 +51,6 @@ final class GraphQLExtension extends CompilerExtension
 		}
 	}
 
-
 	private function setupQueryFieldProvider(): void
 	{
 		$containerBuilder = $this->getContainerBuilder();
@@ -69,7 +65,6 @@ final class GraphQLExtension extends CompilerExtension
 			$queryFieldProvider->addSetup('addField', ['@' . $queryFieldDefinition->getType()]);
 		}
 	}
-
 
 	private function setupRequestProcessor(): void
 	{

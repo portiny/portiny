@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Portiny\GraphQL\Tests\Http\Request;
 
@@ -20,7 +20,6 @@ final class JsonRequestParserTest extends TestCase
 		$this->assertSame('some query', $jsonRequestParser->getQuery());
 	}
 
-
 	public function testGetVariables(): void
 	{
 		$url = new UrlScript('https://portiny.org');
@@ -31,7 +30,6 @@ final class JsonRequestParserTest extends TestCase
 
 		$this->assertSame(['key' => 'value'], $jsonRequestParser->getVariables());
 	}
-
 
 	public function testEmptyData(): void
 	{

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Portiny\GraphQL\Provider;
 
@@ -9,26 +9,22 @@ use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
 use Portiny\GraphQL\Converter\MutationFieldConverter;
 use Portiny\GraphQL\Exception\Provider\ExistingMutationFieldException;
 
-
 final class MutationFieldsProvider implements MutationFieldsProviderInterface
 {
-
 	/**
 	 * @var MutationFieldInterface[]
 	 */
 	private $fields = [];
 
-
 	/**
 	 * {@inheritdoc}
 	 */
-	public function addField(MutationFieldInterface $mutationField)
+	public function addField(MutationFieldInterface $mutationField): void
 	{
 		$this->ensureFieldIsNotRegistered($mutationField);
 
 		$this->fields[$mutationField->getName()] = $mutationField;
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -38,11 +34,10 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 		return $this->fields;
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
-	public function convertFieldsToArray(array $allowedMutations = NULL): array
+	public function convertFieldsToArray(?array $allowedMutations = NULL): array
 	{
 		$fields = [];
 		foreach ($this->getFields() as $field) {
@@ -56,11 +51,10 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 		return $fields;
 	}
 
-
 	/**
 	 * @throws ExistingMutationFieldException
 	 */
-	private function ensureFieldIsNotRegistered(MutationFieldInterface $mutationField)
+	private function ensureFieldIsNotRegistered(MutationFieldInterface $mutationField): void
 	{
 		if (isset($this->fields[$mutationField->getName()])) {
 			throw new ExistingMutationFieldException(
@@ -71,5 +65,4 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 			);
 		}
 	}
-
 }

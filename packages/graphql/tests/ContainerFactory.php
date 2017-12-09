@@ -21,7 +21,7 @@ final class ContainerFactory
 			FileSystem::delete(__DIR__ . '/temp');
 		});
 
-		$configurator = new Configurator;
+		$configurator = new Configurator();
 		$configurator->setTempDirectory($tempDir);
 		$configurator->addConfig(__DIR__ . '/config/config.neon');
 

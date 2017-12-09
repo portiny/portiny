@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Portiny\GraphQL\Tests\Provider;
 
@@ -10,66 +10,59 @@ use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
 use Portiny\GraphQL\Provider\MutationFieldsProvider;
 use Portiny\GraphQL\Tests\Source\Provider\SomeMutationField;
 
-
 class MutationFieldsProviderTest extends TestCase
 {
-
 	/**
 	 * @var MutationFieldsProviderInterface
 	 */
-	private $mutationFieldProvider;
+	private $mutationFieldsProvider;
 
-
-	protected function setUp()
+	protected function setUp(): void
 	{
-		$this->mutationFieldProvider = new MutationFieldsProvider;
+		$this->mutationFieldsProvider = new MutationFieldsProvider();
 	}
 
-
-	public function testAddField()
+	public function testAddField(): void
 	{
 		$mutationField = $this->getMutationField();
 
-		$this->assertEmpty($this->mutationFieldProvider->getFields());
+		$this->assertEmpty($this->mutationFieldsProvider->getFields());
 
-		$this->mutationFieldProvider->addField($mutationField);
+		$this->mutationFieldsProvider->addField($mutationField);
 
-		$this->assertCount(1, $this->mutationFieldProvider->getFields());
+		$this->assertCount(1, $this->mutationFieldsProvider->getFields());
 	}
-
 
 	/**
 	 * @expectedException \Portiny\GraphQL\Exception\Provider\ExistingMutationFieldException
 	 * @expectedExceptionMessage Mutation field with name "Some name" is already registered.
 	 */
-	public function testAddFieldAlreadyExists()
+	public function testAddFieldAlreadyExists(): void
 	{
 		$mutationField = $this->getMutationField();
 
-		$this->assertEmpty($this->mutationFieldProvider->getFields());
+		$this->assertEmpty($this->mutationFieldsProvider->getFields());
 
-		$this->mutationFieldProvider->addField($mutationField);
-		$this->mutationFieldProvider->addField($mutationField);
+		$this->mutationFieldsProvider->addField($mutationField);
+		$this->mutationFieldsProvider->addField($mutationField);
 	}
 
-
-	public function testGetFields()
+	public function testGetFields(): void
 	{
 		$mutationField = $this->getMutationField();
-		$this->mutationFieldProvider->addField($mutationField);
+		$this->mutationFieldsProvider->addField($mutationField);
 
-		$fields = $this->mutationFieldProvider->getFields();
+		$fields = $this->mutationFieldsProvider->getFields();
 		$this->assertCount(1, $fields);
 		$this->assertSame($mutationField, reset($fields));
 	}
 
-
-	public function testConvertFieldsToArray()
+	public function testConvertFieldsToArray(): void
 	{
 		$mutationField = $this->getMutationField();
-		$this->mutationFieldProvider->addField($mutationField);
+		$this->mutationFieldsProvider->addField($mutationField);
 
-		$output = $this->mutationFieldProvider->convertFieldsToArray();
+		$output = $this->mutationFieldsProvider->convertFieldsToArray();
 		$this->assertSame('Some name', key($output));
 
 		$mutationFieldAsArray = reset($output);
@@ -80,16 +73,14 @@ class MutationFieldsProviderTest extends TestCase
 		$this->assertInstanceOf(StringType::class, $mutationFieldAsArray['args']['someArg']['type']);
 		$this->assertTrue(is_callable($mutationFieldAsArray['resolve']));
 
-		$output = $this->mutationFieldProvider->convertFieldsToArray([SomeMutationField::class]);
+		$output = $this->mutationFieldsProvider->convertFieldsToArray([SomeMutationField::class]);
 		$this->assertEmpty($output);
 	}
 
-
 	private function getMutationField(): MutationFieldInterface
 	{
-		return (new class () implements MutationFieldInterface
+		return new class implements MutationFieldInterface
 		{
-
 			/**
 			 * {@inheritdoc}
 			 */
@@ -97,7 +88,6 @@ class MutationFieldsProviderTest extends TestCase
 			{
 				return 'Some name';
 			}
-
 
 			/**
 			 * {@inheritdoc}
@@ -107,7 +97,6 @@ class MutationFieldsProviderTest extends TestCase
 				return Type::string();
 			}
 
-
 			/**
 			 * {@inheritdoc}
 			 */
@@ -116,17 +105,15 @@ class MutationFieldsProviderTest extends TestCase
 				return 'Some description';
 			}
 
-
 			/**
 			 * {@inheritdoc}
 			 */
 			public function getArgs(): array
 			{
 				return [
-					'someArg' => ['type' => Type::string()]
+					'someArg' => ['type' => Type::string()],
 				];
 			}
-
 
 			/**
 			 * {@inheritdoc}
@@ -135,8 +122,6 @@ class MutationFieldsProviderTest extends TestCase
 			{
 				return 'resolved';
 			}
-
-		});
+		};
 	}
-
 }
