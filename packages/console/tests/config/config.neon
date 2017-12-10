@@ -1,0 +1,5 @@
+extensions:
+	- Portiny\Console\Adapter\Nette\DI\ConsoleExtension
+
+services:
+	- Portiny\Console\Tests\Source\SomeBasicCommand

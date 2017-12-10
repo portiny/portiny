@@ -1,0 +1,4 @@
+services:
+	- Symfony\Component\Console\Application
+	- Symfony\Component\Console\Helper\HelperSet
+	- Symfony\Component\Console\Helper\QuestionHelper
