@@ -210,6 +210,11 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		$this->sortQueries = $sortQueries;
 	}
 
+	public function getQueries(): array
+	{
+		return $this->queries;
+	}
+
 	/**
 	 * @return bool
 	 */
