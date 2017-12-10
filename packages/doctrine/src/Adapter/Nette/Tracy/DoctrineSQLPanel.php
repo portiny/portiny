@@ -163,9 +163,10 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			$params = $this->queries[$key][self::DATA_INDEX_PARAMS];
 			$types = $this->queries[$key][self::DATA_INDEX_TYPES];
 
-			$stmt = $this->connection->executeQuery('EXPLAIN ' . $query, $params, $types);
-
-			$this->queries[$key][self::DATA_INDEX_EXPLAIN] = $stmt->fetchAll();
+			if ($this->connection) {
+				$stmt = $this->connection->executeQuery('EXPLAIN ' . $query, $params, $types);
+				$this->queries[$key][self::DATA_INDEX_EXPLAIN] = $stmt->fetchAll();
+			}
 
 			$this->explainRunning = FALSE;
 		}
@@ -319,7 +320,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		$s .= '</td>';
 
 		$s .= '<td class="nette-Doctrine2Panel-sql" style="min-width: 400px">' .
-			self::dumpSql($query[self::DATA_INDEX_SQL]);
+			Helper::dumpSql($query[self::DATA_INDEX_SQL]);
 
 		if ($this->doExplains && isset($query[self::DATA_INDEX_EXPLAIN])) {
 			$s .= "<table id='nette-Doctrine2Panel-row-" . $this->queryCounter . "' class='nette-collapsed'><tr>";
@@ -461,73 +462,5 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 				return ($a[$key] > $b[$key]) ? -1 : 1;
 			}
 		);
-	}
-
-	/**
-	 * Returns syntax highlighted SQL command.
-	 */
-	private static function dumpSql(string $sql, ?array $params = NULL, ?Connection $connection = NULL): string
-	{
-		static $keywords1 = 'SELECT|(?:ON\s+DUPLICATE\s+KEY)?UPDATE|INSERT(?:\s+INTO)?|REPLACE(?:\s+INTO)?|'
-			. 'DELETE|CALL|UNION|FROM|WHERE|HAVING|GROUP\s+BY|ORDER\s+BY|LIMIT|OFFSET|SET|VALUES|LEFT\s+JOIN|'
-			. 'INNER\s+JOIN|TRUNCATE';
-		static $keywords2 = 'ALL|DISTINCT|DISTINCTROW|IGNORE|AS|USING|ON|AND|OR|IN|IS|NOT|NULL|[RI]?LIKE|'
-			. 'REGEXP|TRUE|FALSE';
-		// insert new lines
-		$sql = " ${sql} ";
-		$sql = preg_replace("#(?<=[\\s,(])(${keywords1})(?=[\\s,)])#i", "\n\$1", $sql);
-		// reduce spaces
-		$sql = preg_replace('#[ \t]{2,}#', ' ', $sql);
-		$sql = wordwrap($sql, 100);
-		$sql = preg_replace('#([ \t]*\r?\n){2,}#', "\n", $sql);
-		// syntax highlight
-		$sql = htmlspecialchars($sql, ENT_IGNORE, 'UTF-8');
-		$sql = preg_replace_callback("#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])(${keywords1})(?=[\\s,)])|'
-			. '(?<=[\\s,(=])(${keywords2})(?=[\\s,)=])#is", function ($matches) {
-			if (! empty($matches[1])) { // comment
-				return '<em style="color:gray">' . $matches[1] . '</em>';
-			} elseif (! empty($matches[2])) { // error
-				return '<strong style="color:red">' . $matches[2] . '</strong>';
-			} elseif (! empty($matches[3])) { // most important keywords
-				return '<strong style="color:blue">' . $matches[3] . '</strong>';
-			} elseif (! empty($matches[4])) { // other keywords
-				return '<strong style="color:green">' . $matches[4] . '</strong>';
-			}
-		}, $sql);
-		// parameters
-		$sql = preg_replace_callback('#\?#', function () use ($params, $connection) {
-			static $i = 0;
-			if (! isset($params[$i])) {
-				return '?';
-			}
-
-			$param = $params[$i++];
-			if (is_string($param)
-				&& (preg_match('#[^\x09\x0A\x0D\x20-\x7E\xA0-\x{10FFFF}]#u', $param) || preg_last_error())
-			) {
-				return '<i title="Length ' . strlen($param) . ' bytes">&lt;binary&gt;</i>';
-			} elseif (is_string($param)) {
-				$length = Strings::length($param);
-				$truncated = Strings::truncate($param, 120);
-				$text = htmlspecialchars(
-					$connection ? $connection->quote($truncated) : '\'' . $truncated . '\'',
-					ENT_NOQUOTES,
-					'UTF-8'
-				);
-				return '<span title="Length ' . $length . ' characters">' . $text . '</span>';
-			} elseif (is_resource($param)) {
-				$type = get_resource_type($param);
-				if ($type === 'stream') {
-					$info = stream_get_meta_data($param);
-					return '<i' . (isset($info['uri']) ? ' title="' .
-							htmlspecialchars($info['uri'], ENT_NOQUOTES, 'UTF-8') . '"' : NULL)
-						. '>&lt;' . htmlspecialchars($type, ENT_NOQUOTES, 'UTF-8') . ' resource&gt;</i> ';
-				}
-			}
-
-			return htmlspecialchars((string) $param, ENT_NOQUOTES, 'UTF-8');
-		}, $sql);
-
-		return '<pre class="dump">' . trim($sql) . "</pre>\n";
 	}
 }

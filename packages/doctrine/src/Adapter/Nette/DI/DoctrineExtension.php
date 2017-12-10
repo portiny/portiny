@@ -132,7 +132,6 @@ class DoctrineExtension extends CompilerExtension
 		if ($this->hasEventManager($builder)) {
 			$builder->getDefinition($builder->getByType(EventManager::class))
 				->addSetup('addEventListener', [Events::loadClassMetadata, '@' . $name . '.resolver']);
-
 		} else {
 			$builder->addDefinition($name . '.eventManager')
 				->setType(EventManager::class)
@@ -187,7 +186,7 @@ class DoctrineExtension extends CompilerExtension
 	private function getCache(string $prefix, ContainerBuilder $containerBuilder): string
 	{
 		$cacheServiceName = $containerBuilder->getByType(Cache::class);
-		if ($cacheServiceName && strlen($cacheServiceName) > 0) {
+		if ($cacheServiceName !== NULL && strlen($cacheServiceName) > 0) {
 			return '@' . $cacheServiceName;
 		}
 
@@ -205,7 +204,7 @@ class DoctrineExtension extends CompilerExtension
 	private function hasEventManager(ContainerBuilder $containerBuilder): bool
 	{
 		$eventManagerServiceName = $containerBuilder->getByType(EventManager::class);
-		return $eventManagerServiceName && strlen($eventManagerServiceName) > 0;
+		return $eventManagerServiceName !== NULL && strlen($eventManagerServiceName) > 0;
 	}
 
 	private function processDbalTypes(string $name, array $types): void
