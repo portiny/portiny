@@ -8,6 +8,7 @@
 		"nette/di": "^2.4",
 		"nette/http": "^2.4",
 		"nette/utils": "^2.4",
+		"symfony/console": "^4.0",
 		"tracy/tracy": "^2.4",
 		"webonyx/graphql-php": "^0.11"
 	},
@@ -19,11 +20,13 @@
 	},
 	"autoload": {
 		"psr-4": {
+			"Portiny\\Console\\": "packages/console/src",
 			"Portiny\\GraphQL\\": "packages/graphql/src"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
+			"Portiny\\Console\\Tests\\": "packages/console/tests",
 			"Portiny\\GraphQL\\Tests\\": "packages/graphql/tests"
 		}
 	},
