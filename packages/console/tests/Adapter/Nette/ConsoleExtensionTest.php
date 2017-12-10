@@ -3,7 +3,7 @@
 namespace Portiny\Console\Tests\Adapter\Nette;
 
 use Portiny\Console\Tests\AbstractContainerTestCase;
-use Portiny\Console\Tests\Source\SomeBasicCommand;
+use Portiny\Console\Tests\Source\PrintRequestUrlCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -20,9 +20,11 @@ final class ConsoleExtensionTest extends AbstractContainerTestCase
 		/** @var Application $application */
 		$application = $this->container->getByType(Application::class);
 
+		$this->assertFalse($application->isAutoExitEnabled());
+		$this->assertTrue($application->areExceptionsCaught());
 		$this->assertCount(3, $application->all());
-		$this->assertTrue($application->has('some-basic'));
-		$this->assertInstanceOf(SomeBasicCommand::class, $application->get('some-basic'));
+		$this->assertTrue($application->has('print-request-url'));
+		$this->assertInstanceOf(PrintRequestUrlCommand::class, $application->get('print-request-url'));
 	}
 
 	public function testExecution(): void
@@ -30,13 +32,13 @@ final class ConsoleExtensionTest extends AbstractContainerTestCase
 		/** @var Application $application */
 		$application = $this->container->getByType(Application::class);
 
-		$command = $application->find('some-basic');
+		$command = $application->find('print-request-url');
 		$commandTester = new CommandTester($command);
 		$commandTester->execute([
 			'command' => $command->getName(),
 		]);
 
 		$output = $commandTester->getDisplay();
-		$this->assertContains('Success!', $output);
+		$this->assertSame('https://portiny.org/', $output);
 	}
 }

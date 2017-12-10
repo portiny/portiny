@@ -6,9 +6,9 @@ namespace Portiny\Console\Adapter\Nette\DI;
 
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
-use Nette\DI\Statement;
-use Nette\Http\Request;
-use Nette\Http\UrlScript;
+use Nette\Http\IRequest;
+use Nette\Http\RequestFactory as NetteRequestFactory;
+use Portiny\Console\Http\HttpRequestFactory;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\HelperInterface;
@@ -21,8 +21,8 @@ class ConsoleExtension extends CompilerExtension
 	 */
 	private $defaults = [
 		'url' => NULL,
-		'catchExceptions' => NULL,
 		'autoExit' => NULL,
+		'catchExceptions' => NULL
 	];
 
 	/**
@@ -64,12 +64,10 @@ class ConsoleExtension extends CompilerExtension
 			$applicationDefinition->addSetup('setCatchExceptions', [(bool) $config['catchExceptions']]);
 		}
 
-		if ($builder->hasDefinition('http.request') && $config['url'] !== NULL) {
-			$builder->getDefinition('http.request')
-				->setType(Request::class)
-				->setArguments([
-					new Statement(UrlScript::class, [$config['url']]),
-				]);
+		if (interface_exists(IRequest::class) && $config['url']) {
+			$builder->getDefinition($builder->getByType(NetteRequestFactory::class) ?: 'nette.httpRequestFactory')
+				->setFactory(HttpRequestFactory::class)
+				->addSetup('setRequestUrl', [$config['url']]);
 		}
 	}
 

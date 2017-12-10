@@ -1,5 +1,10 @@
 extensions:
-	- Portiny\Console\Adapter\Nette\DI\ConsoleExtension
+	console: Portiny\Console\Adapter\Nette\DI\ConsoleExtension
 
 services:
-	- Portiny\Console\Tests\Source\SomeBasicCommand
+	- Portiny\Console\Tests\Source\PrintRequestUrlCommand
+
+console:
+	url: "https://portiny.org"
+	catchExceptions: TRUE
+	autoExit: FALSE
