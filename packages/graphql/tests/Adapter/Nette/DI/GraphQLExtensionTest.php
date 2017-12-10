@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Portiny\GraphQL\Tests\Adapter\Nette;
+namespace Portiny\GraphQL\Tests\Adapter\Nette\DI;
 
 use Portiny\GraphQL\GraphQL\RequestProcessor;
 use Portiny\GraphQL\Tests\AbstractContainerTestCase;
