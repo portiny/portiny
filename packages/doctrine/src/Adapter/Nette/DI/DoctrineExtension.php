@@ -156,7 +156,7 @@ class DoctrineExtension extends CompilerExtension
 	/**
 	 * @throws AssertionException
 	 */
-	protected function parseConfig(): array
+	private function parseConfig(): array
 	{
 		$config = $this->getConfig(self::$defaults);
 		$this->classMappings = $config['targetEntityMappings'];
