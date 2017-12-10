@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Portiny\Doctrine\Adapter\Nette\Tracy;
 
-use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Logging\SQLLogger;
 use Doctrine\ORM\Cache\Logging\CacheLoggerChain;
 use Doctrine\ORM\Cache\Logging\StatisticsCacheLogger;
 use Doctrine\ORM\EntityManager;
-use Nette\InvalidStateException;
-use Nette\Utils\Strings;
 use Tracy\Debugger;
 use Tracy\Dumper;
 use Tracy\IBarPanel;
@@ -48,43 +45,22 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	/**
 	 * @var int
 	 */
-	public const DATA_INDEX_EXPLAIN = 4;
+	public const DATA_INDEX_TRACE = 4;
 
 	/**
 	 * @var int
 	 */
-	public const DATA_INDEX_TRACE = 5;
+	public const DATA_INDEX_COUNT = 5;
 
 	/**
-	 * @var int
+	 * @var EntityManager
 	 */
-	public const DATA_INDEX_COUNT = 6;
+	private $entityManager;
 
 	/**
 	 * @var bool
 	 */
 	private $sortQueries = FALSE;
-
-	/**
-	 * @var bool
-	 */
-	private $groupQueries = FALSE;
-
-	/**
-	 * whether to do explain queries for selects or not
-	 * @var bool
-	 */
-	private $doExplains = FALSE;
-
-	/**
-	 * @var bool
-	 */
-	private $explainRunning = FALSE;
-
-	/**
-	 * @var Connection|null
-	 */
-	private $connection;
 
 	/**
 	 * @var int
@@ -96,13 +72,6 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	 */
 	private $queries = [];
 
-	/**
-	 * @var EntityManager
-	 */
-	private $entityManager;
-
-	private $queryCounter = 0;
-
 	public function __construct(EntityManager $entityManager)
 	{
 		$this->entityManager = $entityManager;
@@ -113,10 +82,6 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	 */
 	public function startQuery($sql, ?array $params = NULL, ?array $types = NULL): void
 	{
-		if ($this->explainRunning) {
-			return;
-		}
-
 		Debugger::timer('doctrine');
 
 		$this->queries[] = [
@@ -124,7 +89,6 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			self::DATA_INDEX_PARAMS => $params,
 			self::DATA_INDEX_TYPES => $types,
 			self::DATA_INDEX_TIME => 0,
-			self::DATA_INDEX_EXPLAIN => NULL,
 			self::DATA_INDEX_TRACE => debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE),
 		];
 	}
@@ -134,42 +98,10 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	 */
 	public function stopQuery(): void
 	{
-		if ($this->explainRunning) {
-			return;
-		}
-
 		$keys = array_keys($this->queries);
 		$key = end($keys);
 		$this->queries[$key][self::DATA_INDEX_TIME] = Debugger::timer('doctrine');
 		$this->totalTime += $this->queries[$key][self::DATA_INDEX_TIME];
-
-		// get EXPLAIN for SELECT queries
-		if ($this->doExplains) {
-			if ($this->connection === NULL) {
-				throw new InvalidStateException(
-					'You must set a Doctrine\DBAL\Connection to get EXPLAIN.'
-				);
-			}
-
-			$query = $this->queries[$key][self::DATA_INDEX_SQL];
-
-			if (! Strings::startsWith($query, 'SELECT')) { // only SELECTs are supported
-				return;
-			}
-
-			// prevent logging explains & infinite recursion
-			$this->explainRunning = TRUE;
-
-			$params = $this->queries[$key][self::DATA_INDEX_PARAMS];
-			$types = $this->queries[$key][self::DATA_INDEX_TYPES];
-
-			if ($this->connection) {
-				$stmt = $this->connection->executeQuery('EXPLAIN ' . $query, $params, $types);
-				$this->queries[$key][self::DATA_INDEX_EXPLAIN] = $stmt->fetchAll();
-			}
-
-			$this->explainRunning = FALSE;
-		}
 	}
 
 	/**
@@ -235,10 +167,6 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	{
 		$s = '';
 
-		if ($this->groupQueries) {
-			$this->queries = $this->groupQueries($this->queries);
-		}
-
 		if ($this->sortQueries) {
 			$this->sortQueries($this->queries, self::DATA_INDEX_TIME);
 		}
@@ -271,7 +199,6 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		}
 
 		$this->entityManager->getConfiguration()->setSQLLogger($this);
-		$this->connection = $this->entityManager->getConnection();
 		Debugger::getBar()->addPanel($this);
 	}
 
@@ -281,14 +208,6 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	public function setSortQueries($sortQueries): void
 	{
 		$this->sortQueries = $sortQueries;
-	}
-
-	/**
-	 * @param bool $groupQueries
-	 */
-	public function setGroupQueries($groupQueries): void
-	{
-		$this->groupQueries = $groupQueries;
 	}
 
 	/**
@@ -307,12 +226,6 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		$s = '<tr>';
 		$s .= '<td>' . sprintf('%0.3f', $query[self::DATA_INDEX_TIME] * 1000);
 
-		if ($this->doExplains && isset($query[self::DATA_INDEX_EXPLAIN])) {
-			++$this->queryCounter;
-			$s .= "<br /><a href='#' class='nette-toggler' rel='#nette-Doctrine2Panel-row-" .
-				$this->queryCounter . "'>" . 'explain&nbsp;&#x25ba;</a>';
-		}
-
 		if (isset($query[self::DATA_INDEX_COUNT])) {
 			$s .= '/' . sprintf('%d', $query[self::DATA_INDEX_COUNT]);
 		}
@@ -321,25 +234,6 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 
 		$s .= '<td class="nette-Doctrine2Panel-sql" style="min-width: 400px">' .
 			Helper::dumpSql($query[self::DATA_INDEX_SQL]);
-
-		if ($this->doExplains && isset($query[self::DATA_INDEX_EXPLAIN])) {
-			$s .= "<table id='nette-Doctrine2Panel-row-" . $this->queryCounter . "' class='nette-collapsed'><tr>";
-			foreach ($query[self::DATA_INDEX_EXPLAIN][0] as $col => $foo) {
-				$s .= '<th>' . htmlspecialchars($col) . '</th>';
-			}
-
-			$s .= '</tr>';
-			foreach ($query[self::DATA_INDEX_EXPLAIN] as $row) {
-				$s .= '<tr>';
-				foreach ($row as $col) {
-					$s .= '<td>' . htmlspecialchars($col) . '</td>';
-				}
-
-				$s .= '</tr>';
-			}
-
-			$s .= '</table>';
-		}
 
 		$s .= '</td>';
 		$s .= '<td>' . Dumper::toHtml($query[self::DATA_INDEX_PARAMS]) . '</td>';
@@ -413,41 +307,6 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 					</td>
 				</tr>
 			</table>';
-	}
-
-	/**
-	 * @return array
-	 */
-	private function groupQueries(array $queries)
-	{
-		$indexed = [];
-		foreach ($queries as $query) {
-			$indexed[$query[self::DATA_INDEX_SQL]][] = $query;
-		}
-
-		$grouped = [];
-		foreach ($indexed as $item) {
-			if (count($item) === 1) {
-				$grouped[] = $item[0];
-				continue;
-			}
-
-			$groupedItem = $item[0];
-			$times = $params = $traces = [];
-			foreach ($item as $subItem) {
-				$times[] = $subItem[self::DATA_INDEX_TIME];
-				$params[] = $subItem[self::DATA_INDEX_PARAMS];
-				$traces[] = $subItem[self::DATA_INDEX_TRACE];
-			}
-
-			$groupedItem[self::DATA_INDEX_TIME] = array_sum($times);
-			$groupedItem[self::DATA_INDEX_PARAMS] = $params;
-			$groupedItem[self::DATA_INDEX_TRACE] = $traces;
-			$groupedItem[self::DATA_INDEX_COUNT] = count($times);
-			$grouped[] = $groupedItem;
-		}
-
-		return $grouped;
 	}
 
 	private function sortQueries(array &$queries, int $key): void
