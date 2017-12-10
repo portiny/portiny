@@ -10,24 +10,20 @@ use Nette\Http\UrlScript;
 
 class HttpRequestFactory extends RequestFactory
 {
-
 	/**
-	 * @var UrlScript
+	 * @var UrlScript|null
 	 */
 	private $urlScript;
 
 	/**
 	 * @param UrlScript|string $url
 	 */
-	public function setRequestUrl($url)
+	public function setRequestUrl($url): void
 	{
 		$this->urlScript = $url ? new UrlScript($url) : NULL;
 	}
 
-	/**
-	 * @return HttpRequest
-	 */
-	public function createHttpRequest()
+	public function createHttpRequest(): HttpRequest
 	{
 		if ($this->urlScript === NULL || php_sapi_name() !== 'cli') {
 			return parent::createHttpRequest();
@@ -35,5 +31,4 @@ class HttpRequestFactory extends RequestFactory
 
 		return new HttpRequest($this->urlScript, NULL, [], [], [], [], PHP_SAPI, '127.0.0.1', '127.0.0.1');
 	}
-
 }

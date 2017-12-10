@@ -9,12 +9,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class PrintRequestUrlCommand extends Command
 {
-
 	/**
 	 * @var IRequest
 	 */
 	private $request;
-
 
 	public function __construct(IRequest $request)
 	{

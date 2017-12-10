@@ -22,7 +22,7 @@ class ConsoleExtension extends CompilerExtension
 	private $defaults = [
 		'url' => NULL,
 		'autoExit' => NULL,
-		'catchExceptions' => NULL
+		'catchExceptions' => NULL,
 	];
 
 	/**
