@@ -15,7 +15,7 @@ Repository to maintain all Portiny packages.
 [![Downloads](https://img.shields.io/packagist/dt/portiny/console.svg?style=flat-square)](https://packagist.org/packages/portiny/console)
 [![Latest stable](https://img.shields.io/github/tag/portiny/console.svg?style=flat-square)](https://packagist.org/packages/portiny/console)
 
-Lightweight Symfony/Console integration extension for Nette framework.
+Lightweight Symfony/Console integration extension for Nette Framework.
 
 
 ## [GraphQL](https://github.com/portiny/graphql)
@@ -26,4 +26,4 @@ Lightweight Symfony/Console integration extension for Nette framework.
 [![Downloads](https://img.shields.io/packagist/dt/portiny/graphql.svg?style=flat-square)](https://packagist.org/packages/portiny/graphql)
 [![Latest stable](https://img.shields.io/github/tag/portiny/graphql.svg?style=flat-square)](https://packagist.org/packages/portiny/graphql)
 
-Lightweight GraphQL integration extension for Nette framework.
+Lightweight GraphQL integration extension for Nette Framework.
