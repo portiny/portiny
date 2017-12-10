@@ -1,0 +1,26 @@
+{
+	"name": "portiny/doctrine",
+	"description": "Lightweight Doctrine integration extension for Nette framework.",
+	"license": ["MIT"],
+	"require": {
+		"php": "~7.1",
+		"nette/bootstrap": "^2.4",
+		"nette/di": "^2.4",
+		"nette/utils": "^2.4",
+		"doctrine/orm": "^2.5"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^6.5",
+		"tracy/tracy": "^2.4"
+	},
+	"autoload": {
+		"psr-4": {
+			"Portiny\\Doctrine\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Portiny\\Doctrine\\Tests\\": "tests"
+		}
+	}
+}

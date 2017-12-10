@@ -1,0 +1,10 @@
+extensions:
+	doctrine: Portiny\Doctrine\Adapter\Nette\DI\DoctrineExtension
+
+doctrine:
+	connection:
+		driver: pdo_sqlite
+		memory: TRUE
+
+	debug: FALSE
+	proxyDir: %tempDir%/proxies
