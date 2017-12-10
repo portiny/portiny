@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Portiny\Doctrine\Tests\Source;
 
@@ -8,22 +8,22 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
+use Doctrine\DBAL\Types\DateTimeType;
 
-
-class DateTimeImmutableType extends \Doctrine\DBAL\Types\DateTimeType
+class DateTimeImmutableType extends DateTimeType
 {
-
-	const NAME = 'datetime_immutable';
+	/**
+	 * @var string
+	 */
+	public const NAME = 'datetime_immutable';
 
 	public function getName(): string
 	{
 		return static::NAME;
 	}
 
-
 	/**
 	 * @param DateTimeImmutable|string|null $value
-	 * @param AbstractPlatform $platform
 	 * @return DateTimeImmutable|null
 	 * @throws ConversionException
 	 */
@@ -40,16 +40,18 @@ class DateTimeImmutableType extends \Doctrine\DBAL\Types\DateTimeType
 		}
 
 		if ($dateTime === false) {
-			throw ConversionException::conversionFailedFormat($value, $this->getName(), $platform->getDateTimeFormatString());
+			throw ConversionException::conversionFailedFormat(
+				$value,
+				$this->getName(),
+				$platform->getDateTimeFormatString()
+			);
 		}
 
 		return $dateTime;
 	}
 
-
 	/**
 	 * @param DateTimeInterface|null $value
-	 * @param AbstractPlatform $platform
 	 * @return string|null
 	 * @throws ConversionException
 	 */
@@ -63,7 +65,7 @@ class DateTimeImmutableType extends \Doctrine\DBAL\Types\DateTimeType
 			return $value->format($platform->getDateTimeFormatString());
 		}
 
-		if (!is_scalar($value)) {
+		if (! is_scalar($value)) {
 			$value = sprintf('of type %s', gettype($value));
 		}
 
@@ -74,5 +76,4 @@ class DateTimeImmutableType extends \Doctrine\DBAL\Types\DateTimeType
 	{
 		return true;
 	}
-
 }

@@ -10,7 +10,6 @@ use Portiny\Doctrine\Tests\Source\CastFunction;
 use Portiny\Doctrine\Tests\Source\DateTimeImmutableType;
 use Portiny\Doctrine\Tests\Source\IntervalType;
 
-
 class DoctrineExtensionTest extends AbstractContainerTestCase
 {
 	public function testLoadConfiguration(): void
@@ -24,8 +23,7 @@ class DoctrineExtensionTest extends AbstractContainerTestCase
 		$this->assertInstanceOf(EventManager::class, $eventManager);
 	}
 
-
-	public function testBeforeCompile()
+	public function testBeforeCompile(): void
 	{
 		$this->assertArrayHasKey('interval', Type::getTypesMap());
 		$this->assertInstanceOf(IntervalType::class, Type::getType('interval'));
@@ -39,5 +37,4 @@ class DoctrineExtensionTest extends AbstractContainerTestCase
 		$this->assertNull($configuration->getCustomStringFunction('nonExistsFunctionName'));
 		$this->assertSame(CastFunction::class, $configuration->getCustomStringFunction('cast'));
 	}
-
 }
