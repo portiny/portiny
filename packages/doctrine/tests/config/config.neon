@@ -1,0 +1,19 @@
+extensions:
+	doctrine: Portiny\Doctrine\Adapter\Nette\DI\DoctrineExtension
+
+doctrine:
+	connection:
+		driver: pdo_sqlite
+		memory: TRUE
+
+	debug: FALSE
+	proxyDir: %tempDir%/proxies
+	dbal:
+		types:
+			interval: Portiny\Doctrine\Tests\Source\IntervalType
+		type_overrides:
+			datetime: Portiny\Doctrine\Tests\Source\DateTimeImmutableType
+		schema_filter: "~^(?!nd_)~" # tables and sequences that start with nd_ are ingored by Doctrine
+
+	functions:
+		CAST: Portiny\Doctrine\Tests\Source\CastFunction

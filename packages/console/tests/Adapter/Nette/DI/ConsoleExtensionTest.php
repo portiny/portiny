@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Portiny\Console\Tests\Adapter\Nette;
+namespace Portiny\Console\Tests\Adapter\Nette\DI;
 
 use Portiny\Console\Tests\AbstractContainerTestCase;
 use Portiny\Console\Tests\Source\PrintRequestUrlCommand;

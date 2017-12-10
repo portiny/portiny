@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Portiny\Console\Tests;
+namespace Portiny\Doctrine\Tests;
 
 use Nette\Configurator;
 use Nette\DI\Container;
