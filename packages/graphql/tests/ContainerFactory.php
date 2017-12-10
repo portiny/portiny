@@ -14,8 +14,9 @@ final class ContainerFactory
 	{
 		$tempDir = __DIR__ . '/temp/' . getmypid();
 
-		@mkdir($tempDir, 0777, TRUE);
-		@mkdir($tempDir . '/log', 0777, TRUE);
+		if (! file_exists($tempDir . '/log')) {
+			mkdir($tempDir . '/log', 0777, TRUE);
+		}
 
 		register_shutdown_function(function (): void {
 			FileSystem::delete(__DIR__ . '/temp');
