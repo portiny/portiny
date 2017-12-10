@@ -18,6 +18,17 @@ Repository to maintain all Portiny packages.
 Lightweight Symfony/Console integration extension for Nette Framework.
 
 
+## [Doctrine](https://github.com/portiny/doctrine)
+
+[![Build Status](https://img.shields.io/travis/portiny/doctrine.svg?style=flat-square)](https://travis-ci.org/portiny/doctrine)
+[![Quality Score](https://img.shields.io/scrutinizer/g/portiny/doctrine.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/doctrine)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/portiny/doctrine.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/doctrine)
+[![Downloads](https://img.shields.io/packagist/dt/portiny/doctrine.svg?style=flat-square)](https://packagist.org/packages/portiny/doctrine)
+[![Latest stable](https://img.shields.io/github/tag/portiny/doctrine.svg?style=flat-square)](https://packagist.org/packages/portiny/doctrine)
+
+Lightweight Doctrine integration extension for Nette Framework.
+
+
 ## [GraphQL](https://github.com/portiny/graphql)
 
 [![Build Status](https://img.shields.io/travis/portiny/graphql.svg?style=flat-square)](https://travis-ci.org/portiny/graphql)
