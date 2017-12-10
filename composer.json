@@ -4,6 +4,7 @@
 	"license": ["MIT"],
 	"require": {
 		"php": "~7.1",
+		"doctrine/orm": "^2.5",
 		"nette/bootstrap": "^2.4",
 		"nette/di": "^2.4",
 		"nette/http": "^2.4",
@@ -21,12 +22,14 @@
 	"autoload": {
 		"psr-4": {
 			"Portiny\\Console\\": "packages/console/src",
+			"Portiny\\Doctrine\\": "packages/doctrine/src",
 			"Portiny\\GraphQL\\": "packages/graphql/src"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
 			"Portiny\\Console\\Tests\\": "packages/console/tests",
+			"Portiny\\Doctrine\\Tests\\": "packages/doctrine/tests",
 			"Portiny\\GraphQL\\Tests\\": "packages/graphql/tests"
 		}
 	},
