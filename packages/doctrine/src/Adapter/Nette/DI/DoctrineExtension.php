@@ -8,10 +8,22 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Tools\Console\Command\ImportCommand;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand;
+use Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand;
+use Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand;
+use Doctrine\ORM\Tools\Console\Command\GenerateEntitiesCommand;
+use Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
+use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ContainerBuilder;
@@ -93,6 +105,32 @@ class DoctrineExtension extends CompilerExtension
 		if ($this->hasIBarPanelInterface()) {
 			$builder->addDefinition($this->prefix($name . '.diagnosticsPanel'))
 				->setType(self::DOCTRINE_SQL_PANEL);
+		}
+
+		// import Doctrine commands into Portiny/Console
+		if($this->hasPortinyConsole()){
+			$commands = [
+				ConvertMappingCommand::class,
+				CreateCommand::class,
+				DropCommand::class,
+				GenerateEntitiesCommand::class,
+				GenerateProxiesCommand::class,
+				ImportCommand::class,
+				MetadataCommand::class,
+				QueryCommand::class,
+				ResultCommand::class,
+				UpdateCommand::class,
+				ValidateSchemaCommand::class,
+			];
+			foreach ($commands as $index => $command) {
+				$builder->addDefinition($name . '.command.' . $index)
+					->setType($command);
+			}
+
+			if ($helperSets = $builder->findByType('\Symfony\Component\Console\Helper\HelperSet')) {
+				$helperSet = reset($helperSets);
+				$helperSet->addSetup('set', [new Statement(EntityManagerHelper::class), 'em']);
+			}
 		}
 	}
 
@@ -199,6 +237,11 @@ class DoctrineExtension extends CompilerExtension
 	private function hasIBarPanelInterface(): bool
 	{
 		return interface_exists(IBarPanel::class);
+	}
+
+	private function hasPortinyConsole(): bool
+	{
+		return class_exists('\Portiny\Console\Adapter\Nette\DI\ConsoleExtension');
 	}
 
 	private function hasEventManager(ContainerBuilder $containerBuilder): bool
