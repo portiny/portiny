@@ -7,7 +7,7 @@ namespace Portiny\Doctrine\Contract\Provider;
 interface EntitySourceProviderInterface
 {
 	/**
-	 * eg. ['App\Entity' => __DIR__ . '/../Entity']
+	 * eg. [__DIR__ . '/../Entity']
 	 * @return array
 	 */
 	public function getEntitySource(): array;
