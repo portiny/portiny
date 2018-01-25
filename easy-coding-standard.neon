@@ -32,6 +32,7 @@ parameters:
 		- Symplify\CodingStandard\Sniffs\Property\DynamicPropertySniff
 		- SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff
 		- Symplify\CodingStandard\Sniffs\Architecture\ExplicitExceptionSniff
+		- Symplify\CodingStandard\Sniffs\Naming\TraitNameSniff
 
 	skip:
 		Symplify\CodingStandard\Fixer\Solid\FinalInterfaceFixer:

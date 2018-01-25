@@ -27,10 +27,7 @@ final class Helper
 		$sql = preg_replace('#([ \t]*\r?\n){2,}#', "\n", $sql);
 		// syntax highlight
 		$sql = htmlspecialchars($sql, ENT_IGNORE, 'UTF-8');
-		$sql = preg_replace_callback("#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])(${keywords1})(?=[\\s,)])|'
-			. '(?<=[\\s,(=])(${keywords2})(?=[\\s,)=])#is", function (
-			$matches
-		) {
+		$closure = function ($matches) {
 			if (! empty($matches[1])) { // comment
 				return '<em style="color:gray">' . $matches[1] . '</em>';
 			} elseif (! empty($matches[2])) { // error
@@ -40,7 +37,9 @@ final class Helper
 			} elseif (! empty($matches[4])) { // other keywords
 				return '<strong style="color:green">' . $matches[4] . '</strong>';
 			}
-		}, $sql);
+		};
+		$sql = preg_replace_callback("#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])(${keywords1})(?=[\\s,)])|'
+			. '(?<=[\\s,(=])(${keywords2})(?=[\\s,)=])#is", $closure, $sql);
 
 		// parameters
 		$sql = preg_replace_callback('#\?#', function () use ($params, $connection) {
