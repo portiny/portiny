@@ -7,6 +7,7 @@ namespace Portiny\Doctrine\Adapter\Nette\DI;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\EventManager;
+use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Tools\Console\Command\ImportCommand;
 use Doctrine\ORM\Configuration;
@@ -167,17 +168,9 @@ class DoctrineExtension extends CompilerExtension
 				->addSetup('addResolveTargetEntity', [$source, $target, []]);
 		}
 
-		if ($this->hasEventManager($builder)) {
-			$builder->getDefinition($builder->getByType(EventManager::class))
-				->addSetup('addEventListener', [Events::loadClassMetadata, '@' . $name . '.resolver']);
-		} else {
-			$builder->addDefinition($name . '.eventManager')
-				->setType(EventManager::class)
-				->addSetup('addEventListener', [Events::loadClassMetadata, '@' . $name . '.resolver']);
-		}
-
 		$this->processDbalTypes($name, $config['dbal']['types']);
 		$this->processDbalTypeOverrides($name, $config['dbal']['type_overrides']);
+		$this->processEventSubscribers($name);
 	}
 
 	/**
@@ -270,6 +263,25 @@ class DoctrineExtension extends CompilerExtension
 
 		foreach ($types as $type => $className) {
 			$entityManagerDefinition->addSetup('Doctrine\DBAL\Types\Type::overrideType(?, ?);', [$type, $className]);
+		}
+	}
+
+
+	private function processEventSubscribers(string $name)
+	{
+		$builder = $this->getContainerBuilder();
+
+		if ($this->hasEventManager($builder)) {
+			$eventManagerDefinition = $builder->getDefinition($builder->getByType(EventManager::class))
+				->addSetup('addEventListener', [Events::loadClassMetadata, '@' . $name . '.resolver']);
+		} else {
+			$eventManagerDefinition = $builder->addDefinition($name . '.eventManager')
+				->setType(EventManager::class)
+				->addSetup('addEventListener', [Events::loadClassMetadata, '@' . $name . '.resolver']);
+		}
+
+		foreach (array_keys($builder->findByType(EventSubscriber::class)) as $serviceName) {
+			$eventManagerDefinition->addSetup('addEventSubscriber', ['@' . $serviceName]);
 		}
 	}
 }
