@@ -32,9 +32,11 @@ use Nette\DI\Statement;
 use Nette\PhpGenerator\ClassType;
 use Nette\Utils\AssertionException;
 use Nette\Utils\Validators;
+use Portiny\Console\Adapter\Nette\DI\ConsoleExtension;
 use Portiny\Doctrine\Adapter\Nette\Tracy\DoctrineSQLPanel;
 use Portiny\Doctrine\Contract\Provider\ClassMappingProviderInterface;
 use Portiny\Doctrine\Contract\Provider\EntitySourceProviderInterface;
+use Symfony\Component\Console\Helper\HelperSet;
 use Tracy\IBarPanel;
 
 class DoctrineExtension extends CompilerExtension
@@ -109,7 +111,7 @@ class DoctrineExtension extends CompilerExtension
 		}
 
 		// import Doctrine commands into Portiny/Console
-		if($this->hasPortinyConsole()){
+		if ($this->hasPortinyConsole()) {
 			$commands = [
 				ConvertMappingCommand::class,
 				CreateCommand::class,
@@ -128,7 +130,8 @@ class DoctrineExtension extends CompilerExtension
 					->setType($command);
 			}
 
-			if ($helperSets = $builder->findByType('\Symfony\Component\Console\Helper\HelperSet')) {
+			$helperSets = $builder->findByType(HelperSet::class);
+			if ($helperSets) {
 				$helperSet = reset($helperSets);
 				$helperSet->addSetup('set', [new Statement(EntityManagerHelper::class), 'em']);
 			}
@@ -234,7 +237,7 @@ class DoctrineExtension extends CompilerExtension
 
 	private function hasPortinyConsole(): bool
 	{
-		return class_exists('\Portiny\Console\Adapter\Nette\DI\ConsoleExtension');
+		return class_exists(ConsoleExtension::class);
 	}
 
 	private function hasEventManager(ContainerBuilder $containerBuilder): bool
@@ -266,8 +269,7 @@ class DoctrineExtension extends CompilerExtension
 		}
 	}
 
-
-	private function processEventSubscribers(string $name)
+	private function processEventSubscribers(string $name): void
 	{
 		$builder = $this->getContainerBuilder();
 

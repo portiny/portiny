@@ -1,15 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Portiny\Doctrine\Behaviour;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Adds support for PostgreSQL strategy of generating id.
- */
 trait Identifier
 {
-
 	/**
 	 * @ORM\Id
 	 * @ORM\Column(type="integer")
@@ -18,6 +14,10 @@ trait Identifier
 	 */
 	private $id;
 
+	public function __clone()
+	{
+		$this->id = NULL;
+	}
 
 	/**
 	 * @return int
@@ -26,11 +26,4 @@ trait Identifier
 	{
 		return $this->id;
 	}
-
-
-	public function __clone()
-	{
-		$this->id = NULL;
-	}
-
 }
