@@ -87,10 +87,7 @@ class ConsoleExtension extends CompilerExtension
 		$helperSetDefinition = $builder->getDefinitionByType(HelperSet::class);
 
 		foreach ($builder->findByType(HelperInterface::class) as $helperDefinition) {
-			$helperSetDefinition->addSetup(
-				'set',
-				['@' . $helperDefinition->getType(), NULL]
-			);
+			$helperSetDefinition->addSetup('set', ['@' . $helperDefinition->getType(), NULL]);
 		}
 	}
 }

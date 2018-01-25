@@ -41,7 +41,7 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 	{
 		$fields = [];
 		foreach ($this->getFields() as $field) {
-			if (is_array($allowedMutations) && ! in_array(get_class($field), $allowedMutations)) {
+			if (is_array($allowedMutations) && ! in_array(get_class($field), $allowedMutations, true)) {
 				continue;
 			}
 

@@ -31,6 +31,7 @@ parameters:
 		- Symplify\CodingStandard\Sniffs\DependencyInjection\NoClassInstantiationSniff
 		- Symplify\CodingStandard\Sniffs\Property\DynamicPropertySniff
 		- SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff
+		- Symplify\CodingStandard\Sniffs\Architecture\ExplicitExceptionSniff
 
 	skip:
 		Symplify\CodingStandard\Fixer\Solid\FinalInterfaceFixer:

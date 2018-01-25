@@ -80,9 +80,7 @@ class DoctrineExtension extends CompilerExtension
 
 		$builder->addDefinition($name . '.config')
 			->setType(Configuration::class)
-			->addSetup(
-				new Statement('setFilterSchemaAssetsExpression', [$config['dbal']['schema_filter']])
-			);
+			->addSetup(new Statement('setFilterSchemaAssetsExpression', [$config['dbal']['schema_filter']]));
 
 		$builder->addDefinition($name . '.connection')
 			->setType(Connection::class)

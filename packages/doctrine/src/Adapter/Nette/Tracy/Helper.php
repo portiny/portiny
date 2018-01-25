@@ -28,7 +28,9 @@ final class Helper
 		// syntax highlight
 		$sql = htmlspecialchars($sql, ENT_IGNORE, 'UTF-8');
 		$sql = preg_replace_callback("#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])(${keywords1})(?=[\\s,)])|'
-			. '(?<=[\\s,(=])(${keywords2})(?=[\\s,)=])#is", function ($matches) {
+			. '(?<=[\\s,(=])(${keywords2})(?=[\\s,)=])#is", function (
+			$matches
+		) {
 			if (! empty($matches[1])) { // comment
 				return '<em style="color:gray">' . $matches[1] . '</em>';
 			} elseif (! empty($matches[2])) { // error

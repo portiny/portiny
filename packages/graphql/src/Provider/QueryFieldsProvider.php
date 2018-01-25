@@ -41,7 +41,7 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 	{
 		$fields = [];
 		foreach ($this->getFields() as $field) {
-			if (is_array($allowedQueries) && ! in_array(get_class($field), $allowedQueries)) {
+			if (is_array($allowedQueries) && ! in_array(get_class($field), $allowedQueries, true)) {
 				continue;
 			}
 
