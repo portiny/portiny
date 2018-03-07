@@ -10,6 +10,13 @@ use Doctrine\Common\EventManager;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Tools\Console\Command\ImportCommand;
+use Doctrine\ORM\Cache\CacheConfiguration;
+use Doctrine\ORM\Cache\CacheFactory;
+use Doctrine\ORM\Cache\DefaultCacheFactory;
+use Doctrine\ORM\Cache\Logging\CacheLogger;
+use Doctrine\ORM\Cache\Logging\CacheLoggerChain;
+use Doctrine\ORM\Cache\Logging\StatisticsCacheLogger;
+use Doctrine\ORM\Cache\RegionsConfiguration;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Events;
@@ -34,6 +41,7 @@ use Nette\Utils\AssertionException;
 use Nette\Utils\Validators;
 use Portiny\Console\Adapter\Nette\DI\ConsoleExtension;
 use Portiny\Doctrine\Adapter\Nette\Tracy\DoctrineSQLPanel;
+use Portiny\Doctrine\Cache\DefaultCache;
 use Portiny\Doctrine\Contract\Provider\ClassMappingProviderInterface;
 use Portiny\Doctrine\Contract\Provider\EntitySourceProviderInterface;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -62,6 +70,22 @@ class DoctrineExtension extends CompilerExtension
 		'targetEntityMappings' => [],
 		'metadata' => [],
 		'functions' => [],
+		// caches
+		'metadataCache' => 'default',
+		'queryCache' => 'default',
+		'resultCache' => 'default',
+		'hydrationCache' => 'default',
+		'secondLevelCache' => [
+			'enabled' => FALSE,
+			'factoryClass' => DefaultCacheFactory::class,
+			'driver' => 'default',
+			'regions' => [
+				'defaultLifetime' => 3600,
+				'defaultLockLifetime' => 60,
+			],
+			'fileLockRegionDirectory' => '%tempDir%/cache/Doctrine.Cache.Locks',
+			'logging' => '%debugMode%',
+		],
 	];
 
 	private $entitySources = [];
@@ -80,7 +104,13 @@ class DoctrineExtension extends CompilerExtension
 
 		$builder->addDefinition($name . '.config')
 			->setType(Configuration::class)
-			->addSetup(new Statement('setFilterSchemaAssetsExpression', [$config['dbal']['schema_filter']]));
+			->addSetup('setFilterSchemaAssetsExpression', [$config['dbal']['schema_filter']])
+			->addSetup('setMetadataCacheImpl', [$this->getCache($name . '.metadata', $builder, $config['metadataCache'])])
+			->addSetup('setQueryCacheImpl', [$this->getCache($name . '.query', $builder, $config['queryCache'])])
+			->addSetup('setResultCacheImpl', [$this->getCache($name . '.ormResult', $builder, $config['resultCache'])])
+			->addSetup('setHydrationCacheImpl', [$this->getCache($name . '.hydration', $builder, $config['hydrationCache'])]);
+
+		$this->processSecondLevelCache($name, $config['secondLevelCache']);
 
 		$builder->addDefinition($name . '.connection')
 			->setType(Connection::class)
@@ -145,7 +175,7 @@ class DoctrineExtension extends CompilerExtension
 		$name = $config['prefix'];
 
 		$builder = $this->getContainerBuilder();
-		$cache = $this->getCache($name, $builder);
+		$cache = $this->getCache($name, $builder, 'default');
 
 		$configDefinition = $builder->getDefinition($name . '.config')
 			->setFactory(
@@ -185,6 +215,30 @@ class DoctrineExtension extends CompilerExtension
 		}
 	}
 
+	private function getCache(string $prefix, ContainerBuilder $containerBuilder, string $cacheType): string
+	{
+		$cacheServiceName = $containerBuilder->getByType(Cache::class);
+		if ($cacheServiceName !== NULL && strlen($cacheServiceName) > 0) {
+			return '@' . $cacheServiceName;
+		}
+
+		$cacheClass = ArrayCache::class;
+		if ($cacheType) {
+			switch ($cacheType) {
+				case 'default':
+				default:
+					$cacheClass = DefaultCache::class;
+					break;
+			}
+
+		}
+
+		$containerBuilder->addDefinition($prefix . '.cache')
+			->setType($cacheClass);
+
+		return '@' . $prefix . '.cache';
+	}
+
 	/**
 	 * @throws AssertionException
 	 */
@@ -213,19 +267,6 @@ class DoctrineExtension extends CompilerExtension
 		}
 
 		return $config;
-	}
-
-	private function getCache(string $prefix, ContainerBuilder $containerBuilder): string
-	{
-		$cacheServiceName = $containerBuilder->getByType(Cache::class);
-		if ($cacheServiceName !== NULL && strlen($cacheServiceName) > 0) {
-			return '@' . $cacheServiceName;
-		}
-
-		$containerBuilder->addDefinition($prefix . '.cache')
-			->setType(ArrayCache::class);
-
-		return '@' . $prefix . '.cache';
 	}
 
 	private function hasIBarPanelInterface(): bool
@@ -283,5 +324,50 @@ class DoctrineExtension extends CompilerExtension
 		foreach (array_keys($builder->findByType(EventSubscriber::class)) as $serviceName) {
 			$eventManagerDefinition->addSetup('addEventSubscriber', ['@' . $serviceName]);
 		}
+	}
+
+	protected function processSecondLevelCache($name, array $config)
+	{
+		if ( ! $config['enabled']) {
+			return;
+		}
+
+		$builder = $this->getContainerBuilder();
+
+		$builder->addDefinition($this->prefix($name . '.cacheFactory'))
+			->setClass(CacheFactory::class)
+			->setFactory($config['factoryClass'], [
+				$this->prefix('@' . $name . '.cacheRegionsConfiguration'),
+				$this->getCache($name . '.secondLevel', $builder, $config['driver']),
+			])
+			->setAutowired(FALSE)
+			->addSetup('setFileLockRegionDirectory', [$config['fileLockRegionDirectory']]);
+
+		$builder->addDefinition($this->prefix($name . '.cacheRegionsConfiguration'))
+			->setClass(RegionsConfiguration::class, [
+				$config['regions']['defaultLifetime'],
+				$config['regions']['defaultLockLifetime'],
+			])
+			->setAutowired(FALSE);
+
+		$logger = $builder->addDefinition($this->prefix($name . '.cacheLogger'))
+			->setClass(CacheLogger::class)
+			->setFactory(CacheLoggerChain::class)
+			->setAutowired(FALSE);
+
+		if ($config['logging']) {
+			$logger->addSetup('setLogger', ['statistics', new Statement(StatisticsCacheLogger::class)]);
+		}
+
+		$cacheConfigName = $this->prefix($name . '.ormCacheConfiguration');
+		$builder->addDefinition($cacheConfigName)
+			->setClass(CacheConfiguration::class)
+			->addSetup('setCacheFactory', [$this->prefix('@' . $name . '.cacheFactory')])
+			->addSetup('setCacheLogger', [$this->prefix('@' . $name . '.cacheLogger')])
+			->setAutowired(FALSE);
+
+		$configuration = $builder->getDefinition($this->prefix($name . '.ormConfiguration'));
+		$configuration->addSetup('setSecondLevelCacheEnabled');
+		$configuration->addSetup('setSecondLevelCacheConfiguration', ['@' . $cacheConfigName]);
 	}
 }
