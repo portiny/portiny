@@ -58,10 +58,7 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 	{
 		if (isset($this->fields[$queryField->getName()])) {
 			throw new ExistingQueryFieldException(
-				sprintf(
-					'Query field with name "%s" is already registered.',
-					$queryField->getName()
-				)
+				sprintf('Query field with name "%s" is already registered.', $queryField->getName())
 			);
 		}
 	}

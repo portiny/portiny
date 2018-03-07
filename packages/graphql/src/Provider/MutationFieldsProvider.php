@@ -58,10 +58,7 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 	{
 		if (isset($this->fields[$mutationField->getName()])) {
 			throw new ExistingMutationFieldException(
-				sprintf(
-					'Mutation field with name "%s" is already registered.',
-					$mutationField->getName()
-				)
+				sprintf('Mutation field with name "%s" is already registered.', $mutationField->getName())
 			);
 		}
 	}
