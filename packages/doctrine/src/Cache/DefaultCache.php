@@ -10,11 +10,12 @@ use Nette\Caching\IStorage;
 use Nette\Utils\Strings;
 use ReflectionClass;
 
-
 final class DefaultCache extends CacheProvider
 {
-
-	const CACHE_NS = 'Doctrine';
+	/**
+	 * @var string
+	 */
+	public const CACHE_NS = 'Doctrine';
 
 	/**
 	 * @var Cache
@@ -32,7 +33,6 @@ final class DefaultCache extends CacheProvider
 		$this->debugMode = $debugMode;
 	}
 
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -41,7 +41,6 @@ final class DefaultCache extends CacheProvider
 		$cached = $this->cache->load($id);
 		return $cached !== NULL ? $cached : FALSE;
 	}
-
 
 	/**
 	 * {@inheritdoc}
@@ -52,7 +51,10 @@ final class DefaultCache extends CacheProvider
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @param string $id
+	 * @param string|object $data
+	 * @param int $lifeTime
+	 * @return bool
 	 */
 	protected function doSave($id, $data, $lifeTime = 0)
 	{
@@ -68,7 +70,7 @@ final class DefaultCache extends CacheProvider
 			}
 		}
 
-		if (!empty($data)) {
+		if (! empty($data)) {
 			$m = Strings::match($id, '~(?P<class>[^@$[\].]+)(?:\$(?P<prop>[^@$[\].]+))?\@\[Annot\]~i');
 			if ($m !== NULL && class_exists($m['class'])) {
 				$files[] = self::getClassFilename($m['class']);
@@ -81,13 +83,15 @@ final class DefaultCache extends CacheProvider
 	/**
 	 * @param string $id
 	 * @param mixed $data
-	 * @param array $files
 	 * @param int $lifeTime
 	 * @return bool
 	 */
 	protected function doSaveDependingOnFiles($id, $data, array $files, $lifeTime = 0)
 	{
-		$dependencies = [Cache::TAGS => ['doctrine'], Cache::FILES => $files];
+		$dependencies = [
+			Cache::TAGS => ['doctrine'],
+			Cache::FILES => $files,
+		];
 		if ($lifeTime > 0) {
 			$dependencies[Cache::EXPIRE] = time() + $lifeTime;
 		}
@@ -138,5 +142,4 @@ final class DefaultCache extends CacheProvider
 		$reflection = new ReflectionClass($className);
 		return $reflection->getFileName();
 	}
-
 }

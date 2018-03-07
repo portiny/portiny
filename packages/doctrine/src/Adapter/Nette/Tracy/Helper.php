@@ -38,8 +38,12 @@ final class Helper
 				return '<strong style="color:green">' . $matches[4] . '</strong>';
 			}
 		};
-		$sql = preg_replace_callback("#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])(${keywords1})(?=[\\s,)])|'
-			. '(?<=[\\s,(=])(${keywords2})(?=[\\s,)=])#is", $closure, $sql);
+		$sql = preg_replace_callback(
+			"#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])(${keywords1})(?=[\\s,)])|'
+			. '(?<=[\\s,(=])(${keywords2})(?=[\\s,)=])#is",
+			$closure,
+			$sql
+		);
 
 		// parameters
 		$sql = preg_replace_callback('#\?#', function () use ($params, $connection) {
