@@ -114,18 +114,21 @@ class DoctrineExtension extends CompilerExtension
 				[$this->getCache($name . '.metadata', $builder, $config['metadataCache'])]
 			);
 		}
+
 		if ($config['queryCache'] !== FALSE) {
 			$configurationDefinition->addSetup(
 				'setQueryCacheImpl',
 				[$this->getCache($name . '.query', $builder, $config['queryCache'])]
 			);
 		}
+
 		if ($config['resultCache'] !== FALSE) {
 			$configurationDefinition->addSetup(
 				'setResultCacheImpl',
 				[$this->getCache($name . '.ormResult', $builder, $config['resultCache'])]
 			);
 		}
+
 		if ($config['hydrationCache'] !== FALSE) {
 			$configurationDefinition->addSetup(
 				'setHydrationCacheImpl',
@@ -238,7 +241,9 @@ class DoctrineExtension extends CompilerExtension
 			$initialize->addBody('$this->getByType(\'' . self::DOCTRINE_SQL_PANEL . '\')->bindToBar();');
 		}
 
-		$initialize->addBody('$filterCollection = $this->getByType(\'' . EntityManagerInterface::class . '\')->getFilters();');
+		$initialize->addBody(
+			'$filterCollection = $this->getByType(\'' . EntityManagerInterface::class . '\')->getFilters();'
+		);
 		$builder = $this->getContainerBuilder();
 		foreach ($builder->findByType(SQLFilter::class) as $name => $filterDefinition) {
 			$initialize->addBody('$filterCollection->enable(\'' . $name . '\');');
@@ -400,7 +405,7 @@ class DoctrineExtension extends CompilerExtension
 		}
 	}
 
-	private function processFilters(string $name)
+	private function processFilters(string $name): void
 	{
 		$builder = $this->getContainerBuilder();
 
