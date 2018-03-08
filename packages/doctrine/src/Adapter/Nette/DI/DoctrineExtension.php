@@ -19,8 +19,10 @@ use Doctrine\ORM\Cache\Logging\StatisticsCacheLogger;
 use Doctrine\ORM\Cache\RegionsConfiguration;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\QueryCommand;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\ResultCommand;
@@ -102,19 +104,34 @@ class DoctrineExtension extends CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$name = $config['prefix'];
 
-		$builder->addDefinition($name . '.config')
+		$configurationDefinition = $builder->addDefinition($name . '.config')
 			->setType(Configuration::class)
-			->addSetup('setFilterSchemaAssetsExpression', [$config['dbal']['schema_filter']])
-			->addSetup(
+			->addSetup('setFilterSchemaAssetsExpression', [$config['dbal']['schema_filter']]);
+
+		if ($config['metadataCache'] !== FALSE) {
+			$configurationDefinition->addSetup(
 				'setMetadataCacheImpl',
 				[$this->getCache($name . '.metadata', $builder, $config['metadataCache'])]
-			)
-			->addSetup('setQueryCacheImpl', [$this->getCache($name . '.query', $builder, $config['queryCache'])])
-			->addSetup('setResultCacheImpl', [$this->getCache($name . '.ormResult', $builder, $config['resultCache'])])
-			->addSetup(
+			);
+		}
+		if ($config['queryCache'] !== FALSE) {
+			$configurationDefinition->addSetup(
+				'setQueryCacheImpl',
+				[$this->getCache($name . '.query', $builder, $config['queryCache'])]
+			);
+		}
+		if ($config['resultCache'] !== FALSE) {
+			$configurationDefinition->addSetup(
+				'setResultCacheImpl',
+				[$this->getCache($name . '.ormResult', $builder, $config['resultCache'])]
+			);
+		}
+		if ($config['hydrationCache'] !== FALSE) {
+			$configurationDefinition->addSetup(
 				'setHydrationCacheImpl',
 				[$this->getCache($name . '.hydration', $builder, $config['hydrationCache'])]
 			);
+		}
 
 		$this->processSecondLevelCache($name, $config['secondLevelCache']);
 
@@ -208,6 +225,7 @@ class DoctrineExtension extends CompilerExtension
 		$this->processDbalTypes($name, $config['dbal']['types']);
 		$this->processDbalTypeOverrides($name, $config['dbal']['type_overrides']);
 		$this->processEventSubscribers($name);
+		$this->processFilters($name);
 	}
 
 	/**
@@ -219,6 +237,12 @@ class DoctrineExtension extends CompilerExtension
 		if ($this->hasIBarPanelInterface()) {
 			$initialize->addBody('$this->getByType(\'' . self::DOCTRINE_SQL_PANEL . '\')->bindToBar();');
 		}
+
+		$initialize->addBody('$filterCollection = $this->getByType(\'' . EntityManagerInterface::class . '\')->getFilters();');
+		$builder = $this->getContainerBuilder();
+		foreach ($builder->findByType(SQLFilter::class) as $name => $filterDefinition) {
+			$initialize->addBody('$filterCollection->enable(\'' . $name . '\');');
+		}
 	}
 
 	protected function processSecondLevelCache($name, array $config): void
@@ -229,24 +253,24 @@ class DoctrineExtension extends CompilerExtension
 
 		$builder = $this->getContainerBuilder();
 
+		$cacheService = $this->getCache($name . '.secondLevel', $builder, $config['driver']);
+
 		$builder->addDefinition($this->prefix($name . '.cacheFactory'))
-			->setClass(CacheFactory::class)
+			->setType(CacheFactory::class)
 			->setFactory($config['factoryClass'], [
 				$this->prefix('@' . $name . '.cacheRegionsConfiguration'),
-				$this->getCache($name . '.secondLevel', $builder, $config['driver']),
+				$cacheService,
 			])
-			->setAutowired(FALSE)
 			->addSetup('setFileLockRegionDirectory', [$config['fileLockRegionDirectory']]);
 
 		$builder->addDefinition($this->prefix($name . '.cacheRegionsConfiguration'))
-			->setClass(RegionsConfiguration::class, [
+			->setFactory(RegionsConfiguration::class, [
 				$config['regions']['defaultLifetime'],
 				$config['regions']['defaultLockLifetime'],
-			])
-			->setAutowired(FALSE);
+			]);
 
 		$logger = $builder->addDefinition($this->prefix($name . '.cacheLogger'))
-			->setClass(CacheLogger::class)
+			->setType(CacheLogger::class)
 			->setFactory(CacheLoggerChain::class)
 			->setAutowired(FALSE);
 
@@ -256,12 +280,12 @@ class DoctrineExtension extends CompilerExtension
 
 		$cacheConfigName = $this->prefix($name . '.ormCacheConfiguration');
 		$builder->addDefinition($cacheConfigName)
-			->setClass(CacheConfiguration::class)
+			->setType(CacheConfiguration::class)
 			->addSetup('setCacheFactory', [$this->prefix('@' . $name . '.cacheFactory')])
 			->addSetup('setCacheLogger', [$this->prefix('@' . $name . '.cacheLogger')])
 			->setAutowired(FALSE);
 
-		$configuration = $builder->getDefinition($this->prefix($name . '.ormConfiguration'));
+		$configuration = $builder->getDefinitionByType(Configuration::class);
 		$configuration->addSetup('setSecondLevelCacheEnabled');
 		$configuration->addSetup('setSecondLevelCacheConfiguration', ['@' . $cacheConfigName]);
 	}
@@ -373,6 +397,16 @@ class DoctrineExtension extends CompilerExtension
 
 		foreach (array_keys($builder->findByType(EventSubscriber::class)) as $serviceName) {
 			$eventManagerDefinition->addSetup('addEventSubscriber', ['@' . $serviceName]);
+		}
+	}
+
+	private function processFilters(string $name)
+	{
+		$builder = $this->getContainerBuilder();
+
+		$configurationService = $builder->getDefinitionByType(Configuration::class);
+		foreach ($builder->findByType(SQLFilter::class) as $name => $filterDefinition) {
+			$configurationService->addSetup('addFilter', [$name, $filterDefinition->getType()]);
 		}
 	}
 }

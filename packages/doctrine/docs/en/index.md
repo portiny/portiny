@@ -62,6 +62,20 @@ doctrine:
 
 	functions:
 		CAST: App\Doctrine\MySQL\Functions\Cast
+	
+	metadataCache: default
+	queryCache: default
+	resultCache: default
+	hydrationCache: default
+	secondLevelCache:
+		enabled: FALSE
+		factoryClass: DefaultCacheFactory::class
+		driver: default
+		regions:
+			defaultLifetime: 3600
+			defaultLockLifetime: 60
+		fileLockRegionDirectory: %tempDir%/cache/Doctrine.Cache.Locks
+		logging: %debugMode%
 ```
 
 ### Modular entities
