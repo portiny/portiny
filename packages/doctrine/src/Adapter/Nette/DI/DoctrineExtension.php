@@ -163,33 +163,6 @@ class DoctrineExtension extends CompilerExtension
 			$builder->addDefinition($this->prefix($name . '.diagnosticsPanel'))
 				->setType(self::DOCTRINE_SQL_PANEL);
 		}
-
-		// import Doctrine commands into Portiny/Console
-		if ($this->hasPortinyConsole()) {
-			$commands = [
-				ConvertMappingCommand::class,
-				CreateCommand::class,
-				DropCommand::class,
-				GenerateEntitiesCommand::class,
-				GenerateProxiesCommand::class,
-				ImportCommand::class,
-				MetadataCommand::class,
-				QueryCommand::class,
-				ResultCommand::class,
-				UpdateCommand::class,
-				ValidateSchemaCommand::class,
-			];
-			foreach ($commands as $index => $command) {
-				$builder->addDefinition($name . '.command.' . $index)
-					->setType($command);
-			}
-
-			$helperSets = $builder->findByType(HelperSet::class);
-			if ($helperSets) {
-				$helperSet = reset($helperSets);
-				$helperSet->addSetup('set', [new Statement(EntityManagerHelper::class), 'em']);
-			}
-		}
 	}
 
 	/**
@@ -229,6 +202,33 @@ class DoctrineExtension extends CompilerExtension
 		$this->processDbalTypeOverrides($name, $config['dbal']['type_overrides']);
 		$this->processEventSubscribers($name);
 		$this->processFilters($name);
+
+		// import Doctrine commands into Portiny/Console
+		if ($this->hasPortinyConsole()) {
+			$commands = [
+				ConvertMappingCommand::class,
+				CreateCommand::class,
+				DropCommand::class,
+				GenerateEntitiesCommand::class,
+				GenerateProxiesCommand::class,
+				ImportCommand::class,
+				MetadataCommand::class,
+				QueryCommand::class,
+				ResultCommand::class,
+				UpdateCommand::class,
+				ValidateSchemaCommand::class,
+			];
+			foreach ($commands as $index => $command) {
+				$builder->addDefinition($name . '.command.' . $index)
+					->setType($command);
+			}
+
+			$helperSets = $builder->findByType(HelperSet::class);
+			if ($helperSets) {
+				$helperSet = reset($helperSets);
+				$helperSet->addSetup('set', [new Statement(EntityManagerHelper::class), 'em']);
+			}
+		}
 	}
 
 	/**
