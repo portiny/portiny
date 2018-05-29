@@ -6,7 +6,7 @@
 [![Downloads](https://img.shields.io/packagist/dt/portiny/doctrine.svg?style=flat-square)](https://packagist.org/packages/portiny/doctrine)
 [![Latest stable](https://img.shields.io/github/tag/portiny/doctrine.svg?style=flat-square)](https://packagist.org/packages/portiny/doctrine)
 
-Lightweight Doctrine integration extension for Nette Framework.
+Lightweight [Doctrine](https://github.com/doctrine/doctrine2) integration extension for Nette Framework.
 
 
 ## Installation

@@ -1,7 +1,7 @@
 {
 	"name": "portiny/elasticsearch",
 	"description": "Lightweight Ruflin/Elastica integration extension for Nette framework.",
-	"keywords": ["nette", "portiny", "elasticsearch", "elastica"],
+	"keywords": ["php", "nette", "portiny", "elasticsearch", "elastica"],
 	"license": ["MIT"],
 	"authors": [
 		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz" }

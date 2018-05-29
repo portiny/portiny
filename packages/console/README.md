@@ -6,7 +6,7 @@
 [![Downloads](https://img.shields.io/packagist/dt/portiny/console.svg?style=flat-square)](https://packagist.org/packages/portiny/console)
 [![Latest stable](https://img.shields.io/github/tag/portiny/console.svg?style=flat-square)](https://packagist.org/packages/portiny/console)
 
-Lightweight Symfony/Console integration extension for Nette Framework.
+Lightweight [Symfony/Console](https://symfony.com/doc/current/components/console.html) integration extension for Nette Framework.
 
 
 ## Installation

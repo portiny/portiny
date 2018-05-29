@@ -6,7 +6,7 @@
 [![Downloads](https://img.shields.io/packagist/dt/portiny/graphql.svg?style=flat-square)](https://packagist.org/packages/portiny/graphql)
 [![Latest stable](https://img.shields.io/github/tag/portiny/graphql.svg?style=flat-square)](https://packagist.org/packages/portiny/graphql)
 
-Lightweight GraphQL integration extension for Nette Framework.
+Lightweight [GraphQL](https://github.com/webonyx/graphql-php) integration extension for Nette Framework.
 
 
 ## Installation

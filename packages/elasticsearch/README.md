@@ -6,7 +6,7 @@
 [![Downloads](https://img.shields.io/packagist/dt/portiny/elasticsearch.svg?style=flat-square)](https://packagist.org/packages/portiny/elasticsearch)
 [![Latest stable](https://img.shields.io/github/tag/portiny/elasticsearch.svg?style=flat-square)](https://packagist.org/packages/portiny/elasticsearch)
 
-Lightweight Ruflin/Elastica integration extension for Nette Framework.
+Lightweight [Ruflin/Elastica](https://github.com/ruflin/Elastica) integration extension for Nette Framework.
 
 
 ## Installation

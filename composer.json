@@ -1,7 +1,7 @@
 {
 	"name": "portiny/portiny",
 	"description": "Repository to maintain all Portiny packages",
-	"keywords": ["nette", "portiny", "symfony", "console", "doctrine", "elasticsearch", "graphql"],
+	"keywords": ["php", "nette", "portiny", "symfony", "console", "doctrine", "elasticsearch", "graphql"],
 	"license": ["MIT"],
 	"authors": [
 		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
