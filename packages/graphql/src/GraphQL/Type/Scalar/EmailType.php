@@ -42,7 +42,7 @@ final class EmailType extends ScalarType
 		}
 
 		if (! filter_var($valueNode->value, FILTER_VALIDATE_EMAIL)) {
-			throw new Error('Not a valid email', [$valueNode]);
+			throw new Error('Not a valid email: ' . Utils::printSafe($valueNode->value), [$valueNode]);
 		}
 
 		return $valueNode->value;
