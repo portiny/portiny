@@ -25,7 +25,7 @@ class HttpRequestFactory extends RequestFactory
 
 	public function createHttpRequest(): HttpRequest
 	{
-		if ($this->urlScript === NULL || php_sapi_name() !== 'cli') {
+		if ($this->urlScript === NULL || PHP_SAPI !== 'cli') {
 			return parent::createHttpRequest();
 		}
 

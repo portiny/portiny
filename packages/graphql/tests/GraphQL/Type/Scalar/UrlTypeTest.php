@@ -26,7 +26,7 @@ final class UrlTypeTest extends TestCase
 
 	/**
 	 * @expectedException UnexpectedValueException
-	 * @expectedExceptionMessage Cannot represent value as URL: "test"
+	 * @expectedExceptionMessage Cannot represent value as URL: test
 	 */
 	public function testParseValueNotValidUrl(): void
 	{

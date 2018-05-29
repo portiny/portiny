@@ -59,7 +59,7 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 
 	public function testGetPanel(): void
 	{
-		$this->assertEmpty($this->doctrineSQLPanel->getPanel());
+		$this->assertContains('<h2>Queries</h2>', $this->doctrineSQLPanel->getPanel());
 
 		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', NULL, NULL);
 		$this->doctrineSQLPanel->stopQuery();

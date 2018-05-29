@@ -8,7 +8,6 @@ interface ClassMappingProviderInterface
 {
 	/**
 	 * eg. ['App/Contract/Entity/PersonInterface' => 'App/Entity/Person']
-	 * @return array
 	 */
 	public function getClassMapping(): array;
 }

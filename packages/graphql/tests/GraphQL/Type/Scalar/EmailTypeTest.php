@@ -26,7 +26,7 @@ final class EmailTypeTest extends TestCase
 
 	/**
 	 * @expectedException UnexpectedValueException
-	 * @expectedExceptionMessage Cannot represent value as email: "test"
+	 * @expectedExceptionMessage Cannot represent value as email: test
 	 */
 	public function testParseValueNotValidEmail(): void
 	{

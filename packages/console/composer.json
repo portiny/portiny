@@ -1,7 +1,11 @@
 {
 	"name": "portiny/console",
 	"description": "Lightweight Symfony/Console integration extension for Nette framework.",
+	"keywords": ["nette", "portiny", "symfony", "console"],
 	"license": ["MIT"],
+	"authors": [
+		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
+	],
 	"require": {
 		"php": "~7.1",
 		"nette/bootstrap": "^2.4",
@@ -10,7 +14,7 @@
 		"symfony/console": "^4.0"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^6.5",
+		"phpunit/phpunit": "^7.1",
 		"tracy/tracy": "^2.4"
 	},
 	"autoload": {

@@ -8,9 +8,6 @@ use GraphQL\Type\Definition\Type;
 
 interface QueryFieldInterface
 {
-	/**
-	 * @return string
-	 */
 	public function getName(): string;
 
 	public function getType(): Type;
@@ -20,8 +17,6 @@ interface QueryFieldInterface
 	public function getArgs(): array;
 
 	/**
-	 * @param array $root
-	 * @param array $args
 	 * @param mixed|null $context
 	 * @return mixed
 	 */
