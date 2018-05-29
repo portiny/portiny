@@ -35,7 +35,7 @@ final class UrlType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public function parseLiteral($valueNode, array $variables = null)
+	public function parseLiteral($valueNode, ?array $variables = null)
 	{
 		if (! $valueNode instanceof StringValueNode) {
 			throw new Error('Can only parse strings got: ' . $valueNode->kind, [$valueNode]);
