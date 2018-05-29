@@ -146,11 +146,7 @@ class DoctrineExtension extends CompilerExtension
 			->setType(EntityManager::class)
 			->setFactory(
 				'\Doctrine\ORM\EntityManager::create',
-				[
-					$config['connection'],
-					'@' . $name . '.config',
-					'@Doctrine\Common\EventManager',
-				]
+				[$config['connection'], '@' . $name . '.config', '@Doctrine\Common\EventManager']
 			);
 
 		$builder->addDefinition($name . '.namingStrategy')
@@ -179,13 +175,7 @@ class DoctrineExtension extends CompilerExtension
 		$configDefinition = $builder->getDefinition($name . '.config')
 			->setFactory(
 				'\Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration',
-				[
-					array_values($this->entitySources),
-					$config['debug'],
-					$config['proxyDir'],
-					$cache,
-					FALSE,
-				]
+				[array_values($this->entitySources), $config['debug'], $config['proxyDir'], $cache, FALSE]
 			)
 			->addSetup('setNamingStrategy', ['@' . $name . '.namingStrategy']);
 

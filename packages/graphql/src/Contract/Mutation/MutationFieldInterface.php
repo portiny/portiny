@@ -17,8 +17,6 @@ interface MutationFieldInterface
 	public function getArgs(): array;
 
 	/**
-	 * @param array $root
-	 * @param array $args
 	 * @param mixed|null $context
 	 * @return mixed
 	 */

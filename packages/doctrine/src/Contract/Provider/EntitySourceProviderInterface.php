@@ -8,7 +8,6 @@ interface EntitySourceProviderInterface
 {
 	/**
 	 * eg. [__DIR__ . '/../Entity']
-	 * @return array
 	 */
 	public function getEntitySource(): array;
 }

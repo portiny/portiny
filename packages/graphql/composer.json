@@ -16,7 +16,7 @@
 		"webonyx/graphql-php": "^0.12"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^6.5",
+		"phpunit/phpunit": "^7.1",
 		"tracy/tracy": "^2.4"
 	},
 	"autoload": {

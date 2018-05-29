@@ -168,7 +168,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		$s = '';
 
 		if ($this->sortQueries) {
-			$this->sortQueries($this->queries, self::DATA_INDEX_TIME);
+			$this->queries = $this->sortQueries($this->queries, self::DATA_INDEX_TIME);
 		}
 
 		foreach ($this->queries as $query) {
@@ -216,7 +216,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 
 	private function isTracyEnabled(): bool
 	{
-		return php_sapi_name() !== 'cli' && Debugger::isEnabled() && ! Debugger::$productionMode;
+		return PHP_SAPI !== 'cli' && Debugger::isEnabled() && ! Debugger::$productionMode;
 	}
 
 	private function processQuery(array $query): string
@@ -307,7 +307,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			</table>';
 	}
 
-	private function sortQueries(array &$queries, int $key): void
+	private function sortQueries(array $queries, int $key): array
 	{
 		uasort(
 			$queries,
@@ -319,5 +319,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 				return ($a[$key] > $b[$key]) ? -1 : 1;
 			}
 		);
+
+		return $queries;
 	}
 }
