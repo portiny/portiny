@@ -41,53 +41,53 @@ use Portiny\GraphQL\GraphQL\Type\Types;
 final class SimpleQueryField implements QueryFieldInterface
 {
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getName(): string
-	{
-		return 'simple';
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function getName(): string
+    {
+        return 'simple';
+    }
 
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getType(): Type
-	{
-		return Type::string();
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function getType(): Type
+    {
+        return Type::string();
+    }
 
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getDescription(): string
-	{
-		return 'Some description for simple query.';
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function getDescription(): string
+    {
+        return 'Some description for simple query.';
+    }
 
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getArgs(): array
-	{
-		return [
-			'email' => ['type' => Types::get(EmailType::class)],
-			'password' => ['type' => Type::string()]
-		];
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function getArgs(): array
+    {
+        return [
+            'email' => ['type' => Types::get(EmailType::class)],
+            'password' => ['type' => Type::string()]
+        ];
+    }
 
 
-	/**
-    	 * {@inheritdoc}
-    	 */
-	public function resolve(array $root, array $args, $context = NULL)
-	{
-		// some logic for resolving query
-		return 'resolved';
-	}
+    /**
+         * {@inheritdoc}
+         */
+    public function resolve(array $root, array $args, $context = NULL)
+    {
+        // some logic for resolving query
+        return 'resolved';
+    }
 
 }
 
@@ -118,24 +118,24 @@ use Portiny\GraphQL\GraphQL\RequestProcessor;
 class GraphQLPresenter extends Presenter
 {
 
-	/**
-	 * @var RequestProcessor
-	 */
-	private $requestProcessor;
+    /**
+     * @var RequestProcessor
+     */
+    private $requestProcessor;
 
 
-	public function __construct(RequestProcessor $requestProcessor) 
-	{
-		$this->requestProcessor = $requestProcessor;
-	}
+    public function __construct(RequestProcessor $requestProcessor) 
+    {
+        $this->requestProcessor = $requestProcessor;
+    }
 
 
-	public function actionDefault()
-	{
-		$this->sendJson(
-			$this->requestProcessor->process()
-		);
-	}
+    public function actionDefault()
+    {
+        $this->sendJson(
+            $this->requestProcessor->process()
+        );
+    }
 
 }
 ```

@@ -35,16 +35,16 @@ final class UrlType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public function parseLiteral($ast)
+	public function parseLiteral($valueNode, array $variables = null)
 	{
-		if (! $ast instanceof StringValueNode) {
-			throw new Error('Can only parse strings got: ' . $ast->kind, [$ast]);
+		if (! $valueNode instanceof StringValueNode) {
+			throw new Error('Can only parse strings got: ' . $valueNode->kind, [$valueNode]);
 		}
 
-		if (! is_string($ast->value) || ! filter_var($ast->value, FILTER_VALIDATE_URL)) {
-			throw new Error('Not a valid URL', [$ast]);
+		if (! is_string($valueNode->value) || ! filter_var($valueNode->value, FILTER_VALIDATE_URL)) {
+			throw new Error('Not a valid URL: ' . Utils::printSafe($valueNode->value), [$valueNode]);
 		}
 
-		return $ast->value;
+		return $valueNode->value;
 	}
 }
