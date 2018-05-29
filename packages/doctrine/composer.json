@@ -1,7 +1,11 @@
 {
 	"name": "portiny/doctrine",
 	"description": "Lightweight Doctrine integration extension for Nette framework.",
+	"keywords": ["nette", "portiny", "doctrine 2", "orm"],
 	"license": ["MIT"],
+	"authors": [
+		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
+	],
 	"require": {
 		"php": "~7.1",
 		"nette/bootstrap": "^2.4",
