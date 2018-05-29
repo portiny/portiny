@@ -60,7 +60,7 @@ class DoctrineExtension extends CompilerExtension
 	 * @var array
 	 */
 	public static $defaults = [
-		'debug' => TRUE,
+		'debug' => '%debugMode%',
 		'dbal' => [
 			'type_overrides' => [],
 			'types' => [],
