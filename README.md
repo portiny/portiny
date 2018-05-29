@@ -29,6 +29,17 @@ Lightweight Symfony/Console integration extension for Nette Framework.
 Lightweight Doctrine integration extension for Nette Framework.
 
 
+## [Elasticsearch](https://github.com/portiny/elasticsearch)
+
+[![Build Status](https://img.shields.io/travis/portiny/elasticsearch.svg?style=flat-square)](https://travis-ci.org/portiny/elasticsearch)
+[![Quality Score](https://img.shields.io/scrutinizer/g/portiny/elasticsearch.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/elasticsearch)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/portiny/elasticsearch.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/elasticsearch)
+[![Downloads](https://img.shields.io/packagist/dt/portiny/elasticsearch.svg?style=flat-square)](https://packagist.org/packages/portiny/elasticsearch)
+[![Latest stable](https://img.shields.io/github/tag/portiny/elasticsearch.svg?style=flat-square)](https://packagist.org/packages/portiny/elasticsearch)
+
+Lightweight Elasticsearch integration extension for Nette Framework.
+
+
 ## [GraphQL](https://github.com/portiny/graphql)
 
 [![Build Status](https://img.shields.io/travis/portiny/graphql.svg?style=flat-square)](https://travis-ci.org/portiny/graphql)

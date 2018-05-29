@@ -1,0 +1,30 @@
+{
+	"name": "portiny/elasticsearch",
+	"description": "Lightweight Ruflin/Elastica integration extension for Nette framework.",
+	"keywords": ["nette", "portiny", "elasticsearch", "elastica"],
+	"license": ["MIT"],
+	"authors": [
+		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz" }
+	],
+	"require": {
+		"php": "~7.1",
+		"nette/bootstrap": "^2.4",
+		"nette/di": "^2.4",
+		"nette/http": "^2.4",
+		"ruflin/elastica": "^6.0"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^7.1",
+		"tracy/tracy": "^2.4"
+	},
+	"autoload": {
+		"psr-4": {
+			"Portiny\\Elasticsearch\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Portiny\\Elasticsearch\\Tests\\": "tests"
+		}
+	}
+}

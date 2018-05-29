@@ -5,6 +5,7 @@ LAST_TAG=$(git tag -l  --sort=committerdate | tail -n1);
 
 git subsplit publish --heads="master" --tags=$LAST_TAG packages/console:git@github.com:portiny/console.git
 git subsplit publish --heads="master" --tags=$LAST_TAG packages/doctrine:git@github.com:portiny/doctrine.git
+git subsplit publish --heads="master" --tags=$LAST_TAG packages/elasticsearch:git@github.com:portiny/elasticsearch.git
 git subsplit publish --heads="master" --tags=$LAST_TAG packages/graphql:git@github.com:portiny/graphql.git
 
 rm -rf .subsplit/

@@ -1,0 +1,51 @@
+imports:
+    - { resource: 'vendor/symplify/easy-coding-standard/config/psr2.yml' }
+    - { resource: 'vendor/symplify/easy-coding-standard/config/php71.yml' }
+    - { resource: 'vendor/symplify/easy-coding-standard/config/clean-code.yml' }
+    - { resource: 'vendor/symplify/easy-coding-standard/config/symplify.yml' }
+    - { resource: 'vendor/symplify/easy-coding-standard/config/common.yml' }
+
+services:
+    # code complexity
+    PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff:
+        absoluteLineLimit: 120
+    PHP_CodeSniffer\Standards\Generic\Sniffs\Metrics\CyclomaticComplexitySniff:
+        absoluteComplexity: 10
+    PHP_CodeSniffer\Standards\Generic\Sniffs\Metrics\NestingLevelSniff:
+        absoluteNestingLevel: 4
+
+    Symplify\CodingStandard\Sniffs\DependencyInjection\NoClassInstantiationSniff:
+        extraAllowedClasses:
+            - Symplify\EasyCodingStandard\Error\Error
+            - Symplify\CodingStandard\FixerTokenWrapper\Naming\Name
+            - Symplify\TokenRunner\*
+            - Symplify\PackageBuilder\Reflection\PrivatesCaller
+
+parameters:
+    indentation: tab
+    exclude_checkers:
+        - PHP_CodeSniffer\Standards\PSR2\Sniffs\ControlStructures\ControlStructureSpacingSniff
+        - PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\LowerCaseConstantSniff
+        - PhpCsFixer\Fixer\Casing\LowercaseConstantsFixer
+        - Symplify\CodingStandard\Sniffs\DependencyInjection\NoClassInstantiationSniff
+        - Symplify\CodingStandard\Sniffs\Property\DynamicPropertySniff
+        - SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff
+        - Symplify\CodingStandard\Sniffs\Architecture\ExplicitExceptionSniff
+        - Symplify\CodingStandard\Sniffs\Naming\TraitNameSniff
+        - Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenStaticFunctionSniff
+        - Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff
+
+    skip:
+        Symplify\CodingStandard\Fixer\Solid\FinalInterfaceFixer:
+            # contains anonymous class
+            - packages/graphql/src/Converter/MutationFieldConverter.php
+            - packages/graphql/tests/Converter/QueryFieldConverterTest.php
+            - packages/graphql/tests/Provider/QueryFieldsProviderTest.php
+            - packages/graphql/tests/Provider/MutationFieldsProviderTest.php
+
+        Symplify\CodingStandard\Fixer\Naming\PropertyNameMatchingTypeFixer:
+            # contains float $totalTime
+            - packages/elasticsearch/src/Adapter/Nette/Tracy/ElasticsearchPanel.php
+
+        Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
+            - packages/doctrine/src/Adapter/Nette/Tracy/Helper.php
