@@ -15,7 +15,7 @@ Enable the extension at your neon config file.
 
 ```yml
 extensions:
-	doctrine: Portiny\Doctrine\Adapter\Nette\DI\DoctrineExtension
+    doctrine: Portiny\Doctrine\Adapter\Nette\DI\DoctrineExtension
 ```
 
 ## Minimal configuration
@@ -24,13 +24,13 @@ This extension can be configured by `doctrine` section. The minimal configuratio
 
 ```yml
 doctrine:
-	connection:
-		driver: pdo_mysql
-		host: localhost
-		port: 3306
-		user: username
-		password: password
-		dbname: database
+    connection:
+        driver: pdo_mysql
+        host: localhost
+        port: 3306
+        user: username
+        password: password
+        dbname: database
 ```
 
 
@@ -40,42 +40,42 @@ Via configuration you can add your own dbal types, schema filters or functions.
 
 ```yml
 doctrine:
-	connection:
-		driver: pdo_mysql
-		host: localhost
-		port: 3306
-		user: username
-		password: password
-		dbname: database
+    connection:
+        driver: pdo_mysql
+        host: localhost
+        port: 3306
+        user: username
+        password: password
+        dbname: database
 
-	debug: false
-	prefix: doctrine.default
-	proxyDir: %tempDir%/proxies
-	sourceDir: %appDir%/Entity
+    debug: false
+    prefix: doctrine.default
+    proxyDir: %tempDir%/proxies
+    sourceDir: %appDir%/Entity
 
-	dbal:
-		types:
-			dateinterval: App\Doctrine\MySQL\Types\DateIntervalType
-		type_overrides:
-			date: App\Doctrine\MySQL\Types\DateTimeImmutableType
-		schema_filter: "~^(?!hidden_)~" # tables and sequences that start with hidden_ are ingored by Doctrine
+    dbal:
+        types:
+            dateinterval: App\Doctrine\MySQL\Types\DateIntervalType
+        type_overrides:
+            date: App\Doctrine\MySQL\Types\DateTimeImmutableType
+        schema_filter: "~^(?!hidden_)~" # tables and sequences that start with hidden_ are ingored by Doctrine
 
-	functions:
-		CAST: App\Doctrine\MySQL\Functions\Cast
-	
-	metadataCache: default
-	queryCache: default
-	resultCache: default
-	hydrationCache: default
-	secondLevelCache:
-		enabled: FALSE
-		factoryClass: DefaultCacheFactory::class
-		driver: default
-		regions:
-			defaultLifetime: 3600
-			defaultLockLifetime: 60
-		fileLockRegionDirectory: %tempDir%/cache/Doctrine.Cache.Locks
-		logging: %debugMode%
+    functions:
+        CAST: App\Doctrine\MySQL\Functions\Cast
+    
+    metadataCache: default
+    queryCache: default
+    resultCache: default
+    hydrationCache: default
+    secondLevelCache:
+        enabled: FALSE
+        factoryClass: DefaultCacheFactory::class
+        driver: default
+        regions:
+            defaultLifetime: 3600
+            defaultLockLifetime: 60
+        fileLockRegionDirectory: %tempDir%/cache/Doctrine.Cache.Locks
+        logging: %debugMode%
 ```
 
 ### Modular entities
@@ -94,15 +94,15 @@ use Portiny\Doctrine\Contract\Provider\EntitySourceProviderInterface;
 
 final class BlogModuleExtension extends CompilerExtension implements EntitySourceProviderInterface
 {
-	// some module configurations ...
+    // some module configurations ...
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getEntitySource(): array
-	{
-		return [__DIR__ . '/../Entity/'];
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function getEntitySource(): array
+    {
+        return [__DIR__ . '/../Entity/'];
+    }
 }
 ```
 
@@ -122,15 +122,15 @@ use Portiny\Doctrine\Contract\Provider\ClassMappingProviderInterface;
 
 final class BlogModuleExtension extends CompilerExtension implements ClassMappingProviderInterface
 {
-	// some module configurations ...
+    // some module configurations ...
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getClassMapping(): array
-	{
-		return ['App\\Contract\\Entity\\BlogInterface' => 'App\\Entity\\Blog'];
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function getClassMapping(): array
+    {
+        return ['App\\Contract\\Entity\\BlogInterface' => 'App\\Entity\\Blog'];
+    }
 }
 ```
 
