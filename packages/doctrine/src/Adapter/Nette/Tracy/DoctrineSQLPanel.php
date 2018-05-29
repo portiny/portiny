@@ -107,7 +107,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getTab()
+	public function getTab(): string
 	{
 		return '<span title="Doctrine 2">'
 			. '<img  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAKT2lDQ1BQaG90b3Nob3A'
@@ -163,7 +163,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getPanel()
+	public function getPanel(): string
 	{
 		$s = '';
 
@@ -175,8 +175,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			$s .= $this->processQuery($query);
 		}
 
-		return empty($this->queries) ? '' :
-			$this->renderStyles() .
+		return $this->renderStyles() .
 			'<h1>Queries: ' . count($this->queries) .
 			($this->totalTime ? ', time: ' . sprintf('%0.3f', $this->totalTime * 1000) . ' ms' : '') .
 			'</h1>
@@ -215,18 +214,12 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		return $this->queries;
 	}
 
-	/**
-	 * @return bool
-	 */
-	private function isTracyEnabled()
+	private function isTracyEnabled(): bool
 	{
 		return php_sapi_name() !== 'cli' && Debugger::isEnabled() && ! Debugger::$productionMode;
 	}
 
-	/**
-	 * @return string
-	 */
-	private function processQuery(array $query)
+	private function processQuery(array $query): string
 	{
 		$s = '<tr>';
 		$s .= '<td>' . sprintf('%0.3f', $query[self::DATA_INDEX_TIME] * 1000);
@@ -248,7 +241,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		return $s;
 	}
 
-	private function renderStyles()
+	private function renderStyles(): string
 	{
 		return '<style>
 			#tracy-debug td.nette-Doctrine2Panel-sql { background: white !important }
@@ -261,7 +254,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			</style>';
 	}
 
-	private function renderPanelCacheStatistics()
+	private function renderPanelCacheStatistics(): string
 	{
 		if (empty($this->entityManager)) {
 			return '';
