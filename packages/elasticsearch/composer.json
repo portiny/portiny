@@ -4,7 +4,7 @@
 	"keywords": ["php", "nette", "portiny", "elasticsearch", "elastica"],
 	"license": ["MIT"],
 	"authors": [
-		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz" }
+		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
 	],
 	"require": {
 		"php": "~7.1",

@@ -1,4 +1,4 @@
-# Console
+# Portiny/Console
 
 [![Build Status](https://img.shields.io/travis/portiny/console.svg?style=flat-square)](https://travis-ci.org/portiny/console)
 [![Quality Score](https://img.shields.io/scrutinizer/g/portiny/console.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/console)

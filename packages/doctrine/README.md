@@ -1,4 +1,4 @@
-# Doctrine
+# Portiny/Doctrine
 
 [![Build Status](https://img.shields.io/travis/portiny/doctrine.svg?style=flat-square)](https://travis-ci.org/portiny/doctrine)
 [![Quality Score](https://img.shields.io/scrutinizer/g/portiny/doctrine.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/doctrine)

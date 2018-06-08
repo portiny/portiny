@@ -18,7 +18,7 @@ extensions:
     elasticsearch: Portiny\Elasticsearch\Adapter\Nette\DI\ElasticsearchExtension
 ```
 
-This extension use default Elasticsearch host and port `(localhost:9200)` configuration. If your Elasticsearch run on a another host or multiple hosts (like cluster) follow next part called *"Simple configuration"*.
+**This extension use default Elasticsearch host and port** `(localhost:9200)` configuration. If your Elasticsearch run on a another host or multiple hosts (like cluster) follow next part called *"Simple configuration"*.
 
 ## Simple configuration
 
@@ -100,4 +100,4 @@ class MyProductService
 }
 ```
 
-More examples and Elastica documentation can be found at [elastica.io](http://elastica.io/) [very outdated but official source :(] or [Ruflin/Elastica](https://github.com/ruflin/Elastica) [official Github project page].
+More examples and Elastica documentation can be found at [elastica.io](http://elastica.io/) (very outdated but official source) or [Ruflin/Elastica](https://github.com/ruflin/Elastica) (official Github project page).

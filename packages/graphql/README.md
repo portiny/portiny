@@ -1,4 +1,4 @@
-# GraphQL
+# Portiny/GraphQL
 
 [![Build Status](https://img.shields.io/travis/portiny/graphql.svg?style=flat-square)](https://travis-ci.org/portiny/graphql)
 [![Quality Score](https://img.shields.io/scrutinizer/g/portiny/graphql.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/graphql)

@@ -1,4 +1,4 @@
-# Elasticsearch
+# Portiny/Elasticsearch
 
 [![Build Status](https://img.shields.io/travis/portiny/elasticsearch.svg?style=flat-square)](https://travis-ci.org/portiny/elasticsearch)
 [![Quality Score](https://img.shields.io/scrutinizer/g/portiny/elasticsearch.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/elasticsearch)
