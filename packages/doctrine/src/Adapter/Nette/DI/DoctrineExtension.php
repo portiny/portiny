@@ -54,12 +54,12 @@ class DoctrineExtension extends CompilerExtension
 	/**
 	 * @var string
 	 */
-	public const DOCTRINE_SQL_PANEL = DoctrineSQLPanel::class;
+	private const DOCTRINE_SQL_PANEL = DoctrineSQLPanel::class;
 
 	/**
 	 * @var array
 	 */
-	public static $defaults = [
+	private static $defaults = [
 		'debug' => '%debugMode%',
 		'dbal' => [
 			'type_overrides' => [],
