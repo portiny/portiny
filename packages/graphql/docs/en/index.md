@@ -118,11 +118,11 @@ use Portiny\GraphQL\GraphQL\RequestProcessor;
 
 class GraphQLPresenter extends Presenter
 {
-	
-	/**
-	* @var RequestParserInterface
-    */
-	private $requestParser;
+
+    /**
+     * @var RequestParserInterface
+     */
+    private $requestParser;
 
     /**
      * @var RequestProcessor
@@ -132,7 +132,7 @@ class GraphQLPresenter extends Presenter
 
     public function __construct(RequestParserInterface $requestParser, RequestProcessor $requestProcessor) 
     {
-    	$this->requestParser = $requestParser;
+        $this->requestParser = $requestParser;
         $this->requestProcessor = $requestProcessor;
     }
 
@@ -176,5 +176,5 @@ extensions:
     graphql: Portiny\GraphQL\Adapter\Nette\DI\GraphQLExtension
     
 graphql:
-	useOwnRequestParser: TRUE
+    useOwnRequestParser: TRUE
 ```
