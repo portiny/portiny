@@ -1,2 +1,1 @@
 services:
-	- Portiny\GraphQL\Http\Request\JsonRequestParser

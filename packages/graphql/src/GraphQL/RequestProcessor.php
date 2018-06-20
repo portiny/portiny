@@ -17,11 +17,6 @@ use Tracy\Debugger;
 final class RequestProcessor
 {
 	/**
-	 * @var RequestParserInterface
-	 */
-	private $requestParser;
-
-	/**
 	 * @var MutationFieldsProviderInterface
 	 */
 	private $mutationFieldsProvider;
@@ -30,11 +25,6 @@ final class RequestProcessor
 	 * @var QueryFieldsProviderInterface
 	 */
 	private $queryFieldsProvider;
-
-	public function __construct(RequestParserInterface $requestParser)
-	{
-		$this->requestParser = $requestParser;
-	}
 
 	public function setMutationFieldsProvider(MutationFieldsProviderInterface $mutationFieldsProvider): void
 	{
@@ -52,6 +42,7 @@ final class RequestProcessor
 	 * @param array|null $allowedMutations
 	 */
 	public function process(
+		RequestParserInterface $requestParser,
 		array $rootValue = [],
 		$context = NULL,
 		?array $allowedQueries = NULL,
@@ -60,10 +51,10 @@ final class RequestProcessor
 		try {
 			$result = GraphQL::executeQuery(
 				$this->createSchema($allowedQueries, $allowedMutations),
-				$this->requestParser->getQuery(),
+				$requestParser->getQuery(),
 				$rootValue,
 				$context,
-				$this->requestParser->getVariables()
+				$requestParser->getVariables()
 			);
 
 			$output = $result->toArray($this->isDebug());

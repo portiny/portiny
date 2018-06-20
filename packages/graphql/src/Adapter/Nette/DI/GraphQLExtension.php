@@ -7,15 +7,24 @@ namespace Portiny\GraphQL\Adapter\Nette\DI;
 use Nette\DI\Compiler;
 use Nette\DI\CompilerExtension;
 use Portiny\GraphQL\Contract\Field\QueryFieldInterface;
+use Portiny\GraphQL\Contract\Http\Request\RequestParserInterface;
 use Portiny\GraphQL\Contract\Mutation\MutationFieldInterface;
 use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
 use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
 use Portiny\GraphQL\GraphQL\RequestProcessor;
+use Portiny\GraphQL\Http\Request\JsonRequestParser;
 use Portiny\GraphQL\Provider\MutationFieldsProvider;
 use Portiny\GraphQL\Provider\QueryFieldsProvider;
 
 final class GraphQLExtension extends CompilerExtension
 {
+	/**
+	 * @var array
+	 */
+	private static $defaults = [
+		'useOwnRequestParser' => FALSE,
+	];
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -68,7 +77,13 @@ final class GraphQLExtension extends CompilerExtension
 
 	private function setupRequestProcessor(): void
 	{
+		$config = $this->getConfig(self::$defaults);
 		$containerBuilder = $this->getContainerBuilder();
+
+		if (! $containerBuilder->findByType(RequestParserInterface::class) && ! $config['useOwnRequestParser']) {
+			$containerBuilder->addDefinition($this->prefix('jsonRequestParser'))
+				->setFactory(JsonRequestParser::class);
+		}
 
 		$containerBuilder->addDefinition($this->prefix('requestProcessor'))
 			->setFactory(RequestProcessor::class)

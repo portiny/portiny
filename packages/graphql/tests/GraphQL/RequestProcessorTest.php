@@ -4,6 +4,7 @@ namespace Portiny\GraphQL\Tests\GraphQL;
 
 use Nette\Http\Request;
 use Nette\Http\UrlScript;
+use Portiny\GraphQL\Contract\Http\Request\RequestParserInterface;
 use Portiny\GraphQL\GraphQL\RequestProcessor;
 use Portiny\GraphQL\Http\Request\JsonRequestParser;
 use Portiny\GraphQL\Provider\MutationFieldsProvider;
@@ -27,8 +28,10 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 		// test query
 		$rawData = '{"query": "query Test($someArg: String) {'
 			. 'someQueryName(someArg: $someArg)}", "variables": {"someArg": "someValue"}}';
-		$output = $this->createRequestFactory($rawData)
-			->process();
+
+		$requestParser = $this->createRequestParser($rawData);
+		$output = $this->createRequestFactory()
+			->process($requestParser);
 
 		$this->assertTrue(is_array($output));
 		$this->assertSame('resolved someValue', $output['data']['someQueryName']);
@@ -36,21 +39,17 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 		// test mutation
 		$rawData = '{"query": "mutation Test($someArg: String) {'
 			. 'someMutationName(someArg: $someArg)}", "variables": {"someArg": "someValue"}}';
-		$output = $this->createRequestFactory($rawData)
-			->process();
+		$requestParser = $this->createRequestParser($rawData);
+
+		$output = $this->createRequestFactory()
+			->process($requestParser);
 
 		$this->assertTrue(is_array($output));
 		$this->assertSame('someValue resolved', $output['data']['someMutationName']);
 	}
 
-	protected function createRequestFactory(string $rawData): RequestProcessor
+	private function createRequestFactory(): RequestProcessor
 	{
-		$url = new UrlScript('https://portiny.org');
-		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () use ($rawData) {
-			return $rawData;
-		});
-		$jsonRequestParser = new JsonRequestParser($httpRequest);
-
 		$queryField = new SomeQueryField();
 		$queryFieldProvider = new QueryFieldsProvider();
 		$queryFieldProvider->addField($queryField);
@@ -59,10 +58,20 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 		$mutationFieldProvider = new MutationFieldsProvider();
 		$mutationFieldProvider->addField($mutationField);
 
-		$requestProcessor = new RequestProcessor($jsonRequestParser);
+		$requestProcessor = new RequestProcessor();
 		$requestProcessor->setQueryFieldsProvider($queryFieldProvider);
 		$requestProcessor->setMutationFieldsProvider($mutationFieldProvider);
 
 		return $requestProcessor;
+	}
+
+	private function createRequestParser(string $rawData): RequestParserInterface
+	{
+		$url = new UrlScript('https://portiny.org');
+		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () use ($rawData) {
+			return $rawData;
+		});
+
+		return new JsonRequestParser($httpRequest);
 	}
 }
