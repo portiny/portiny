@@ -38,8 +38,8 @@ class MutationFieldConverter
 
 			public function __construct(array $data)
 			{
-				$this->name = key($data);
-				$this->data = reset($data);
+				$this->name = (string) key($data);
+				$this->data = (array) reset($data);
 			}
 
 			/**

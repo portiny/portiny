@@ -271,9 +271,9 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			return '';
 		}
 
-		/** @var StatisticsCacheLogger $statistics */
+		/** @var StatisticsCacheLogger|null $statistics */
 		$statistics = $cacheLogger->getLogger('statistics');
-		if (! ($statistics)) {
+		if (! $statistics) {
 			return '';
 		}
 

@@ -37,6 +37,7 @@ use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ContainerBuilder;
+use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\PhpGenerator\ClassType;
 use Nette\Utils\AssertionException;
@@ -404,6 +405,7 @@ class DoctrineExtension extends CompilerExtension
 
 			$helperSets = $containerBuilder->findByType(HelperSet::class);
 			if ($helperSets) {
+				/** @var ServiceDefinition $helperSet */
 				$helperSet = reset($helperSets);
 				$helperSet->addSetup('set', [new Statement(EntityManagerHelper::class), 'em']);
 			}
