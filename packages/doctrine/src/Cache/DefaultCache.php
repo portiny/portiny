@@ -140,6 +140,6 @@ final class DefaultCache extends CacheProvider
 	private static function getClassFilename(string $className): string
 	{
 		$reflection = new ReflectionClass($className);
-		return $reflection->getFileName();
+		return (string) $reflection->getFileName();
 	}
 }
