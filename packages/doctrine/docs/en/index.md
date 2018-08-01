@@ -48,20 +48,24 @@ doctrine:
         password: password
         dbname: database
 
-    debug: false
+    debug: %debugMode%
     prefix: doctrine.default
     proxyDir: %tempDir%/proxies
     sourceDir: %appDir%/Entity
+    
+    defaultRepositoryClassName: \Doctrine\ORM\EntityRepository
+    repositoryFactory: \App\Doctrine\Repository\MyLazyRepositoryFactory
+    namingStrategy: \Doctrine\ORM\Mapping\UnderscoreNamingStrategy::class,
 
     dbal:
         types:
-            dateinterval: App\Doctrine\MySQL\Types\DateIntervalType
+            dateinterval: \App\Doctrine\MySQL\Types\DateIntervalType
         type_overrides:
-            date: App\Doctrine\MySQL\Types\DateTimeImmutableType
+            date: \App\Doctrine\MySQL\Types\DateTimeImmutableType
         schema_filter: "~^(?!hidden_)~" # tables and sequences that start with hidden_ are ingored by Doctrine
 
     functions:
-        CAST: App\Doctrine\MySQL\Functions\Cast
+        CAST: \App\Doctrine\MySQL\Functions\Cast
     
     metadataCache: default
     queryCache: default
@@ -69,7 +73,7 @@ doctrine:
     hydrationCache: default
     secondLevelCache:
         enabled: FALSE
-        factoryClass: DefaultCacheFactory::class
+        factoryClass: \Doctrine\ORM\Cache\DefaultCacheFactory::class
         driver: default
         regions:
             defaultLifetime: 3600

@@ -20,6 +20,7 @@ use Doctrine\ORM\Cache\RegionsConfiguration;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\Query\Filter\SQLFilter;
@@ -70,6 +71,8 @@ class DoctrineExtension extends CompilerExtension
 		'prefix' => 'doctrine.default',
 		'proxyDir' => '%tempDir%/cache/proxies',
 		'sourceDir' => NULL,
+		'defaultRepositoryClassName' => EntityRepository::class,
+		'repositoryFactory' => NULL,
 		'namingStrategy' => UnderscoreNamingStrategy::class,
 		'targetEntityMappings' => [],
 		'metadata' => [],
@@ -108,7 +111,14 @@ class DoctrineExtension extends CompilerExtension
 
 		$configurationDefinition = $builder->addDefinition($name . '.config')
 			->setType(Configuration::class)
-			->addSetup('setFilterSchemaAssetsExpression', [$config['dbal']['schema_filter']]);
+			->addSetup('setFilterSchemaAssetsExpression', [$config['dbal']['schema_filter']])
+			->addSetup('setDefaultRepositoryClassName', [$config['defaultRepositoryClassName']]);
+
+		if ($config['repositoryFactory']) {
+			$builder->addDefinition($name . '.repositoryFactory')
+				->setClass($config['repositoryFactory']);
+			$configurationDefinition->addSetup('setRepositoryFactory', ['@' . $name . '.repositoryFactory']);
+		}
 
 		if ($config['metadataCache'] !== FALSE) {
 			$configurationDefinition->addSetup(
