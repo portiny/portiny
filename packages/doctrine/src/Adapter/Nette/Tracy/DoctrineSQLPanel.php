@@ -265,8 +265,12 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			return '';
 		}
 
-		$cacheLogger = $config->getSecondLevelCacheConfiguration()->getCacheLogger();
+		$cacheConfiguration = $config->getSecondLevelCacheConfiguration();
+		if (! $cacheConfiguration) {
+			return '';
+		}
 
+		$cacheLogger = $cacheConfiguration->getCacheLogger();
 		if (! $cacheLogger instanceof CacheLoggerChain) {
 			return '';
 		}
@@ -278,7 +282,10 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		}
 
 		$cacheDriver = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
-		$driverInformation = get_class($cacheDriver);
+		$driverInformation = '';
+		if ($cacheDriver) {
+			$driverInformation = get_class($cacheDriver);
+		}
 
 		return '<h2>Second Level Cache</h2>
 			<table>

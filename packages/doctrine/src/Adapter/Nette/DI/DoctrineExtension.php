@@ -70,6 +70,7 @@ class DoctrineExtension extends CompilerExtension
 		'prefix' => 'doctrine.default',
 		'proxyDir' => '%tempDir%/cache/proxies',
 		'sourceDir' => NULL,
+		'namingStrategy' => UnderscoreNamingStrategy::class,
 		'targetEntityMappings' => [],
 		'metadata' => [],
 		'functions' => [],
@@ -151,7 +152,7 @@ class DoctrineExtension extends CompilerExtension
 			);
 
 		$builder->addDefinition($name . '.namingStrategy')
-			->setType(UnderscoreNamingStrategy::class);
+			->setType($config['namingStrategy']);
 
 		$builder->addDefinition($name . '.resolver')
 			->setType(ResolveTargetEntityListener::class);
