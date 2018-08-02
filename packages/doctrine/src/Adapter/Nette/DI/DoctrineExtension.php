@@ -71,6 +71,7 @@ class DoctrineExtension extends CompilerExtension
 		'prefix' => 'doctrine.default',
 		'proxyDir' => '%tempDir%/cache/proxies',
 		'sourceDir' => NULL,
+		'entityManagerClassName' => EntityManager::class,
 		'defaultRepositoryClassName' => EntityRepository::class,
 		'repositoryFactory' => NULL,
 		'namingStrategy' => UnderscoreNamingStrategy::class,
@@ -155,9 +156,9 @@ class DoctrineExtension extends CompilerExtension
 			->setFactory('@' . $name . '.entityManager::getConnection');
 
 		$builder->addDefinition($name . '.entityManager')
-			->setType(EntityManager::class)
+			->setType($config['entityManagerClassName'])
 			->setFactory(
-				'\Doctrine\ORM\EntityManager::create',
+				$config['entityManagerClassName'] . '::create',
 				[$config['connection'], '@' . $name . '.config', '@Doctrine\Common\EventManager']
 			);
 
