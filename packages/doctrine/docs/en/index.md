@@ -53,6 +53,7 @@ doctrine:
     proxyDir: %tempDir%/proxies
     sourceDir: %appDir%/Entity
     
+    entityManagerClassName: \Doctrine\ORM\EntityManager
     defaultRepositoryClassName: \Doctrine\ORM\EntityRepository
     repositoryFactory: \App\Doctrine\Repository\MyLazyRepositoryFactory
     namingStrategy: \Doctrine\ORM\Mapping\UnderscoreNamingStrategy::class,
