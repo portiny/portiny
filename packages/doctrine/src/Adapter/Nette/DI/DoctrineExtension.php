@@ -191,7 +191,13 @@ class DoctrineExtension extends CompilerExtension
 		$configDefinition = $builder->getDefinition($name . '.config')
 			->setFactory(
 				'\Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration',
-				[array_values($this->entitySources), $config['debug'], $config['proxyDir'], $cache, FALSE]
+				[
+					array_values($this->entitySources),
+					$config['debug'],
+					$config['proxyDir'],
+					$config['metadataCache'] !== FALSE ? $cache : NULL,
+					FALSE,
+				]
 			)
 			->addSetup('setNamingStrategy', ['@' . $name . '.namingStrategy']);
 
