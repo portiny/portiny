@@ -75,6 +75,7 @@ class DoctrineExtension extends CompilerExtension
 		'defaultRepositoryClassName' => EntityRepository::class,
 		'repositoryFactory' => NULL,
 		'namingStrategy' => UnderscoreNamingStrategy::class,
+		'sqlLogger' => NULL,
 		'targetEntityMappings' => [],
 		'metadata' => [],
 		'functions' => [],
@@ -119,6 +120,11 @@ class DoctrineExtension extends CompilerExtension
 			$builder->addDefinition($name . '.repositoryFactory')
 				->setClass($config['repositoryFactory']);
 			$configurationDefinition->addSetup('setRepositoryFactory', ['@' . $name . '.repositoryFactory']);
+		}
+		if ($config['sqlLogger']) {
+			$builder->addDefinition($name . '.sqlLogger')
+				->setClass($config['sqlLogger']);
+			$configurationDefinition->addSetup('setSQLLogger', ['@' . $name . '.sqlLogger']);
 		}
 
 		if ($config['metadataCache'] !== FALSE) {

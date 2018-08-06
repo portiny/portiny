@@ -56,7 +56,8 @@ doctrine:
     entityManagerClassName: \Doctrine\ORM\EntityManager
     defaultRepositoryClassName: \Doctrine\ORM\EntityRepository
     repositoryFactory: \App\Doctrine\Repository\MyLazyRepositoryFactory
-    namingStrategy: \Doctrine\ORM\Mapping\UnderscoreNamingStrategy::class,
+    namingStrategy: \Doctrine\ORM\Mapping\UnderscoreNamingStrategy
+    sqlLogger: \App\Logger\FileLogger
 
     dbal:
         types:
