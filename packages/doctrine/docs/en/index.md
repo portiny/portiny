@@ -69,19 +69,27 @@ doctrine:
     functions:
         CAST: \App\Doctrine\MySQL\Functions\Cast
     
-    metadataCache: default
-    queryCache: default
-    resultCache: default
-    hydrationCache: default
+    metadataCache: default   # options: FALSE, default (Nette Storage), redis
+    queryCache: default      # options: FALSE, default (Nette Storage), redis
+    resultCache: default     # options: FALSE, default (Nette Storage), redis
+    hydrationCache: default  # options: FALSE, default (Nette Storage), redis
     secondLevelCache:
         enabled: FALSE
+        driver: default      # options: FALSE, default (Nette Storage), redis
         factoryClass: \Doctrine\ORM\Cache\DefaultCacheFactory::class
-        driver: default
         regions:
             defaultLifetime: 3600
             defaultLockLifetime: 60
         fileLockRegionDirectory: %tempDir%/cache/Doctrine.Cache.Locks
         logging: %debugMode%
+    
+    cache:
+        redis: # optional configuration for redis cache
+            host: 127.0.0.1
+            port: 6379
+            timeout: 0
+            reserved: null
+            retryInterval: 5
 ```
 
 ### Modular entities

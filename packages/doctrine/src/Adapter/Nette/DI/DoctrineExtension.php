@@ -6,6 +6,7 @@ namespace Portiny\Doctrine\Adapter\Nette\DI;
 
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\EventManager;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\DBAL\Connection;
@@ -48,6 +49,7 @@ use Portiny\Doctrine\Adapter\Nette\Tracy\DoctrineSQLPanel;
 use Portiny\Doctrine\Cache\DefaultCache;
 use Portiny\Doctrine\Contract\Provider\ClassMappingProviderInterface;
 use Portiny\Doctrine\Contract\Provider\EntitySourceProviderInterface;
+use Redis;
 use Symfony\Component\Console\Helper\HelperSet;
 use Tracy\IBarPanel;
 
@@ -94,6 +96,9 @@ class DoctrineExtension extends CompilerExtension
 			],
 			'fileLockRegionDirectory' => '%tempDir%/cache/Doctrine.Cache.Locks',
 			'logging' => '%debugMode%',
+		],
+		'cache' => [
+			'redis' => [],
 		],
 	];
 
@@ -192,18 +197,11 @@ class DoctrineExtension extends CompilerExtension
 		$name = $config['prefix'];
 
 		$builder = $this->getContainerBuilder();
-		$cache = $this->getCache($name, $builder, 'default');
 
 		$configDefinition = $builder->getDefinition($name . '.config')
 			->setFactory(
 				'\Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration',
-				[
-					array_values($this->entitySources),
-					$config['debug'],
-					$config['proxyDir'],
-					$config['metadataCache'] !== FALSE ? $cache : NULL,
-					FALSE,
-				]
+				[array_values($this->entitySources), $config['debug'], $config['proxyDir'], NULL, FALSE]
 			)
 			->addSetup('setNamingStrategy', ['@' . $name . '.namingStrategy']);
 
@@ -296,6 +294,10 @@ class DoctrineExtension extends CompilerExtension
 		$cacheClass = ArrayCache::class;
 		if ($cacheType) {
 			switch ($cacheType) {
+				case 'redis':
+					$cacheClass = RedisCache::class;
+					break;
+
 				case 'default':
 				default:
 					$cacheClass = DefaultCache::class;
@@ -303,8 +305,27 @@ class DoctrineExtension extends CompilerExtension
 			}
 		}
 
-		$containerBuilder->addDefinition($prefix . '.cache')
+		$cacheDefinition = $containerBuilder->addDefinition($prefix . '.cache')
 			->setType($cacheClass);
+
+		if ($cacheType === 'redis') {
+			$config = $this->parseConfig();
+			$redisConfig = $config['cache']['redis'];
+
+			$containerBuilder->addDefinition($prefix . '.redis')
+				->setType(Redis::class)
+				->setAutowired(FALSE)
+				->addSetup('connect', [
+					$redisConfig['host'] ?? '127.0.0.1',
+					$redisConfig['port'] ?? null,
+					$redisConfig['timeout'] ?? 0.0,
+					$redisConfig['reserved'] ?? null,
+					$redisConfig['retryInterval'] ?? 0,
+				])
+				->addSetup('select', [$redisConfig['database'] ?? 1]);
+
+			$cacheDefinition->addSetup('setRedis', ['@' . $prefix . '.redis']);
+		}
 
 		return '@' . $prefix . '.cache';
 	}
