@@ -49,7 +49,6 @@ use Portiny\Doctrine\Adapter\Nette\Tracy\DoctrineSQLPanel;
 use Portiny\Doctrine\Cache\DefaultCache;
 use Portiny\Doctrine\Contract\Provider\ClassMappingProviderInterface;
 use Portiny\Doctrine\Contract\Provider\EntitySourceProviderInterface;
-use Redis;
 use Symfony\Component\Console\Helper\HelperSet;
 use Tracy\IBarPanel;
 
@@ -313,7 +312,7 @@ class DoctrineExtension extends CompilerExtension
 			$redisConfig = $config['cache']['redis'];
 
 			$containerBuilder->addDefinition($prefix . '.redis')
-				->setType(Redis::class)
+				->setType('\Redis')
 				->setAutowired(FALSE)
 				->addSetup('connect', [
 					$redisConfig['host'] ?? '127.0.0.1',
