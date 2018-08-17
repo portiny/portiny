@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Portiny\GraphQL\GraphQL;
 
 use GraphQL\Error\Debug;
+use GraphQL\Executor\Promise\Promise;
+use GraphQL\Executor\Promise\PromiseAdapter;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Schema;
@@ -67,6 +69,33 @@ final class RequestProcessor
 		}
 
 		return $output;
+	}
+
+	/**
+	 * @param mixed|null $context
+	 * @param array|null $allowedQueries
+	 * @param array|null $allowedMutations
+	 */
+	public function processViaPromise(
+		PromiseAdapter $promiseAdapter,
+		RequestParserInterface $requestParser,
+		array $rootValue = [],
+		$context = NULL,
+		?array $allowedQueries = NULL,
+		?array $allowedMutations = NULL
+	): Promise {
+		try {
+			return GraphQL::promiseToExecute(
+				$promiseAdapter,
+				$this->createSchema($allowedQueries, $allowedMutations),
+				$requestParser->getQuery(),
+				$rootValue,
+				$context,
+				$requestParser->getVariables()
+			);
+		} catch (Throwable $exception) {
+			return $promiseAdapter->createRejected($exception);
+		}
 	}
 
 	private function createSchema(?array $allowedQueries = NULL, ?array $allowedMutations = NULL): Schema
