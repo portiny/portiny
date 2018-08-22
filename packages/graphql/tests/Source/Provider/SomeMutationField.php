@@ -18,14 +18,6 @@ final class SomeMutationField implements MutationFieldInterface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getType(): Type
-	{
-		return Type::string();
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
 	public function getDescription(): string
 	{
 		return 'Some description';
@@ -39,6 +31,14 @@ final class SomeMutationField implements MutationFieldInterface
 		return [
 			'someArg' => ['type' => Type::string()],
 		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getType(): Type
+	{
+		return Type::string();
 	}
 
 	/**

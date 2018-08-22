@@ -55,14 +55,6 @@ final class MutationFieldConverterTest extends AbstractContainerTestCase
 			/**
 			 * {@inheritdoc}
 			 */
-			public function getType(): Type
-			{
-				return Type::string();
-			}
-
-			/**
-			 * {@inheritdoc}
-			 */
 			public function getDescription(): string
 			{
 				return 'Some description';
@@ -76,6 +68,14 @@ final class MutationFieldConverterTest extends AbstractContainerTestCase
 				return [
 					'someArg' => ['type' => Type::string()],
 				];
+			}
+
+			/**
+			 * {@inheritdoc}
+			 */
+			public function getType(): Type
+			{
+				return Type::string();
 			}
 
 			/**

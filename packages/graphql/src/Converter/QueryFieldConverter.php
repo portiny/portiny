@@ -53,14 +53,6 @@ final class QueryFieldConverter
 			/**
 			 * {@inheritdoc}
 			 */
-			public function getType(): Type
-			{
-				return $this->data['type'];
-			}
-
-			/**
-			 * {@inheritdoc}
-			 */
 			public function getDescription(): string
 			{
 				return $this->data['description'];
@@ -72,6 +64,14 @@ final class QueryFieldConverter
 			public function getArgs(): array
 			{
 				return $this->data['args'];
+			}
+
+			/**
+			 * {@inheritdoc}
+			 */
+			public function getType(): Type
+			{
+				return $this->data['type'];
 			}
 
 			/**

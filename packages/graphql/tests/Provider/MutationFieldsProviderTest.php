@@ -91,14 +91,6 @@ class MutationFieldsProviderTest extends TestCase
 			/**
 			 * {@inheritdoc}
 			 */
-			public function getType(): Type
-			{
-				return Type::string();
-			}
-
-			/**
-			 * {@inheritdoc}
-			 */
 			public function getDescription(): string
 			{
 				return 'Some description';
@@ -112,6 +104,14 @@ class MutationFieldsProviderTest extends TestCase
 				return [
 					'someArg' => ['type' => Type::string()],
 				];
+			}
+
+			/**
+			 * {@inheritdoc}
+			 */
+			public function getType(): Type
+			{
+				return Type::string();
 			}
 
 			/**

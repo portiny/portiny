@@ -10,11 +10,11 @@ interface MutationFieldInterface
 {
 	public function getName(): string;
 
-	public function getType(): Type;
-
 	public function getDescription(): string;
 
 	public function getArgs(): array;
+
+	public function getType(): Type;
 
 	/**
 	 * @param mixed|null $context
