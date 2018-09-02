@@ -100,10 +100,16 @@ final class RequestProcessor
 
 	private function createSchema(?array $allowedQueries = NULL, ?array $allowedMutations = NULL): Schema
 	{
-		return new Schema([
+		$configuration = [
 			'query' => $this->createQueryObject($allowedQueries),
-			'mutation' => $this->createMutationObject($allowedMutations),
-		]);
+		];
+
+		$mutationObject = $this->createMutationObject($allowedMutations);
+		if ($mutationObject->getFields()) {
+			$configuration['mutation'] = $mutationObject;
+		}
+
+		return new Schema($configuration);
 	}
 
 	private function createQueryObject(?array $allowedQueries = NULL): ObjectType
