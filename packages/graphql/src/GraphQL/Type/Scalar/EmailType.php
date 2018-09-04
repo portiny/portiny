@@ -10,8 +10,18 @@ use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
 use UnexpectedValueException;
 
-final class EmailType extends ScalarType
+class EmailType extends ScalarType
 {
+	/**
+	 * {@inheritdoc}
+	 */
+	public $name = 'Email';
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public $description = 'This scalar type represents e-mail formatted string.';
+
 	/**
 	 * {@inheritdoc}
 	 */

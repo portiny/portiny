@@ -10,8 +10,18 @@ use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
 use UnexpectedValueException;
 
-final class UrlType extends ScalarType
+class UrlType extends ScalarType
 {
+	/**
+	 * {@inheritdoc}
+	 */
+	public $name = 'Url';
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public $description = 'This scalar type represents URL formatted string.';
+
 	/**
 	 * {@inheritdoc}
 	 */
