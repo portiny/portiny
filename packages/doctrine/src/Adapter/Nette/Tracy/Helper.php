@@ -20,11 +20,11 @@ final class Helper
 
 		// insert new lines
 		$sql = " ${sql} ";
-		$sql = preg_replace("#(?<=[\\s,(])(${keywords1})(?=[\\s,)])#i", "\n\$1", $sql);
+		$sql = (string) preg_replace("#(?<=[\\s,(])(${keywords1})(?=[\\s,)])#i", "\n\$1", $sql);
 		// reduce spaces
-		$sql = preg_replace('#[ \t]{2,}#', ' ', $sql);
+		$sql = (string) preg_replace('#[ \t]{2,}#', ' ', $sql);
 		$sql = wordwrap($sql, 100);
-		$sql = preg_replace('#([ \t]*\r?\n){2,}#', "\n", $sql);
+		$sql = (string) preg_replace('#([ \t]*\r?\n){2,}#', "\n", $sql);
 		// syntax highlight
 		$sql = htmlspecialchars($sql, ENT_IGNORE, 'UTF-8');
 		$closure = function ($matches) {
@@ -38,7 +38,7 @@ final class Helper
 				return '<strong style="color:green">' . $matches[4] . '</strong>';
 			}
 		};
-		$sql = preg_replace_callback(
+		$sql = (string) preg_replace_callback(
 			"#(/\\*.+?\\*/)|(\\*\\*.+?\\*\\*)|(?<=[\\s,(])(${keywords1})(?=[\\s,)])|'
 			. '(?<=[\\s,(=])(${keywords2})(?=[\\s,)=])#is",
 			$closure,
@@ -46,7 +46,7 @@ final class Helper
 		);
 
 		// parameters
-		$sql = preg_replace_callback('#\?#', function () use ($params, $connection) {
+		$sql = (string) preg_replace_callback('#\?#', function () use ($params, $connection) {
 			static $i = 0;
 			if (! isset($params[$i])) {
 				return '?';

@@ -35,6 +35,7 @@ parameters:
         - Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenStaticFunctionSniff
         - Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff
         - Symplify\CodingStandard\Fixer\Php\ClassStringToClassConstantFixer
+        - SlamCsFixer\FinalInternalClassFixer
 
     skip:
         Symplify\CodingStandard\Fixer\Solid\FinalInterfaceFixer:

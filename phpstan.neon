@@ -1,3 +1,4 @@
 parameters:
 	excludes_analyse:
 		- %rootDir%/packages/*/tests/temp/*
+		- %rootDir%/packages/doctrine/src/Adapter/Nette/Tracy/Helper.php

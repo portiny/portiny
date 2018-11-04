@@ -15,6 +15,7 @@ use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
 use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
 use Throwable;
 use Tracy\Debugger;
+use Tracy\ILogger;
 
 final class RequestProcessor
 {
@@ -48,7 +49,8 @@ final class RequestProcessor
 		array $rootValue = [],
 		$context = NULL,
 		?array $allowedQueries = NULL,
-		?array $allowedMutations = NULL
+		?array $allowedMutations = NULL,
+		?ILogger $logger = NULL
 	): array {
 		try {
 			$result = GraphQL::executeQuery(
@@ -61,6 +63,10 @@ final class RequestProcessor
 
 			$output = $result->toArray($this->isDebug());
 		} catch (Throwable $exception) {
+			if ($logger) {
+				$logger->log($exception);
+			}
+
 			$output = [
 				'error' => [
 					'message' => $exception->getMessage(),
@@ -82,7 +88,8 @@ final class RequestProcessor
 		array $rootValue = [],
 		$context = NULL,
 		?array $allowedQueries = NULL,
-		?array $allowedMutations = NULL
+		?array $allowedMutations = NULL,
+		?ILogger $logger = NULL
 	): Promise {
 		try {
 			return GraphQL::promiseToExecute(
@@ -94,6 +101,10 @@ final class RequestProcessor
 				$requestParser->getVariables()
 			);
 		} catch (Throwable $exception) {
+			if ($logger) {
+				$logger->log($exception);
+			}
+
 			return $promiseAdapter->createRejected($exception);
 		}
 	}

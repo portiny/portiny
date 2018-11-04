@@ -323,7 +323,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 					return 0;
 				}
 
-				return ($a[$key] > $b[$key]) ? -1 : 1;
+				return $a[$key] > $b[$key] ? -1 : 1;
 			}
 		);
 

@@ -76,7 +76,8 @@ class ConsoleExtension extends CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$applicationDefinition = $builder->getDefinitionByType(Application::class);
 
-		foreach ($builder->findByType(Command::class) as $name => $commandDefinition) {
+		$commandDefinitions = $builder->findByType(Command::class);
+		foreach (array_keys($commandDefinitions) as $name) {
 			$applicationDefinition->addSetup('add', ['@' . $name]);
 		}
 	}

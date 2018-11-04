@@ -233,7 +233,8 @@ class DoctrineExtension extends CompilerExtension
 			'$filterCollection = $this->getByType(\'' . EntityManagerInterface::class . '\')->getFilters();'
 		);
 		$builder = $this->getContainerBuilder();
-		foreach ($builder->findByType(SQLFilter::class) as $name => $filterDefinition) {
+		$filterDefinitions = $builder->findByType(SQLFilter::class);
+		foreach (array_keys($filterDefinitions) as $name) {
 			$initialize->addBody('$filterCollection->enable(\'' . $name . '\');');
 		}
 	}
