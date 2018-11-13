@@ -193,6 +193,17 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 	{
 	}
 
+	private function renderStyles(): string
+	{
+		return '<style>
+			#tracy-debug td.nette-ElasticsearchPanel-request { background: white !important; }
+			#tracy-debug td.nette-ElasticsearchPanel-request pre.tracy-dump { background: white !important; }
+			#tracy-debug div.tracy-inner.nette-ElasticsearchPanel { max-width: 1000px }
+			#tracy-debug .nette-ElasticsearchPanel h2 { font-size: 23px; }
+			#tracy-debug .nette-ElasticsearchPanel tr table { margin: 8px 0; max-height: 150px; overflow:auto }
+			</style>';
+	}
+
 	private function logRequest(?Request $request, ?Response $response): void
 	{
 		if (! $request || ! $response) {
@@ -208,16 +219,5 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 			self::DATA_TRACE_INDEX => debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE),
 			self::DATA_METHOD_INDEX => $request->getMethod(),
 		];
-	}
-
-	private function renderStyles(): string
-	{
-		return '<style>
-			#tracy-debug td.nette-ElasticsearchPanel-request { background: white !important; }
-			#tracy-debug td.nette-ElasticsearchPanel-request pre.tracy-dump { background: white !important; }
-			#tracy-debug div.tracy-inner.nette-ElasticsearchPanel { max-width: 1000px }
-			#tracy-debug .nette-ElasticsearchPanel h2 { font-size: 23px; }
-			#tracy-debug .nette-ElasticsearchPanel tr table { margin: 8px 0; max-height: 150px; overflow:auto }
-			</style>';
 	}
 }

@@ -18,14 +18,14 @@ final class DefaultCache extends CacheProvider
 	public const CACHE_NS = 'Doctrine';
 
 	/**
-	 * @var Cache
-	 */
-	private $cache;
-
-	/**
 	 * @var bool
 	 */
 	private $debugMode = FALSE;
+
+	/**
+	 * @var Cache
+	 */
+	private $cache;
 
 	public function __construct(IStorage $storage, string $namespace = self::CACHE_NS, bool $debugMode = FALSE)
 	{

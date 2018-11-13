@@ -59,6 +59,10 @@ class DoctrineExtension extends CompilerExtension
 	 */
 	private const DOCTRINE_SQL_PANEL = DoctrineSQLPanel::class;
 
+	private $classMappings = [];
+
+	private $entitySources = [];
+
 	/**
 	 * @var array
 	 */
@@ -100,10 +104,6 @@ class DoctrineExtension extends CompilerExtension
 			'redis' => [],
 		],
 	];
-
-	private $entitySources = [];
-
-	private $classMappings = [];
 
 	/**
 	 * {@inheritdoc}
@@ -284,6 +284,36 @@ class DoctrineExtension extends CompilerExtension
 		$configuration->addSetup('setSecondLevelCacheConfiguration', ['@' . $cacheConfigName]);
 	}
 
+	/**
+	 * @throws AssertionException
+	 */
+	private function parseConfig(): array
+	{
+		$config = $this->getConfig(self::$defaults);
+		$this->classMappings = $config['targetEntityMappings'];
+		$this->entitySources = $config['metadata'];
+
+		foreach ($this->compiler->getExtensions() as $extension) {
+			if ($extension instanceof ClassMappingProviderInterface) {
+				$entityMapping = $extension->getClassMapping();
+				Validators::assert($entityMapping, 'array');
+				$this->classMappings = array_merge($this->classMappings, $entityMapping);
+			}
+
+			if ($extension instanceof EntitySourceProviderInterface) {
+				$entitySource = $extension->getEntitySource();
+				Validators::assert($entitySource, 'array');
+				$this->entitySources = array_merge($this->entitySources, $entitySource);
+			}
+		}
+
+		if ($config['sourceDir']) {
+			$this->entitySources[] = $config['sourceDir'];
+		}
+
+		return $config;
+	}
+
 	private function getCache(string $prefix, ContainerBuilder $containerBuilder, string $cacheType): string
 	{
 		$cacheServiceName = $containerBuilder->getByType(Cache::class);
@@ -330,50 +360,39 @@ class DoctrineExtension extends CompilerExtension
 		return '@' . $prefix . '.cache';
 	}
 
-	/**
-	 * @throws AssertionException
-	 */
-	private function parseConfig(): array
-	{
-		$config = $this->getConfig(self::$defaults);
-		$this->classMappings = $config['targetEntityMappings'];
-		$this->entitySources = $config['metadata'];
-
-		foreach ($this->compiler->getExtensions() as $extension) {
-			if ($extension instanceof ClassMappingProviderInterface) {
-				$entityMapping = $extension->getClassMapping();
-				Validators::assert($entityMapping, 'array');
-				$this->classMappings = array_merge($this->classMappings, $entityMapping);
-			}
-
-			if ($extension instanceof EntitySourceProviderInterface) {
-				$entitySource = $extension->getEntitySource();
-				Validators::assert($entitySource, 'array');
-				$this->entitySources = array_merge($this->entitySources, $entitySource);
-			}
-		}
-
-		if ($config['sourceDir']) {
-			$this->entitySources[] = $config['sourceDir'];
-		}
-
-		return $config;
-	}
-
 	private function hasIBarPanelInterface(): bool
 	{
 		return interface_exists(IBarPanel::class);
 	}
 
-	private function hasPortinyConsole(): bool
+	private function registerCommandsIntoConsole(ContainerBuilder $containerBuilder, string $name): void
 	{
-		return class_exists(ConsoleExtension::class);
-	}
+		if ($this->hasPortinyConsole()) {
+			$commands = [
+				ConvertMappingCommand::class,
+				CreateCommand::class,
+				DropCommand::class,
+				GenerateEntitiesCommand::class,
+				GenerateProxiesCommand::class,
+				ImportCommand::class,
+				MetadataCommand::class,
+				QueryCommand::class,
+				ResultCommand::class,
+				UpdateCommand::class,
+				ValidateSchemaCommand::class,
+			];
+			foreach ($commands as $index => $command) {
+				$containerBuilder->addDefinition($name . '.command.' . $index)
+					->setType($command);
+			}
 
-	private function hasEventManager(ContainerBuilder $containerBuilder): bool
-	{
-		$eventManagerServiceName = $containerBuilder->getByType(EventManager::class);
-		return $eventManagerServiceName !== NULL && strlen($eventManagerServiceName) > 0;
+			$helperSets = $containerBuilder->findByType(HelperSet::class);
+			if ($helperSets) {
+				/** @var ServiceDefinition $helperSet */
+				$helperSet = reset($helperSets);
+				$helperSet->addSetup('set', [new Statement(EntityManagerHelper::class), 'em']);
+			}
+		}
 	}
 
 	private function processDbalTypes(string $name, array $types): void
@@ -427,33 +446,14 @@ class DoctrineExtension extends CompilerExtension
 		}
 	}
 
-	private function registerCommandsIntoConsole(ContainerBuilder $containerBuilder, string $name): void
+	private function hasPortinyConsole(): bool
 	{
-		if ($this->hasPortinyConsole()) {
-			$commands = [
-				ConvertMappingCommand::class,
-				CreateCommand::class,
-				DropCommand::class,
-				GenerateEntitiesCommand::class,
-				GenerateProxiesCommand::class,
-				ImportCommand::class,
-				MetadataCommand::class,
-				QueryCommand::class,
-				ResultCommand::class,
-				UpdateCommand::class,
-				ValidateSchemaCommand::class,
-			];
-			foreach ($commands as $index => $command) {
-				$containerBuilder->addDefinition($name . '.command.' . $index)
-					->setType($command);
-			}
+		return class_exists(ConsoleExtension::class);
+	}
 
-			$helperSets = $containerBuilder->findByType(HelperSet::class);
-			if ($helperSets) {
-				/** @var ServiceDefinition $helperSet */
-				$helperSet = reset($helperSets);
-				$helperSet->addSetup('set', [new Statement(EntityManagerHelper::class), 'em']);
-			}
-		}
+	private function hasEventManager(ContainerBuilder $containerBuilder): bool
+	{
+		$eventManagerServiceName = $containerBuilder->getByType(EventManager::class);
+		return $eventManagerServiceName !== NULL && strlen($eventManagerServiceName) > 0;
 	}
 }

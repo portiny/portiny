@@ -53,9 +53,9 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	public const DATA_INDEX_COUNT = 5;
 
 	/**
-	 * @var EntityManager
+	 * @var int
 	 */
-	private $entityManager;
+	private $totalTime = 0;
 
 	/**
 	 * @var bool
@@ -63,14 +63,14 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	private $sortQueries = FALSE;
 
 	/**
-	 * @var int
-	 */
-	private $totalTime = 0;
-
-	/**
 	 * @var array
 	 */
 	private $queries = [];
+
+	/**
+	 * @var EntityManager
+	 */
+	private $entityManager;
 
 	public function __construct(EntityManager $entityManager)
 	{
@@ -214,9 +214,20 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		return $this->queries;
 	}
 
-	private function isTracyEnabled(): bool
+	private function sortQueries(array $queries, int $key): array
 	{
-		return PHP_SAPI !== 'cli' && Debugger::isEnabled() && ! Debugger::$productionMode;
+		uasort(
+			$queries,
+			function ($a, $b) use ($key) {
+				if ($a[$key] === $b[$key]) {
+					return 0;
+				}
+
+				return $a[$key] > $b[$key] ? -1 : 1;
+			}
+		);
+
+		return $queries;
 	}
 
 	private function processQuery(array $query): string
@@ -314,19 +325,8 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			</table>';
 	}
 
-	private function sortQueries(array $queries, int $key): array
+	private function isTracyEnabled(): bool
 	{
-		uasort(
-			$queries,
-			function ($a, $b) use ($key) {
-				if ($a[$key] === $b[$key]) {
-					return 0;
-				}
-
-				return $a[$key] > $b[$key] ? -1 : 1;
-			}
-		);
-
-		return $queries;
+		return PHP_SAPI !== 'cli' && Debugger::isEnabled() && ! Debugger::$productionMode;
 	}
 }
