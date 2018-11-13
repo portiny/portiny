@@ -29,13 +29,11 @@ final class RequestProcessor
 	 */
 	private $queryFieldsProvider;
 
-	public function setMutationFieldsProvider(MutationFieldsProviderInterface $mutationFieldsProvider): void
-	{
+	public function __construct(
+		MutationFieldsProviderInterface $mutationFieldsProvider,
+		QueryFieldsProviderInterface $queryFieldsProvider
+	) {
 		$this->mutationFieldsProvider = $mutationFieldsProvider;
-	}
-
-	public function setQueryFieldsProvider(QueryFieldsProviderInterface $queryFieldsProvider): void
-	{
 		$this->queryFieldsProvider = $queryFieldsProvider;
 	}
 
@@ -123,6 +121,11 @@ final class RequestProcessor
 		return new Schema($configuration);
 	}
 
+	private function isDebug(): int
+	{
+		return ! Debugger::$productionMode ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0;
+	}
+
 	private function createQueryObject(?array $allowedQueries = NULL): ObjectType
 	{
 		return new ObjectType([
@@ -137,10 +140,5 @@ final class RequestProcessor
 			'name' => 'Mutation',
 			'fields' => $this->mutationFieldsProvider->convertFieldsToArray($allowedMutations),
 		]);
-	}
-
-	private function isDebug(): int
-	{
-		return ! Debugger::$productionMode ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0;
 	}
 }

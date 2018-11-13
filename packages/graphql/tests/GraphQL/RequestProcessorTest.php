@@ -48,6 +48,16 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 		$this->assertSame('someValue resolved', $output['data']['someMutationName']);
 	}
 
+	private function createRequestParser(string $rawData): RequestParserInterface
+	{
+		$url = new UrlScript('https://portiny.org');
+		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () use ($rawData) {
+			return $rawData;
+		});
+
+		return new JsonRequestParser($httpRequest);
+	}
+
 	private function createRequestFactory(): RequestProcessor
 	{
 		$queryField = new SomeQueryField();
@@ -58,20 +68,6 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 		$mutationFieldProvider = new MutationFieldsProvider();
 		$mutationFieldProvider->addField($mutationField);
 
-		$requestProcessor = new RequestProcessor();
-		$requestProcessor->setQueryFieldsProvider($queryFieldProvider);
-		$requestProcessor->setMutationFieldsProvider($mutationFieldProvider);
-
-		return $requestProcessor;
-	}
-
-	private function createRequestParser(string $rawData): RequestParserInterface
-	{
-		$url = new UrlScript('https://portiny.org');
-		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () use ($rawData) {
-			return $rawData;
-		});
-
-		return new JsonRequestParser($httpRequest);
+		return new RequestProcessor($mutationFieldProvider, $queryFieldProvider);
 	}
 }

@@ -51,8 +51,7 @@ final class GraphQLExtension extends CompilerExtension
 
 		$mutationFieldProvider = $containerBuilder->addDefinition($this->prefix('mutationFieldsProvider'))
 			->setFactory(MutationFieldsProvider::class)
-			->setType(MutationFieldsProviderInterface::class)
-			->setInject(FALSE);
+			->setType(MutationFieldsProviderInterface::class);
 
 		$mutationFieldDefinitions = $containerBuilder->findByType(MutationFieldInterface::class);
 		foreach ($mutationFieldDefinitions as $mutationFieldDefinition) {
@@ -66,8 +65,7 @@ final class GraphQLExtension extends CompilerExtension
 
 		$queryFieldProvider = $containerBuilder->addDefinition($this->prefix('queryFieldsProvider'))
 			->setFactory(QueryFieldsProvider::class)
-			->setType(QueryFieldsProviderInterface::class)
-			->setInject(FALSE);
+			->setType(QueryFieldsProviderInterface::class);
 
 		$queryFieldDefinitions = $containerBuilder->findByType(QueryFieldInterface::class);
 		foreach ($queryFieldDefinitions as $queryFieldDefinition) {
@@ -86,8 +84,6 @@ final class GraphQLExtension extends CompilerExtension
 		}
 
 		$containerBuilder->addDefinition($this->prefix('requestProcessor'))
-			->setFactory(RequestProcessor::class)
-			->addSetup('setMutationFieldsProvider', ['@' . MutationFieldsProviderInterface::class])
-			->addSetup('setQueryFieldsProvider', ['@' . QueryFieldsProviderInterface::class]);
+			->setFactory(RequestProcessor::class);
 	}
 }
