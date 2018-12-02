@@ -101,7 +101,9 @@ class DoctrineExtension extends CompilerExtension
 			'logging' => '%debugMode%',
 		],
 		'cache' => [
-			'redis' => [],
+			'redis' => [
+				'class' => RedisCache::class,
+			],
 		],
 	];
 
@@ -321,11 +323,13 @@ class DoctrineExtension extends CompilerExtension
 			return '@' . $cacheServiceName;
 		}
 
+		$config = $this->parseConfig();
+
 		$cacheClass = ArrayCache::class;
 		if ($cacheType) {
 			switch ($cacheType) {
 				case 'redis':
-					$cacheClass = RedisCache::class;
+					$cacheClass = $config['cache']['redis']['class'];
 					break;
 
 				case 'default':
@@ -339,7 +343,6 @@ class DoctrineExtension extends CompilerExtension
 			->setType($cacheClass);
 
 		if ($cacheType === 'redis') {
-			$config = $this->parseConfig();
 			$redisConfig = $config['cache']['redis'];
 
 			$containerBuilder->addDefinition($prefix . '.redis')
