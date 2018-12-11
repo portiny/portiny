@@ -68,6 +68,7 @@ final class RequestProcessor
 			$output = [
 				'error' => [
 					'message' => $exception->getMessage(),
+					'code' => $exception->getCode(),
 				],
 			];
 		}
