@@ -7,7 +7,7 @@
 		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
 	],
 	"require": {
-		"php": "~7.1",
+		"php": "^7.1",
 		"nette/bootstrap": "^2.4",
 		"nette/di": "^2.4",
 		"nette/http": "^2.4",
