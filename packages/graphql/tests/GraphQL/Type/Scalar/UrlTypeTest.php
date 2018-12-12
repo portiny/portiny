@@ -62,7 +62,7 @@ final class UrlTypeTest extends TestCase
 	public function testParseLiteralNotValidNode(): void
 	{
 		$urlType = new UrlType();
-		$booleanValueNode = new BooleanValueNode(['value' => FALSE]);
+		$booleanValueNode = new BooleanValueNode(['value' => null]);
 
 		$this->assertSame('test', $urlType->parseLiteral($booleanValueNode));
 	}

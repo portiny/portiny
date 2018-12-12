@@ -62,7 +62,7 @@ final class EmailTypeTest extends TestCase
 	public function testParseLiteralNotValidNode(): void
 	{
 		$emailType = new EmailType();
-		$booleanValueNode = new BooleanValueNode(['value' => FALSE]);
+		$booleanValueNode = new BooleanValueNode(['value' => null]);
 
 		$this->assertSame('test', $emailType->parseLiteral($booleanValueNode));
 	}

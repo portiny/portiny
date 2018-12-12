@@ -48,11 +48,11 @@ class EmailType extends ScalarType
 	public function parseLiteral($valueNode, ?array $variables = null)
 	{
 		if (! $valueNode instanceof StringValueNode) {
-			throw new Error('Can only parse strings got: ' . $valueNode->kind, [$valueNode]);
+			throw new Error('Can only parse strings got: ' . $valueNode->kind, $valueNode);
 		}
 
 		if (! filter_var($valueNode->value, FILTER_VALIDATE_EMAIL)) {
-			throw new Error('Not a valid email: ' . Utils::printSafe($valueNode->value), [$valueNode]);
+			throw new Error('Not a valid email: ' . Utils::printSafe($valueNode->value), $valueNode);
 		}
 
 		return $valueNode->value;
