@@ -124,12 +124,12 @@ class DoctrineExtension extends CompilerExtension
 
 		if ($config['repositoryFactory']) {
 			$builder->addDefinition($name . '.repositoryFactory')
-				->setClass($config['repositoryFactory']);
+				->setType($config['repositoryFactory']);
 			$configurationDefinition->addSetup('setRepositoryFactory', ['@' . $name . '.repositoryFactory']);
 		}
 		if ($config['sqlLogger']) {
 			$builder->addDefinition($name . '.sqlLogger')
-				->setClass($config['sqlLogger']);
+				->setType($config['sqlLogger']);
 			$configurationDefinition->addSetup('setSQLLogger', ['@' . $name . '.sqlLogger']);
 		}
 
@@ -218,7 +218,7 @@ class DoctrineExtension extends CompilerExtension
 		$this->processDbalTypes($name, $config['dbal']['types']);
 		$this->processDbalTypeOverrides($name, $config['dbal']['type_overrides']);
 		$this->processEventSubscribers($name);
-		$this->processFilters($name);
+		$this->processFilters();
 	}
 
 	/**
@@ -390,7 +390,7 @@ class DoctrineExtension extends CompilerExtension
 			}
 
 			$helperSets = $containerBuilder->findByType(HelperSet::class);
-			if ($helperSets) {
+			if (! empty($helperSets)) {
 				/** @var ServiceDefinition $helperSet */
 				$helperSet = reset($helperSets);
 				$helperSet->addSetup('set', [new Statement(EntityManagerHelper::class), 'em']);
@@ -439,7 +439,7 @@ class DoctrineExtension extends CompilerExtension
 		}
 	}
 
-	private function processFilters(string $name): void
+	private function processFilters(): void
 	{
 		$builder = $this->getContainerBuilder();
 
