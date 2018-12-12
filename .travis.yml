@@ -11,6 +11,7 @@ matrix:
         - CODING_STANDARD=true
         - COMPOSER_FLAGS=""
     - php: 7.1
+      env:
         - PHPSTAN=true
         - COMPOSER_FLAGS=""
     - php: 7.2
@@ -22,6 +23,7 @@ matrix:
         - CODING_STANDARD=true
         - COMPOSER_FLAGS=""
     - php: 7.2
+      env:
         - PHPSTAN=true
         - COMPOSER_FLAGS=""
     - php: 7.3
