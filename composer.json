@@ -14,14 +14,14 @@
 		"nette/di": "^2.4",
 		"nette/http": "^2.4",
 		"nette/utils": "^2.4",
-		"ruflin/elastica": "^6.0",
-		"symfony/console": "^4.1",
+		"ruflin/elastica": "^6.1",
+		"symfony/console": "^4.2",
 		"tracy/tracy": "^2.4",
-		"webonyx/graphql-php": "^0.12"
+		"webonyx/graphql-php": "^0.13"
 	},
 	"require-dev": {
 		"phpstan/phpstan": "^0.10",
-		"phpunit/phpunit": "^7.4",
+		"phpunit/phpunit": "^7.5",
 		"symplify/easy-coding-standard": "^5.2",
 		"tracy/tracy": "^2.5"
 	},
