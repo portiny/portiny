@@ -14,6 +14,12 @@ matrix:
       env: CODING_STANDARD=true
     - php: 7.2
       env: PHPSTAN=true
+    - php: 7.3
+      env: PHPUNIT_FLAGS="--coverage-clover coverage.xml"
+    - php: 7.3
+      env: CODING_STANDARD=true
+    - php: 7.3
+      env: PHPSTAN=true
 
 install:
   - composer install
