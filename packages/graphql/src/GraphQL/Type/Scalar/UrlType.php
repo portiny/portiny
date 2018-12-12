@@ -48,11 +48,11 @@ class UrlType extends ScalarType
 	public function parseLiteral($valueNode, ?array $variables = null)
 	{
 		if (! $valueNode instanceof StringValueNode) {
-			throw new Error('Can only parse strings got: ' . $valueNode->kind, [$valueNode]);
+			throw new Error('Can only parse strings got: ' . $valueNode->kind, $valueNode);
 		}
 
 		if (! is_string($valueNode->value) || ! filter_var($valueNode->value, FILTER_VALIDATE_URL)) {
-			throw new Error('Not a valid URL: ' . Utils::printSafe($valueNode->value), [$valueNode]);
+			throw new Error('Not a valid URL: ' . Utils::printSafe($valueNode->value), $valueNode);
 		}
 
 		return $valueNode->value;
