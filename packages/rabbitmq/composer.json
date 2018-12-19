@@ -12,6 +12,7 @@
 		"nette/di": "^2.4"
 	},
 	"require-dev": {
+		"nette/bootstrap": "^2.4",
 		"phpunit/phpunit": "^7.5",
 		"tracy/tracy": "^2.5"
 	},

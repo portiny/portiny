@@ -10,7 +10,6 @@
 		"php": "^7.1",
 		"bunny/bunny": "^0.4",
 		"doctrine/orm": "^2.6",
-		"nette/bootstrap": "^2.4",
 		"nette/caching": "^2.4",
 		"nette/di": "^2.4",
 		"nette/http": "^2.4",
@@ -21,6 +20,7 @@
 		"webonyx/graphql-php": "^0.13"
 	},
 	"require-dev": {
+		"nette/bootstrap": "^2.4",
 		"phpstan/phpstan": "^0.10",
 		"phpunit/phpunit": "^7.5",
 		"symplify/easy-coding-standard": "^5.2",
