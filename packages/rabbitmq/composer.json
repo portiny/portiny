@@ -1,0 +1,28 @@
+{
+	"name": "portiny/rabbitmq",
+	"description": "Lightweight Buny/Buny integration extension for Nette framework.",
+	"keywords": ["php", "nette", "portiny", "rabbitmq", "bunny", "amqp"],
+	"license": ["MIT"],
+	"authors": [
+		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
+	],
+	"require": {
+		"php": ">=7.1",
+		"bunny/bunny": "^0.4",
+		"nette/di": "^2.4"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^7.5",
+		"tracy/tracy": "^2.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"Portiny\\RabbtiMQ\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Portiny\\RabbtiMQ\\Tests\\": "tests"
+		}
+	}
+}

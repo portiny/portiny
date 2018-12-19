@@ -7,6 +7,7 @@ git subsplit publish --heads="master" --tags=$LAST_TAG packages/console:git@gith
 git subsplit publish --heads="master" --tags=$LAST_TAG packages/doctrine:git@github.com:portiny/doctrine.git
 git subsplit publish --heads="master" --tags=$LAST_TAG packages/elasticsearch:git@github.com:portiny/elasticsearch.git
 git subsplit publish --heads="master" --tags=$LAST_TAG packages/graphql:git@github.com:portiny/graphql.git
+git subsplit publish --heads="master" --tags=$LAST_TAG packages/rabbitmq:git@github.com:portiny/rabbitmq.git
 
 rm -rf .subsplit/
 

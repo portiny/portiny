@@ -49,3 +49,14 @@ Lightweight Elasticsearch integration extension for Nette Framework.
 [![Latest stable](https://img.shields.io/github/tag/portiny/graphql.svg?style=flat-square)](https://packagist.org/packages/portiny/graphql)
 
 Lightweight GraphQL integration extension for Nette Framework.
+
+
+## [RabbitMQ](https://github.com/portiny/rabbitmq)
+
+[![Build Status](https://img.shields.io/travis/portiny/rabbitmq.svg?style=flat-square)](https://travis-ci.org/portiny/rabbitmq)
+[![Quality Score](https://img.shields.io/scrutinizer/g/portiny/rabbitmq.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/rabbitmq)
+[![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/portiny/rabbitmq.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/rabbitmq)
+[![Downloads](https://img.shields.io/packagist/dt/portiny/rabbitmq.svg?style=flat-square)](https://packagist.org/packages/portiny/rabbitmq)
+[![Latest stable](https://img.shields.io/github/tag/portiny/rabbitmq.svg?style=flat-square)](https://packagist.org/packages/portiny/rabbitmq)
+
+Lightweight RabbitMQ integration extension for Nette Framework.

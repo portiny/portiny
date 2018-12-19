@@ -1,13 +1,14 @@
 {
 	"name": "portiny/portiny",
 	"description": "Repository to maintain all Portiny packages",
-	"keywords": ["php", "nette", "portiny", "symfony", "console", "doctrine", "elasticsearch", "graphql"],
+	"keywords": ["php", "nette", "portiny", "symfony", "console", "doctrine", "elasticsearch", "graphql", "rabbitmq", "bunny", "amqp"],
 	"license": ["MIT"],
 	"authors": [
 		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
 	],
 	"require": {
 		"php": "^7.1",
+		"bunny/bunny": "^0.4",
 		"doctrine/orm": "^2.6",
 		"nette/bootstrap": "^2.4",
 		"nette/caching": "^2.4",
@@ -30,7 +31,8 @@
 			"Portiny\\Console\\": "packages/console/src",
 			"Portiny\\Doctrine\\": "packages/doctrine/src",
 			"Portiny\\Elasticsearch\\": "packages/elasticsearch/src",
-			"Portiny\\GraphQL\\": "packages/graphql/src"
+			"Portiny\\GraphQL\\": "packages/graphql/src",
+			"Portiny\\RabbitMQ\\": "packages/rabbitmq/src"
 		}
 	},
 	"autoload-dev": {
@@ -38,7 +40,8 @@
 			"Portiny\\Console\\Tests\\": "packages/console/tests",
 			"Portiny\\Doctrine\\Tests\\": "packages/doctrine/tests",
 			"Portiny\\Elasticsearch\\Tests\\": "packages/elasticsearch/tests",
-			"Portiny\\GraphQL\\Tests\\": "packages/graphql/tests"
+			"Portiny\\GraphQL\\Tests\\": "packages/graphql/tests",
+			"Portiny\\RabbitMQ\\Tests\\": "packages/rabbitmq/tests"
 		}
 	},
 	"scripts": {
