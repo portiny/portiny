@@ -23,8 +23,6 @@ abstract class AbstractProducer
 
 	abstract public function getRoutingKey(): string;
 
-	// "routing key" = "queue name" (if exchange name is empty)
-
 	public function getHeaders(): array
 	{
 		return [];
