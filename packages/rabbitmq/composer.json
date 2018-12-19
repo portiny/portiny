@@ -1,0 +1,13 @@
+{
+	"name": "portiny/rabbitmq",
+	"require": {
+		"php": ">=7.1",
+		"bunny/bunny": "^0.4",
+		"nette/di": "^2.4"
+	},
+	"autoload": {
+		"psr-4": {
+			"Portiny\\RabbitMQ\\": "src"
+		}
+	}
+}
