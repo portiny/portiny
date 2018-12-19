@@ -1,6 +1,6 @@
 {
 	"name": "portiny/rabbitmq",
-	"description": "Lightweight Buny/Buny integration extension for Nette framework.",
+	"description": "Lightweight Bunny/Bunny integration extension for Nette framework.",
 	"keywords": ["php", "nette", "portiny", "rabbitmq", "bunny", "amqp"],
 	"license": ["MIT"],
 	"authors": [
@@ -17,12 +17,12 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Portiny\\RabbtiMQ\\": "src"
+			"Portiny\\RabbitMQ\\": "src"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Portiny\\RabbtiMQ\\Tests\\": "tests"
+			"Portiny\\RabbitMQ\\Tests\\": "tests"
 		}
 	}
 }
