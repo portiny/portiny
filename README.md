@@ -1,4 +1,4 @@
-# Portiny main repository
+# Portiny Monorepo
 
 [![Build Status](https://img.shields.io/travis/portiny/portiny.svg?style=flat-square)](https://travis-ci.org/portiny/portiny)
 [![Quality Score](https://img.shields.io/scrutinizer/g/portiny/portiny.svg?style=flat-square)](https://scrutinizer-ci.com/g/portiny/portiny)
