@@ -1,7 +1,7 @@
 {
 	"name": "portiny/portiny",
 	"description": "Repository to maintain all Portiny packages",
-	"keywords": ["php", "nette", "portiny", "symfony", "console", "doctrine", "elasticsearch", "graphql", "rabbitmq", "bunny", "amqp"],
+	"keywords": ["php", "nette", "portiny", "symfony", "console", "doctrine", "elasticsearch", "graphql", "rabbitmq", "bunny", "amqp", "monorepo"],
 	"license": ["MIT"],
 	"authors": [
 		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
