@@ -1,2 +1,8 @@
 extensions:
 	rabbitmq: Portiny\RabbitMQ\Adapter\Nette\DI\RabbitMQExtension
+
+services:
+	- Portiny\RabbitMQ\Tests\Source\TestConsumer
+	- Portiny\RabbitMQ\Tests\Source\TestExchange
+	- Portiny\RabbitMQ\Tests\Source\TestProducer
+	- Portiny\RabbitMQ\Tests\Source\TestQueue

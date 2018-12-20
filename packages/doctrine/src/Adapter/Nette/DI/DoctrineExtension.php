@@ -44,11 +44,11 @@ use Nette\DI\Statement;
 use Nette\PhpGenerator\ClassType;
 use Nette\Utils\AssertionException;
 use Nette\Utils\Validators;
-use Portiny\Console\Adapter\Nette\DI\ConsoleExtension;
 use Portiny\Doctrine\Adapter\Nette\Tracy\DoctrineSQLPanel;
 use Portiny\Doctrine\Cache\DefaultCache;
 use Portiny\Doctrine\Contract\Provider\ClassMappingProviderInterface;
 use Portiny\Doctrine\Contract\Provider\EntitySourceProviderInterface;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 use Tracy\IBarPanel;
 
@@ -185,7 +185,7 @@ class DoctrineExtension extends CompilerExtension
 				->setType(self::DOCTRINE_SQL_PANEL);
 		}
 
-		// import Doctrine commands into Portiny/Console if exists
+		// import Doctrine commands into Symfony/Console if exists
 		$this->registerCommandsIntoConsole($builder, $name);
 	}
 
@@ -370,7 +370,7 @@ class DoctrineExtension extends CompilerExtension
 
 	private function registerCommandsIntoConsole(ContainerBuilder $containerBuilder, string $name): void
 	{
-		if ($this->hasPortinyConsole()) {
+		if ($this->hasSymfonyConsole()) {
 			$commands = [
 				ConvertMappingCommand::class,
 				CreateCommand::class,
@@ -449,9 +449,9 @@ class DoctrineExtension extends CompilerExtension
 		}
 	}
 
-	private function hasPortinyConsole(): bool
+	private function hasSymfonyConsole(): bool
 	{
-		return class_exists(ConsoleExtension::class);
+		return class_exists(Application::class);
 	}
 
 	private function hasEventManager(ContainerBuilder $containerBuilder): bool

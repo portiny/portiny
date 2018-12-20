@@ -1,0 +1,73 @@
+<?php
+declare(strict_types=1);
+
+namespace Portiny\RabbitMQ\Tests;
+
+use Bunny\Async\Client as AsyncClient;
+use Bunny\Client;
+use Portiny\RabbitMQ\BunnyManager;
+use React\EventLoop\Factory;
+
+final class BunnyManagerTest extends AbstractContainerTestCase
+{
+	/**
+	 * @var BunnyManager
+	 */
+	private $bunnyManager;
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		$this->bunnyManager = $this->createBunnyManager();
+	}
+
+	public function testGetClient(): void
+	{
+		$client = $this->bunnyManager->getClient();
+
+		$this->assertInstanceOf(Client::class, $client);
+		$this->assertSame($client, $this->bunnyManager->getClient());
+	}
+
+	public function testGetAsyncClient(): void
+	{
+		$loop = Factory::create();
+		$this->bunnyManager->setLoop($loop);
+
+		$client = $this->bunnyManager->getClient();
+
+		$this->assertInstanceOf(AsyncClient::class, $client);
+		$this->assertSame($client, $this->bunnyManager->getClient());
+	}
+
+	public function testGetClassNameByAlias(): void
+	{
+		$this->assertSame('App\\Service\\Consumer\\TestConsumer', $this->bunnyManager->getClassNameByAlias('myAlias'));
+		$this->assertNull($this->bunnyManager->getClassNameByAlias('nonExisting'));
+	}
+
+	protected function createBunnyManager(): BunnyManager
+	{
+		return new BunnyManager(
+			$this->container,
+			[
+				'aliases' => [
+					'myAlias' => 'App\\Service\\Consumer\\TestConsumer',
+				],
+				'connection' => [
+					'host' => '127.0.0.10',
+					'port' => 9999,
+					'user' => 'guest',
+					'password' => 'guest',
+					'vhost' => '/',
+					'timeout' => 1,
+					'heartbeat' => 60.0,
+					'persistent' => false,
+					'path' => '/',
+					'tcp_nodelay' => false,
+				],
+			]
+		);
+	}
+}

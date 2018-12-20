@@ -203,7 +203,7 @@ services:
 You have two ways how to declare exchange and queue into RabbitMQ. If you use [Symfony/Console](https://symfony.com/doc/current/components/console.html) integrated via e.g. [Portiny/Console](https://github.com/portiny/console), [Contributte/Console](https://github.com/contributte/console) or [Kdyby/Console](https://github.com/Kdyby/Console) then simply run command `rabbitmq:declare`.
 
 ```bash
-# bin/console rabbitmq:declare
+bin/console rabbitmq:declare
 ```
 
 If you don't use [Symfony/Console](https://symfony.com/doc/current/components/console.html) simply inject `Portiny\RabbitMQ\BunnyManager` into your class and call `declare()` method.
@@ -234,6 +234,43 @@ class MyDeclarator
 }
 ```
 
+### How to publish?
+
+It's simple! Just call `logException` method on `App\Service\Producer\LogProducer` e.g.:
+
+```php
+<?php declare(strict_types=1);
+
+namespace App\Control;
+
+use App\Service\Producer\LogProducer;
+use Exception;
+use Nette\Application\UI\Control;
+
+final class ClickControl extends Control
+{
+	/**
+	 * @var LogProducer
+	 */
+	private $logProducer;
+
+	public function __construct(LogProducer $logProducer)
+	{
+		$this->logProducer = $logProducer;
+	}
+
+	public function handleClick(int $x, int $y)
+	{
+		try {
+			// some logic
+		
+		} catch (Exception $exception) {
+			$this->logProducer->logException($exception);
+		}
+	}
+}
+```
+
 ### How to consume?
 
 You have two ways how to trigger consuming messages from RabbitMQ. If you use [Symfony/Console](https://symfony.com/doc/current/components/console.html) integrated via e.g. [Portiny/Console](https://github.com/portiny/console), [Contributte/Console](https://github.com/contributte/console) or [Kdyby/Console](https://github.com/Kdyby/Console) then simply run command `rabbitmq:consume`.
@@ -243,7 +280,7 @@ You have two ways how to trigger consuming messages from RabbitMQ. If you use [S
 Consumer `App\Service\Consumer\LogConsumer` will consume 20 messages and then die.
 
 ```bash
-# bin/console rabbitmq:consume App\\Service\\Consumer\\LogConsumer --messages 20
+bin/console rabbitmq:consume App\\Service\\Consumer\\LogConsumer --messages 20
 ```
 
 #### Consuming for limited time
@@ -251,10 +288,10 @@ Consumer `App\Service\Consumer\LogConsumer` will consume 20 messages and then di
 Consumer `App\Service\Consumer\LogConsumer` will consumimg for 30 seconds and then die.
 
 ```bash
-# bin/console rabbitmq:consume App\\Service\\Consumer\\LogConsumer --time 30
+bin/console rabbitmq:consume App\\Service\\Consumer\\LogConsumer --time 30
 ```
 
-If you don't like using FQDM at CLI (like me) then you can use aliases. :)
+If you don't like using FQDN at CLI (like me) you can use aliases. :)
 
 ```yaml
 rabbitmq:
@@ -265,5 +302,5 @@ rabbitmq:
 Then you can use alias "logger" at `rabbitmq:consume` command.
 
 ```bash
-# bin/console rabbitmq:consume logger --time 30
+bin/console rabbitmq:consume logger --time 30
 ```
