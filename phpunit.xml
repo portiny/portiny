@@ -8,7 +8,7 @@
 	verbose="true"
 >
 	<testsuite name="tests">
-		<directory>packages/**/tests</directory>
+		<directory>packages/*/tests</directory>
 	</testsuite>
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
