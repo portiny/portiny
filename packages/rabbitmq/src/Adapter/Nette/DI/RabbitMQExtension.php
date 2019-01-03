@@ -41,12 +41,34 @@ final class RabbitMQExtension extends CompilerExtension
 	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
-		$config = $this->createConfig($builder);
 
-		$this->setupBunnyManager($builder, $config);
+		$builder->addDefinition($this->prefix('producer'))
+			->setType(Producer::class);
 
 		// import RabbitMQ commands into Symfony/Console if exists
 		$this->registerCommandsIntoConsole($builder);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function beforeCompile(): void
+	{
+		$builder = $this->getContainerBuilder();
+		$config = $this->createConfig($builder);
+
+		$this->setupBunnyManager($builder, $config);
+	}
+
+	private function registerCommandsIntoConsole(ContainerBuilder $containerBuilder): void
+	{
+		if ($this->hasSymfonyConsole()) {
+			$commands = [ConsumeCommand::class, DeclareCommand::class];
+			foreach ($commands as $index => $command) {
+				$containerBuilder->addDefinition($this->prefix('command.' . $index))
+					->setType($command);
+			}
+		}
 	}
 
 	private function createConfig(ContainerBuilder $containerBuilder): array
@@ -80,20 +102,6 @@ final class RabbitMQExtension extends CompilerExtension
 	{
 		$containerBuilder->addDefinition($this->prefix('bunnyManager'))
 			->setFactory(BunnyManager::class, ['@container', $config]);
-
-		$containerBuilder->addDefinition($this->prefix('producer'))
-			->setType(Producer::class);
-	}
-
-	private function registerCommandsIntoConsole(ContainerBuilder $containerBuilder): void
-	{
-		if ($this->hasSymfonyConsole()) {
-			$commands = [ConsumeCommand::class, DeclareCommand::class];
-			foreach ($commands as $index => $command) {
-				$containerBuilder->addDefinition($this->prefix('command.' . $index))
-					->setType($command);
-			}
-		}
 	}
 
 	private function hasSymfonyConsole(): bool
