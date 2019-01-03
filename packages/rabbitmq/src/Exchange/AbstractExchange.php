@@ -2,6 +2,11 @@
 
 namespace Portiny\RabbitMQ\Exchange;
 
+use Bunny\Channel;
+use Bunny\Exception\BunnyException;
+use Bunny\Protocol\MethodExchangeBindOkFrame;
+use Bunny\Protocol\MethodExchangeDeclareOkFrame;
+
 abstract class AbstractExchange
 {
 	/**
@@ -29,47 +34,93 @@ abstract class AbstractExchange
 	 */
 	public const AVAILABLE_TYPES = [self::TYPE_DIRECT, self::TYPE_HEADERS, self::TYPE_FANOUT, self::TYPE_TOPIC];
 
-	abstract public function getName(): string;
+	/**
+	 * @throws BunnyException
+	 */
+	final public function declare(Channel $channel): void
+	{
+		$frame = $channel->exchangeDeclare(
+			$this->getName(),
+			$this->getType(),
+			$this->isPassive(),
+			$this->isDurable(),
+			$this->isAutoDelete(),
+			$this->isInternal(),
+			FALSE,
+			$this->getArguments()
+		);
+		if (! $frame instanceof MethodExchangeDeclareOkFrame) {
+			throw new BunnyException(sprintf('Could not declare exchange "%s".', $this->getName()));
+		}
+	}
+
+	/**
+	 * @throws BunnyException
+	 */
+	final public function declareBindings(Channel $channel): void
+	{
+		foreach ($this->getBindings() as $exchangeBind) {
+			$frame = $channel->exchangeBind(
+				$exchangeBind->getDestination(),
+				$this->getName(),
+				$exchangeBind->getRoutingKey(),
+				FALSE,
+				$exchangeBind->getArguments()
+			);
+			if (! $frame instanceof MethodExchangeBindOkFrame) {
+				throw new BunnyException(
+					sprintf(
+						'Could not bind exchange "%s" to "%s" with routing key "%s".',
+						$exchangeBind->getDestination(),
+						$this->getName(),
+						$exchangeBind->getRoutingKey()
+					)
+				);
+			}
+		}
+	}
+
+	abstract protected function getName(): string;
 
 	/**
 	 * @return ExchangeBind[]
 	 */
-	public function getBindings(): array
+	protected function getBindings(): array
 	{
 		return [];
 	}
 
-	public function getType(): string
+	protected function getType(): string
 	{
 		return self::TYPE_DIRECT;
 	}
 
-	public function isPassive(): bool
+	protected function isPassive(): bool
 	{
 		return false;
 	}
 
-	public function isDurable(): bool
+	protected function isDurable(): bool
 	{
 		return false;
 	}
 
-	public function isAutoDelete(): bool
+	protected function isAutoDelete(): bool
 	{
 		return false;
 	}
 
-	public function isInternal(): bool
+	protected function isInternal(): bool
 	{
 		return false;
 	}
 
-	public function isNoWait(): bool
+	protected function isNoWait(): bool
 	{
 		return false;
 	}
 
-	public function getArguments(): array
+	protected function getArguments(): array
 	{
 		return [];
 	}

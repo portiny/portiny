@@ -2,36 +2,77 @@
 
 namespace Portiny\RabbitMQ\Queue;
 
+use Bunny\Channel;
+use Bunny\Exception\BunnyException;
+use Bunny\Protocol\MethodQueueBindOkFrame;
+use Bunny\Protocol\MethodQueueDeclareOkFrame;
+
 abstract class AbstractQueue
 {
-	abstract public function getName(): string;
+	final public function declare(Channel $channel): void
+	{
+		$frame = $channel->queueDeclare(
+			$this->getName(),
+			$this->isPassive(),
+			$this->isDurable(),
+			$this->isExclusive(),
+			$this->isAutoDelete(),
+			FALSE,
+			$this->getArguments()
+		);
+		if (! $frame instanceof MethodQueueDeclareOkFrame) {
+			throw new BunnyException(sprintf('Could not declare queue "%s".', $this->getName()));
+		}
 
-	public function isPassive(): bool
+		foreach ($this->getBindings() as $queueBind) {
+			$frame = $channel->queueBind(
+				$this->getName(),
+				$queueBind->getExchange(),
+				$queueBind->getRoutingKey(),
+				FALSE,
+				$queueBind->getArguments()
+			);
+			if (! $frame instanceof MethodQueueBindOkFrame) {
+				throw new BunnyException(
+					sprintf(
+						'Could not bind queue "%s" to "%s" with routing key "%s".',
+						$this->getName(),
+						$queueBind->getExchange(),
+						$queueBind->getRoutingKey()
+					)
+				);
+			}
+		}
+	}
+
+	abstract protected function getName(): string;
+
+	protected function isPassive(): bool
 	{
 		return false;
 	}
 
-	public function isDurable(): bool
+	protected function isDurable(): bool
 	{
 		return false;
 	}
 
-	public function isExclusive(): bool
+	protected function isExclusive(): bool
 	{
 		return false;
 	}
 
-	public function isAutoDelete(): bool
+	protected function isAutoDelete(): bool
 	{
 		return false;
 	}
 
-	public function isNoWait(): bool
+	protected function isNoWait(): bool
 	{
 		return false;
 	}
 
-	public function getArguments(): array
+	protected function getArguments(): array
 	{
 		return [];
 	}
@@ -39,7 +80,7 @@ abstract class AbstractQueue
 	/**
 	 * @return QueueBind[]
 	 */
-	public function getBindings(): array
+	protected function getBindings(): array
 	{
 		return [];
 	}

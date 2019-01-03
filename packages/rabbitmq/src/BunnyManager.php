@@ -5,11 +5,6 @@ namespace Portiny\RabbitMQ;
 use Bunny\Async\Client as AsyncClient;
 use Bunny\Channel;
 use Bunny\Client;
-use Bunny\Exception\BunnyException;
-use Bunny\Protocol\MethodExchangeBindOkFrame;
-use Bunny\Protocol\MethodExchangeDeclareOkFrame;
-use Bunny\Protocol\MethodQueueBindOkFrame;
-use Bunny\Protocol\MethodQueueDeclareOkFrame;
 use Nette\DI\Container;
 use Portiny\RabbitMQ\Exchange\AbstractExchange;
 use Portiny\RabbitMQ\Queue\AbstractQueue;
@@ -147,45 +142,13 @@ final class BunnyManager
 		foreach ($this->config['exchanges'] as $exchangeClassName) {
 			/** @var AbstractExchange $exchange */
 			$exchange = $this->container->getByType($exchangeClassName);
-
-			$frame = $channel->exchangeDeclare(
-				$exchange->getName(),
-				$exchange->getType(),
-				$exchange->isPassive(),
-				$exchange->isDurable(),
-				$exchange->isAutoDelete(),
-				$exchange->isInternal(),
-				FALSE,
-				$exchange->getArguments()
-			);
-			if (! $frame instanceof MethodExchangeDeclareOkFrame) {
-				throw new BunnyException(sprintf('Could not declare exchange "%s".', $exchange->getName()));
-			}
+			$exchange->declare($channel);
 		}
 
 		foreach ($this->config['exchanges'] as $exchangeClassName) {
 			/** @var AbstractExchange $exchange */
 			$exchange = $this->container->getByType($exchangeClassName);
-
-			foreach ($exchange->getBindings() as $exchangeBind) {
-				$frame = $channel->exchangeBind(
-					$exchangeBind->getDestination(),
-					$exchange->getName(),
-					$exchangeBind->getRoutingKey(),
-					FALSE,
-					$exchangeBind->getArguments()
-				);
-				if (! $frame instanceof MethodExchangeBindOkFrame) {
-					throw new BunnyException(
-						sprintf(
-							'Could not bind exchange "%s" to "%s" with routing key "%s".',
-							$exchangeBind->getDestination(),
-							$exchange->getName(),
-							$exchangeBind->getRoutingKey()
-						)
-					);
-				}
-			}
+			$exchange->declareBindings($channel);
 		}
 	}
 
@@ -194,39 +157,7 @@ final class BunnyManager
 		foreach ($this->config['queues'] as $queueClassName) {
 			/** @var AbstractQueue $queue */
 			$queue = $this->container->getByType($queueClassName);
-
-			$frame = $channel->queueDeclare(
-				$queue->getName(),
-				$queue->isPassive(),
-				$queue->isDurable(),
-				$queue->isExclusive(),
-				$queue->isAutoDelete(),
-				FALSE,
-				$queue->getArguments()
-			);
-			if (! $frame instanceof MethodQueueDeclareOkFrame) {
-				throw new BunnyException(sprintf('Could not declare queue "%s".', $queue->getName()));
-			}
-
-			foreach ($queue->getBindings() as $queueBind) {
-				$frame = $channel->queueBind(
-					$queue->getName(),
-					$queueBind->getExchange(),
-					$queueBind->getRoutingKey(),
-					FALSE,
-					$queueBind->getArguments()
-				);
-				if (! $frame instanceof MethodQueueBindOkFrame) {
-					throw new BunnyException(
-						sprintf(
-							'Could not bind queue "%s" to "%s" with routing key "%s".',
-							$queue->getName(),
-							$queueBind->getExchange(),
-							$queueBind->getRoutingKey()
-						)
-					);
-				}
-			}
+			$queue->declare($channel);
 		}
 	}
 }

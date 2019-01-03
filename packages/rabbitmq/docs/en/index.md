@@ -25,9 +25,10 @@ This extension can be configured by `rabbitmq` section like this:
 
 ```yml
 rabbitmq:
-    host: localhost
-    port: 5672
-    # etc.
+    connection:
+        host: localhost
+        port: 5672
+        # etc.
 ```
 
 If your RabbitMQ service use default configuration you do not need to configure anything here.
@@ -68,12 +69,12 @@ use Portiny\RabbitMQ\Exchange\AbstractExchange;
 
 final class LogExchange extends AbstractExchange
 {
-    public function getName(): string
+    protected function getName(): string
     {
         return 'logExchange';
     }
     
-    public function getType(): string
+    protected function getType(): string
     {
         return self::TYPE_FANOUT;
     }
@@ -92,12 +93,12 @@ use Portiny\RabbitMQ\Queue\QueueBind;
 
 final class LogQueue extends AbstractQueue
 {
-    public function getName(): string
+    protected function getName(): string
     {
         return 'log';
     }
 
-    public function getBindings(): array
+    protected function getBindings(): array
     {
         return [
             new QueueBind('logExchange')
@@ -171,12 +172,12 @@ use Portiny\RabbitMQ\Consumer\AbstractConsumer;
 
 final class LogConsumer extends AbstractConsumer
 {
-    public function getQueueName(): string
+    protected function getQueueName(): string
     {
         return 'log';
     }
     
-    public function process(Message $message): int
+    protected function process(Message $message): int
     {
         $exception = json_decode($message->content);
 

@@ -32,50 +32,6 @@ abstract class AbstractConsumer
 	 */
 	private $consumedMessages = 0;
 
-	abstract public function getQueueName(): string;
-
-	abstract public function process(Message $message): int;
-
-	public function getConsumerTag(): string
-	{
-		return '';
-	}
-
-	public function isNoLocal(): bool
-	{
-		return false;
-	}
-
-	public function isNoAck(): bool
-	{
-		return false;
-	}
-
-	public function isExclusive(): bool
-	{
-		return false;
-	}
-
-	public function isNoWait(): bool
-	{
-		return false;
-	}
-
-	public function getArguments(): array
-	{
-		return [];
-	}
-
-	public function getPrefetchSize(): int
-	{
-		return 0;
-	}
-
-	public function getPrefetchCount(): int
-	{
-		return 1;
-	}
-
 	/**
 	 * @return MethodBasicConsumeOkFrame|PromiseInterface
 	 */
@@ -115,5 +71,49 @@ abstract class AbstractConsumer
 			$this->isNoWait(),
 			$this->getArguments()
 		);
+	}
+
+	abstract protected function process(Message $message): int;
+
+	abstract protected function getQueueName(): string;
+
+	protected function getConsumerTag(): string
+	{
+		return '';
+	}
+
+	protected function isNoLocal(): bool
+	{
+		return false;
+	}
+
+	protected function isNoAck(): bool
+	{
+		return false;
+	}
+
+	protected function isExclusive(): bool
+	{
+		return false;
+	}
+
+	protected function isNoWait(): bool
+	{
+		return false;
+	}
+
+	protected function getArguments(): array
+	{
+		return [];
+	}
+
+	protected function getPrefetchSize(): int
+	{
+		return 0;
+	}
+
+	protected function getPrefetchCount(): int
+	{
+		return 1;
 	}
 }
