@@ -24,15 +24,15 @@ class ElasticserachPanelTest extends AbstractContainerTestCase
 
 	public function testGetTab(): void
 	{
-		$this->assertContains('<span title="Elasticsearch">', $this->elasticsearchPanel->getTab());
-		$this->assertContains('0 queries', $this->elasticsearchPanel->getTab());
+		self::assertContains('<span title="Elasticsearch">', $this->elasticsearchPanel->getTab());
+		self::assertContains('0 queries', $this->elasticsearchPanel->getTab());
 
 		// TODO: test send request to mockup client
 	}
 
 	public function testGetPanel(): void
 	{
-		$this->assertContains('<h2>Queries</h2>', $this->elasticsearchPanel->getPanel());
+		self::assertContains('<h2>Queries</h2>', $this->elasticsearchPanel->getPanel());
 
 		// TODO: test send request to mockup client
 	}
