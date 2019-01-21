@@ -6,8 +6,12 @@ doctrine:
 		driver: pdo_sqlite
 		memory: TRUE
 
-	debug: FALSE
+	debug: TRUE
 	proxyDir: %tempDir%/proxies
+	metadataCache: false
+	queryCache: false
+	resultCache: false
+	hydrationCache: false
 	dbal:
 		types:
 			interval: Portiny\Doctrine\Tests\Source\IntervalType

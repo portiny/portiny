@@ -9,7 +9,7 @@ final class HelperTest extends TestCase
 {
 	public function testDumpSql(): void
 	{
-		$this->assertSame(
+		self::assertSame(
 			'<pre class="dump"><strong style="color:blue">SELECT</strong> 1 
 <strong style="color:blue">FROM</strong> dual</pre>
 ',

@@ -28,8 +28,8 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 		$this->doctrineSQLPanel->stopQuery();
 
 		$queries = $this->doctrineSQLPanel->getQueries();
-		$this->assertCount(1, $queries);
-		$this->assertSame('SELECT 1 FROM dual', reset($queries)[0]);
+		self::assertCount(1, $queries);
+		self::assertSame('SELECT 1 FROM dual', reset($queries)[0]);
 	}
 
 	public function testStopQuery(): void
@@ -41,29 +41,29 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 		$queries = $this->doctrineSQLPanel->getQueries();
 		$firstQuery = reset($queries);
 
-		$this->assertCount(1, $queries);
-		$this->assertSame('SELECT 1 FROM dual', $firstQuery[0]);
-		$this->assertTrue($firstQuery[3] > 0);
+		self::assertCount(1, $queries);
+		self::assertSame('SELECT 1 FROM dual', $firstQuery[0]);
+		self::assertTrue($firstQuery[3] > 0);
 	}
 
 	public function testGetTab(): void
 	{
-		$this->assertContains('<span title="Doctrine 2">', $this->doctrineSQLPanel->getTab());
-		$this->assertContains('0 queries', $this->doctrineSQLPanel->getTab());
+		self::assertContains('<span title="Doctrine 2">', $this->doctrineSQLPanel->getTab());
+		self::assertContains('0 queries', $this->doctrineSQLPanel->getTab());
 
 		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', NULL, NULL);
 		$this->doctrineSQLPanel->stopQuery();
 
-		$this->assertContains('1 queries', $this->doctrineSQLPanel->getTab());
+		self::assertContains('1 queries', $this->doctrineSQLPanel->getTab());
 	}
 
 	public function testGetPanel(): void
 	{
-		$this->assertContains('<h2>Queries</h2>', $this->doctrineSQLPanel->getPanel());
+		self::assertContains('<h2>Queries</h2>', $this->doctrineSQLPanel->getPanel());
 
 		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', NULL, NULL);
 		$this->doctrineSQLPanel->stopQuery();
 
-		$this->assertContains('<h1>Queries: 1, time:', $this->doctrineSQLPanel->getPanel());
+		self::assertContains('<h1>Queries: 1, time:', $this->doctrineSQLPanel->getPanel());
 	}
 }
