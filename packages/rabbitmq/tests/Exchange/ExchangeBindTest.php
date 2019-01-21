@@ -20,21 +20,21 @@ final class ExchangeBindTest extends TestCase
 
 	public function testGetDestination(): void
 	{
-		$this->assertSame('someDestination', $this->exchangeBind->getDestination());
+		self::assertSame('someDestination', $this->exchangeBind->getDestination());
 	}
 
 	public function testGetRoutingKey(): void
 	{
-		$this->assertSame('routingKey', $this->exchangeBind->getRoutingKey());
+		self::assertSame('routingKey', $this->exchangeBind->getRoutingKey());
 	}
 
 	public function testIsNowait(): void
 	{
-		$this->assertTrue($this->exchangeBind->isNowait());
+		self::assertTrue($this->exchangeBind->isNowait());
 	}
 
 	public function testGetArguments(): void
 	{
-		$this->assertSame(['a' => 1], $this->exchangeBind->getArguments());
+		self::assertSame(['a' => 1], $this->exchangeBind->getArguments());
 	}
 }

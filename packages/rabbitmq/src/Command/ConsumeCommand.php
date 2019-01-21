@@ -46,7 +46,7 @@ final class ConsumeCommand extends Command
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function execute(InputInterface $input, OutputInterface $output): void
+	protected function execute(InputInterface $input, OutputInterface $output): ?int
 	{
 		/** @var string $consumer */
 		$consumer = $input->getArgument('consumer');
@@ -65,6 +65,8 @@ final class ConsumeCommand extends Command
 		$consumer->consume($channel, $numberOfMessages);
 
 		$this->bunnyManager->getClient()->run($secondsToRun);
+
+		return 0;
 	}
 
 	protected function getNumberOfMessages(InputInterface $input): ?int

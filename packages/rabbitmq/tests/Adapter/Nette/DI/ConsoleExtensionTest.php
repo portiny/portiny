@@ -10,6 +10,6 @@ final class ConsoleExtensionTest extends AbstractContainerTestCase
 	public function testLoadConfiguration(): void
 	{
 		$bunnyManager = $this->container->getByType(BunnyManager::class);
-		$this->assertInstanceOf(BunnyManager::class, $bunnyManager);
+		self::assertInstanceOf(BunnyManager::class, $bunnyManager);
 	}
 }

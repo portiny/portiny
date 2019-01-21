@@ -26,8 +26,8 @@ final class BunnyManagerTest extends AbstractContainerTestCase
 	{
 		$client = $this->bunnyManager->getClient();
 
-		$this->assertInstanceOf(Client::class, $client);
-		$this->assertSame($client, $this->bunnyManager->getClient());
+		self::assertInstanceOf(Client::class, $client);
+		self::assertSame($client, $this->bunnyManager->getClient());
 	}
 
 	public function testGetAsyncClient(): void
@@ -37,14 +37,14 @@ final class BunnyManagerTest extends AbstractContainerTestCase
 
 		$client = $this->bunnyManager->getClient();
 
-		$this->assertInstanceOf(AsyncClient::class, $client);
-		$this->assertSame($client, $this->bunnyManager->getClient());
+		self::assertInstanceOf(AsyncClient::class, $client);
+		self::assertSame($client, $this->bunnyManager->getClient());
 	}
 
 	public function testGetClassNameByAlias(): void
 	{
-		$this->assertSame('App\\Service\\Consumer\\TestConsumer', $this->bunnyManager->getClassNameByAlias('myAlias'));
-		$this->assertNull($this->bunnyManager->getClassNameByAlias('nonExisting'));
+		self::assertSame('App\\Service\\Consumer\\TestConsumer', $this->bunnyManager->getClassNameByAlias('myAlias'));
+		self::assertNull($this->bunnyManager->getClassNameByAlias('nonExisting'));
 	}
 
 	protected function createBunnyManager(): BunnyManager

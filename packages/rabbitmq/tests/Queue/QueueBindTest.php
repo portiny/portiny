@@ -20,21 +20,21 @@ final class QueueBindTest extends TestCase
 
 	public function testGetExchange(): void
 	{
-		$this->assertSame('someExchange', $this->queueBind->getExchange());
+		self::assertSame('someExchange', $this->queueBind->getExchange());
 	}
 
 	public function testGetRoutingKey(): void
 	{
-		$this->assertSame('routingKey', $this->queueBind->getRoutingKey());
+		self::assertSame('routingKey', $this->queueBind->getRoutingKey());
 	}
 
 	public function testIsNowait(): void
 	{
-		$this->assertTrue($this->queueBind->isNowait());
+		self::assertTrue($this->queueBind->isNowait());
 	}
 
 	public function testGetArguments(): void
 	{
-		$this->assertSame(['b' => 2], $this->queueBind->getArguments());
+		self::assertSame(['b' => 2], $this->queueBind->getArguments());
 	}
 }

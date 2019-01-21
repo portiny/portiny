@@ -2,6 +2,9 @@
 
 namespace Portiny\RabbitMQ\Producer;
 
+use Bunny\Channel;
+use React\Promise\PromiseInterface;
+
 abstract class AbstractProducer
 {
 	/**
@@ -19,21 +22,36 @@ abstract class AbstractProducer
 	 */
 	public const CONTENT_TYPE_APPLICATION_JSON = 'application/json';
 
-	abstract public function getExchangeName(): string;
+	/**
+	 * @return bool|int|PromiseInterface
+	 */
+	final public function produce(Channel $channel, $body)
+	{
+		return $channel->publish(
+			$body,
+			$this->getHeaders(),
+			$this->getExchangeName(),
+			$this->getRoutingKey(),
+			$this->isMandatory(),
+			$this->isImmediate()
+		);
+	}
 
-	abstract public function getRoutingKey(): string;
+	abstract protected function getExchangeName(): string;
 
-	public function getHeaders(): array
+	abstract protected function getRoutingKey(): string;
+
+	protected function getHeaders(): array
 	{
 		return [];
 	}
 
-	public function isMandatory(): bool
+	protected function isMandatory(): bool
 	{
 		return false;
 	}
 
-	public function isImmediate(): bool
+	protected function isImmediate(): bool
 	{
 		return false;
 	}

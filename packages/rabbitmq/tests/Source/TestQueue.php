@@ -7,7 +7,7 @@ use Portiny\RabbitMQ\Queue\AbstractQueue;
 
 final class TestQueue extends AbstractQueue
 {
-	public function getName(): string
+	protected function getName(): string
 	{
 		return 'queueName';
 	}

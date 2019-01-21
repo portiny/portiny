@@ -41,13 +41,6 @@ final class Producer
 	 */
 	private function callPublish(Channel $channel, $body, AbstractProducer $abstractProducer)
 	{
-		return $channel->publish(
-			$body,
-			$abstractProducer->getHeaders(),
-			$abstractProducer->getExchangeName(),
-			$abstractProducer->getRoutingKey(),
-			$abstractProducer->isMandatory(),
-			$abstractProducer->isImmediate()
-		);
+		return $abstractProducer->produce($channel, $body);
 	}
 }
