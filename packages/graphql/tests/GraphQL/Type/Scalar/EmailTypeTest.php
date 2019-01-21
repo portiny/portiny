@@ -14,14 +14,14 @@ final class EmailTypeTest extends TestCase
 	{
 		$emailType = new EmailType();
 
-		$this->assertSame('test@test.test', $emailType->serialize('test@test.test'));
+		self::assertSame('test@test.test', $emailType->serialize('test@test.test'));
 	}
 
 	public function testParseValue(): void
 	{
 		$emailType = new EmailType();
 
-		$this->assertSame('test@test.test', $emailType->parseValue('test@test.test'));
+		self::assertSame('test@test.test', $emailType->parseValue('test@test.test'));
 	}
 
 	/**
@@ -32,7 +32,7 @@ final class EmailTypeTest extends TestCase
 	{
 		$emailType = new EmailType();
 
-		$this->assertSame('test', $emailType->parseValue('test'));
+		self::assertSame('test', $emailType->parseValue('test'));
 	}
 
 	public function testParseLiteral(): void
@@ -40,7 +40,7 @@ final class EmailTypeTest extends TestCase
 		$emailType = new EmailType();
 		$stringValueNode = new StringValueNode(['value' => 'test@test.test']);
 
-		$this->assertSame('test@test.test', $emailType->parseLiteral($stringValueNode));
+		self::assertSame('test@test.test', $emailType->parseLiteral($stringValueNode));
 	}
 
 	/**
@@ -52,7 +52,7 @@ final class EmailTypeTest extends TestCase
 		$emailType = new EmailType();
 		$stringValueNode = new StringValueNode(['value' => 'test']);
 
-		$this->assertSame('test', $emailType->parseLiteral($stringValueNode));
+		self::assertSame('test', $emailType->parseLiteral($stringValueNode));
 	}
 
 	/**
@@ -64,6 +64,6 @@ final class EmailTypeTest extends TestCase
 		$emailType = new EmailType();
 		$booleanValueNode = new BooleanValueNode(['value' => null]);
 
-		$this->assertSame('test', $emailType->parseLiteral($booleanValueNode));
+		self::assertSame('test', $emailType->parseLiteral($booleanValueNode));
 	}
 }

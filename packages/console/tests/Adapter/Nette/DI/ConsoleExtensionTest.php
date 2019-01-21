@@ -12,7 +12,7 @@ final class ConsoleExtensionTest extends AbstractContainerTestCase
 	public function testLoadConfiguration(): void
 	{
 		$application = $this->container->getByType(Application::class);
-		$this->assertInstanceOf(Application::class, $application);
+		self::assertInstanceOf(Application::class, $application);
 	}
 
 	public function testBeforeCompile(): void
@@ -20,11 +20,11 @@ final class ConsoleExtensionTest extends AbstractContainerTestCase
 		/** @var Application $application */
 		$application = $this->container->getByType(Application::class);
 
-		$this->assertFalse($application->isAutoExitEnabled());
-		$this->assertTrue($application->areExceptionsCaught());
-		$this->assertCount(3, $application->all());
-		$this->assertTrue($application->has('print-request-url'));
-		$this->assertInstanceOf(PrintRequestUrlCommand::class, $application->get('print-request-url'));
+		self::assertFalse($application->isAutoExitEnabled());
+		self::assertTrue($application->areExceptionsCaught());
+		self::assertCount(3, $application->all());
+		self::assertTrue($application->has('print-request-url'));
+		self::assertInstanceOf(PrintRequestUrlCommand::class, $application->get('print-request-url'));
 	}
 
 	public function testExecution(): void
@@ -39,6 +39,6 @@ final class ConsoleExtensionTest extends AbstractContainerTestCase
 		]);
 
 		$output = $commandTester->getDisplay();
-		$this->assertSame('https://portiny.org/', $output);
+		self::assertSame('https://portiny.org/', $output);
 	}
 }

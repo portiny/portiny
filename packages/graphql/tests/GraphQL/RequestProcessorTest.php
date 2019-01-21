@@ -33,8 +33,8 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 		$output = $this->createRequestFactory()
 			->process($requestParser);
 
-		$this->assertTrue(is_array($output));
-		$this->assertSame('resolved someValue', $output['data']['someQueryName']);
+		self::assertTrue(is_array($output));
+		self::assertSame('resolved someValue', $output['data']['someQueryName']);
 
 		// test mutation
 		$rawData = '{"query": "mutation Test($someArg: String) {'
@@ -44,8 +44,8 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 		$output = $this->createRequestFactory()
 			->process($requestParser);
 
-		$this->assertTrue(is_array($output));
-		$this->assertSame('someValue resolved', $output['data']['someMutationName']);
+		self::assertTrue(is_array($output));
+		self::assertSame('someValue resolved', $output['data']['someMutationName']);
 	}
 
 	private function createRequestParser(string $rawData): RequestParserInterface

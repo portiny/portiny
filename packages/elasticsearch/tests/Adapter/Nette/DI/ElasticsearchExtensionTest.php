@@ -10,7 +10,7 @@ class ElasticsearchExtensionTest extends AbstractContainerTestCase
 	public function testLoadConfiguration(): void
 	{
 		$client = $this->container->getByType(Client::class);
-		$this->assertInstanceOf(Client::class, $client);
+		self::assertInstanceOf(Client::class, $client);
 	}
 
 	public function testClientSetup(): void
@@ -18,7 +18,7 @@ class ElasticsearchExtensionTest extends AbstractContainerTestCase
 		/** @var Client $client */
 		$client = $this->container->getByType(Client::class);
 
-		$this->assertSame(
+		self::assertSame(
 			[1 => [
 				'host' => 'localhost',
 				'port' => 9201,
@@ -28,17 +28,17 @@ class ElasticsearchExtensionTest extends AbstractContainerTestCase
 			]],
 			$client->getConfig('connections')
 		);
-		$this->assertSame('some-path', $client->getConfig('path'));
-		$this->assertSame('http://some.url', $client->getConfig('url'));
-		$this->assertSame('66.96.200.39:80', $client->getConfig('proxy'));
-		$this->assertSame('Http', $client->getConfig('transport'));
-		$this->assertTrue((bool) $client->getConfig('persistent'));
-		$this->assertSame(5, $client->getConfig('timeout'));
-		$this->assertFalse((bool) $client->getConfig('roundRobin'));
-		$this->assertFalse((bool) $client->getConfig('log'));
-		$this->assertSame(2, $client->getConfig('retryOnConflict'));
-		$this->assertFalse((bool) $client->getConfig('bigintConversion'));
-		$this->assertSame('someUserName', $client->getConfig('username'));
-		$this->assertSame('somePassword', $client->getConfig('password'));
+		self::assertSame('some-path', $client->getConfig('path'));
+		self::assertSame('http://some.url', $client->getConfig('url'));
+		self::assertSame('66.96.200.39:80', $client->getConfig('proxy'));
+		self::assertSame('Http', $client->getConfig('transport'));
+		self::assertTrue((bool) $client->getConfig('persistent'));
+		self::assertSame(5, $client->getConfig('timeout'));
+		self::assertFalse((bool) $client->getConfig('roundRobin'));
+		self::assertFalse((bool) $client->getConfig('log'));
+		self::assertSame(2, $client->getConfig('retryOnConflict'));
+		self::assertFalse((bool) $client->getConfig('bigintConversion'));
+		self::assertSame('someUserName', $client->getConfig('username'));
+		self::assertSame('somePassword', $client->getConfig('password'));
 	}
 }

@@ -140,7 +140,7 @@ final class LogProducer extends AbstractProducer
         $this->producer->produce($this, json_encode($body));
     }
 
-    public function getHeaders(): array
+    protected function getHeaders(): array
     {
         return [
             'content-type' => self::CONTENT_TYPE_APPLICATION_JSON,
@@ -148,12 +148,12 @@ final class LogProducer extends AbstractProducer
         ];
     }
 
-    public function getExchangeName(): string
+    protected function getExchangeName(): string
     {
         return 'logExchange';
     }
 
-    public function getRoutingKey(): string
+    protected function getRoutingKey(): string
     {
         return ''; // we have fanout exchange so routing key can be empty
     }

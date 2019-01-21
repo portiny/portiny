@@ -15,15 +15,15 @@ final class MutationFieldConverterTest extends AbstractContainerTestCase
 		$mutationField = $this->getMutationField();
 		$output = MutationFieldConverter::toArray($mutationField);
 
-		$this->assertSame('Some name', key($output));
+		self::assertSame('Some name', key($output));
 
 		$mutationFieldAsArray = reset($output);
-		$this->assertInstanceOf(StringType::class, $mutationFieldAsArray['type']);
-		$this->assertSame('Some description', $mutationFieldAsArray['description']);
-		$this->assertArrayHasKey('someArg', $mutationFieldAsArray['args']);
-		$this->assertArrayHasKey('type', $mutationFieldAsArray['args']['someArg']);
-		$this->assertInstanceOf(StringType::class, $mutationFieldAsArray['args']['someArg']['type']);
-		$this->assertTrue(is_callable($mutationFieldAsArray['resolve']));
+		self::assertInstanceOf(StringType::class, $mutationFieldAsArray['type']);
+		self::assertSame('Some description', $mutationFieldAsArray['description']);
+		self::assertArrayHasKey('someArg', $mutationFieldAsArray['args']);
+		self::assertArrayHasKey('type', $mutationFieldAsArray['args']['someArg']);
+		self::assertInstanceOf(StringType::class, $mutationFieldAsArray['args']['someArg']['type']);
+		self::assertTrue(is_callable($mutationFieldAsArray['resolve']));
 	}
 
 	public function testToObject(): void
@@ -32,13 +32,13 @@ final class MutationFieldConverterTest extends AbstractContainerTestCase
 		$mutationFieldAsArray = MutationFieldConverter::toArray($mutationField);
 		$output = MutationFieldConverter::toObject($mutationFieldAsArray);
 
-		$this->assertSame('Some name', $output->getName());
-		$this->assertInstanceOf(StringType::class, $output->getType());
-		$this->assertSame('Some description', $output->getDescription());
-		$this->assertArrayHasKey('someArg', $output->getArgs());
-		$this->assertArrayHasKey('type', $output->getArgs()['someArg']);
-		$this->assertInstanceOf(StringType::class, $output->getArgs()['someArg']['type']);
-		$this->assertSame('resolved', $output->resolve([], ['someArg' => '']));
+		self::assertSame('Some name', $output->getName());
+		self::assertInstanceOf(StringType::class, $output->getType());
+		self::assertSame('Some description', $output->getDescription());
+		self::assertArrayHasKey('someArg', $output->getArgs());
+		self::assertArrayHasKey('type', $output->getArgs()['someArg']);
+		self::assertInstanceOf(StringType::class, $output->getArgs()['someArg']['type']);
+		self::assertSame('resolved', $output->resolve([], ['someArg' => '']));
 	}
 
 	private function getMutationField(): MutationFieldInterface

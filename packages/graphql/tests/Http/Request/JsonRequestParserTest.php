@@ -17,7 +17,7 @@ final class JsonRequestParserTest extends TestCase
 		});
 		$jsonRequestParser = new JsonRequestParser($httpRequest);
 
-		$this->assertSame('some query', $jsonRequestParser->getQuery());
+		self::assertSame('some query', $jsonRequestParser->getQuery());
 	}
 
 	public function testGetVariables(): void
@@ -28,7 +28,7 @@ final class JsonRequestParserTest extends TestCase
 		});
 		$jsonRequestParser = new JsonRequestParser($httpRequest);
 
-		$this->assertSame(['key' => 'value'], $jsonRequestParser->getVariables());
+		self::assertSame(['key' => 'value'], $jsonRequestParser->getVariables());
 	}
 
 	public function testEmptyData(): void
@@ -39,7 +39,7 @@ final class JsonRequestParserTest extends TestCase
 		});
 		$jsonRequestParser = new JsonRequestParser($httpRequest);
 
-		$this->assertSame('', $jsonRequestParser->getQuery());
-		$this->assertSame([], $jsonRequestParser->getVariables());
+		self::assertSame('', $jsonRequestParser->getQuery());
+		self::assertSame([], $jsonRequestParser->getVariables());
 	}
 }

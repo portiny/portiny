@@ -7,7 +7,7 @@ use Portiny\RabbitMQ\Exchange\AbstractExchange;
 
 final class TestExchange extends AbstractExchange
 {
-	public function getName(): string
+	protected function getName(): string
 	{
 		return 'exchangeName';
 	}

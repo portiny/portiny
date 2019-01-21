@@ -27,12 +27,14 @@ final class DeclareCommand extends Command
 			->setDescription('Creates all exchanges and queues.');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output): void
+	protected function execute(InputInterface $input, OutputInterface $output): ?int
 	{
 		$output->write('<comment>Declaring...</comment>');
 
 		$this->bunnyManager->declare();
 
 		$output->writeln(' <info>DONE</info>');
+
+		return 0;
 	}
 }

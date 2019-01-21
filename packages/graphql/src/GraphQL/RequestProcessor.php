@@ -60,15 +60,15 @@ final class RequestProcessor
 			);
 
 			$output = $result->toArray($this->isDebug());
-		} catch (Throwable $exception) {
+		} catch (Throwable $throwable) {
 			if ($logger) {
-				$logger->log($exception);
+				$logger->log($throwable);
 			}
 
 			$output = [
 				'error' => [
-					'message' => $exception->getMessage(),
-					'code' => $exception->getCode(),
+					'message' => $throwable->getMessage(),
+					'code' => $throwable->getCode(),
 				],
 			];
 		}
@@ -99,12 +99,12 @@ final class RequestProcessor
 				$context,
 				$requestParser->getVariables()
 			);
-		} catch (Throwable $exception) {
+		} catch (Throwable $throwable) {
 			if ($logger) {
-				$logger->log($exception);
+				$logger->log($throwable);
 			}
 
-			return $promiseAdapter->createRejected($exception);
+			return $promiseAdapter->createRejected($throwable);
 		}
 	}
 

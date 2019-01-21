@@ -26,11 +26,11 @@ class QueryFieldsProviderTest extends TestCase
 	{
 		$queryField = $this->getQueryField();
 
-		$this->assertEmpty($this->queryFieldsProvider->getFields());
+		self::assertEmpty($this->queryFieldsProvider->getFields());
 
 		$this->queryFieldsProvider->addField($queryField);
 
-		$this->assertCount(1, $this->queryFieldsProvider->getFields());
+		self::assertCount(1, $this->queryFieldsProvider->getFields());
 	}
 
 	/**
@@ -41,7 +41,7 @@ class QueryFieldsProviderTest extends TestCase
 	{
 		$queryField = $this->getQueryField();
 
-		$this->assertEmpty($this->queryFieldsProvider->getFields());
+		self::assertEmpty($this->queryFieldsProvider->getFields());
 
 		$this->queryFieldsProvider->addField($queryField);
 		$this->queryFieldsProvider->addField($queryField);
@@ -53,8 +53,8 @@ class QueryFieldsProviderTest extends TestCase
 		$this->queryFieldsProvider->addField($queryField);
 
 		$fields = $this->queryFieldsProvider->getFields();
-		$this->assertCount(1, $fields);
-		$this->assertSame($queryField, reset($fields));
+		self::assertCount(1, $fields);
+		self::assertSame($queryField, reset($fields));
 	}
 
 	public function testConvertFieldsToArray(): void
@@ -63,18 +63,18 @@ class QueryFieldsProviderTest extends TestCase
 		$this->queryFieldsProvider->addField($queryField);
 
 		$output = $this->queryFieldsProvider->convertFieldsToArray();
-		$this->assertSame('Some name', key($output));
+		self::assertSame('Some name', key($output));
 
 		$queryFieldAsArray = reset($output);
-		$this->assertInstanceOf(StringType::class, $queryFieldAsArray['type']);
-		$this->assertSame('Some description', $queryFieldAsArray['description']);
-		$this->assertArrayHasKey('someArg', $queryFieldAsArray['args']);
-		$this->assertArrayHasKey('type', $queryFieldAsArray['args']['someArg']);
-		$this->assertInstanceOf(StringType::class, $queryFieldAsArray['args']['someArg']['type']);
-		$this->assertTrue(is_callable($queryFieldAsArray['resolve']));
+		self::assertInstanceOf(StringType::class, $queryFieldAsArray['type']);
+		self::assertSame('Some description', $queryFieldAsArray['description']);
+		self::assertArrayHasKey('someArg', $queryFieldAsArray['args']);
+		self::assertArrayHasKey('type', $queryFieldAsArray['args']['someArg']);
+		self::assertInstanceOf(StringType::class, $queryFieldAsArray['args']['someArg']['type']);
+		self::assertTrue(is_callable($queryFieldAsArray['resolve']));
 
 		$output = $this->queryFieldsProvider->convertFieldsToArray([SomeQueryField::class]);
-		$this->assertEmpty($output);
+		self::assertEmpty($output);
 	}
 
 	private function getQueryField(): QueryFieldInterface

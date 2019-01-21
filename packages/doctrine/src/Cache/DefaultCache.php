@@ -71,7 +71,7 @@ final class DefaultCache extends CacheProvider
 		}
 
 		if (! empty($data)) {
-			$m = Strings::match($id, '~(?P<class>[^@$[\].]+)(?:\$(?P<prop>[^@$[\].]+))?\@\[Annot\]~i');
+			$m = Strings::match($id, '#(?P<class>[^@$[\].]+)(?:\$(?P<prop>[^@$[\].]+))?\@\[Annot\]#i');
 			if ($m !== NULL && class_exists($m['class'])) {
 				$files[] = self::getClassFilename($m['class']);
 			}

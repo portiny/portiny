@@ -27,8 +27,10 @@ final class PrintRequestUrlCommand extends Command
 			->setDescription('Print request URL');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output): void
+	protected function execute(InputInterface $input, OutputInterface $output): ?int
 	{
 		$output->write($this->request->getUrl()->getAbsoluteUrl());
+
+		return 0;
 	}
 }

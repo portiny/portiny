@@ -14,14 +14,14 @@ final class UrlTypeTest extends TestCase
 	{
 		$urlType = new UrlType();
 
-		$this->assertSame('https://portiny.org', $urlType->serialize('https://portiny.org'));
+		self::assertSame('https://portiny.org', $urlType->serialize('https://portiny.org'));
 	}
 
 	public function testParseValue(): void
 	{
 		$urlType = new UrlType();
 
-		$this->assertSame('https://portiny.org', $urlType->parseValue('https://portiny.org'));
+		self::assertSame('https://portiny.org', $urlType->parseValue('https://portiny.org'));
 	}
 
 	/**
@@ -32,7 +32,7 @@ final class UrlTypeTest extends TestCase
 	{
 		$urlType = new UrlType();
 
-		$this->assertSame('test', $urlType->parseValue('test'));
+		self::assertSame('test', $urlType->parseValue('test'));
 	}
 
 	public function testParseLiteral(): void
@@ -40,7 +40,7 @@ final class UrlTypeTest extends TestCase
 		$urlType = new UrlType();
 		$stringValueNode = new StringValueNode(['value' => 'https://portiny.org']);
 
-		$this->assertSame('https://portiny.org', $urlType->parseLiteral($stringValueNode));
+		self::assertSame('https://portiny.org', $urlType->parseLiteral($stringValueNode));
 	}
 
 	/**
@@ -52,7 +52,7 @@ final class UrlTypeTest extends TestCase
 		$urlType = new UrlType();
 		$stringValueNode = new StringValueNode(['value' => 'test']);
 
-		$this->assertSame('test', $urlType->parseLiteral($stringValueNode));
+		self::assertSame('test', $urlType->parseLiteral($stringValueNode));
 	}
 
 	/**
@@ -64,6 +64,6 @@ final class UrlTypeTest extends TestCase
 		$urlType = new UrlType();
 		$booleanValueNode = new BooleanValueNode(['value' => null]);
 
-		$this->assertSame('test', $urlType->parseLiteral($booleanValueNode));
+		self::assertSame('test', $urlType->parseLiteral($booleanValueNode));
 	}
 }

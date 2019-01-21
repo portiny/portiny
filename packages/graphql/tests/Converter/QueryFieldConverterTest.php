@@ -15,15 +15,15 @@ final class QueryFieldConverterTest extends AbstractContainerTestCase
 		$queryField = $this->getQueryField();
 		$output = QueryFieldConverter::toArray($queryField);
 
-		$this->assertSame('Some name', key($output));
+		self::assertSame('Some name', key($output));
 
 		$queryFieldAsArray = reset($output);
-		$this->assertInstanceOf(StringType::class, $queryFieldAsArray['type']);
-		$this->assertSame('Some description', $queryFieldAsArray['description']);
-		$this->assertArrayHasKey('someArg', $queryFieldAsArray['args']);
-		$this->assertArrayHasKey('type', $queryFieldAsArray['args']['someArg']);
-		$this->assertInstanceOf(StringType::class, $queryFieldAsArray['args']['someArg']['type']);
-		$this->assertTrue(is_callable($queryFieldAsArray['resolve']));
+		self::assertInstanceOf(StringType::class, $queryFieldAsArray['type']);
+		self::assertSame('Some description', $queryFieldAsArray['description']);
+		self::assertArrayHasKey('someArg', $queryFieldAsArray['args']);
+		self::assertArrayHasKey('type', $queryFieldAsArray['args']['someArg']);
+		self::assertInstanceOf(StringType::class, $queryFieldAsArray['args']['someArg']['type']);
+		self::assertTrue(is_callable($queryFieldAsArray['resolve']));
 	}
 
 	public function testToObject(): void
@@ -32,13 +32,13 @@ final class QueryFieldConverterTest extends AbstractContainerTestCase
 		$queryFieldAsArray = QueryFieldConverter::toArray($queryField);
 		$output = QueryFieldConverter::toObject($queryFieldAsArray);
 
-		$this->assertSame('Some name', $output->getName());
-		$this->assertInstanceOf(StringType::class, $output->getType());
-		$this->assertSame('Some description', $output->getDescription());
-		$this->assertArrayHasKey('someArg', $output->getArgs());
-		$this->assertArrayHasKey('type', $output->getArgs()['someArg']);
-		$this->assertInstanceOf(StringType::class, $output->getArgs()['someArg']['type']);
-		$this->assertSame('resolved', $output->resolve([], ['someArg' => '']));
+		self::assertSame('Some name', $output->getName());
+		self::assertInstanceOf(StringType::class, $output->getType());
+		self::assertSame('Some description', $output->getDescription());
+		self::assertArrayHasKey('someArg', $output->getArgs());
+		self::assertArrayHasKey('type', $output->getArgs()['someArg']);
+		self::assertInstanceOf(StringType::class, $output->getArgs()['someArg']['type']);
+		self::assertSame('resolved', $output->resolve([], ['someArg' => '']));
 	}
 
 	private function getQueryField(): QueryFieldInterface

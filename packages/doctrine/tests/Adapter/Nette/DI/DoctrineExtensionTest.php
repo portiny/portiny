@@ -16,25 +16,25 @@ class DoctrineExtensionTest extends AbstractContainerTestCase
 	{
 		/** @var EntityManager $entityManager */
 		$entityManager = $this->container->getByType(EntityManager::class);
-		$this->assertInstanceOf(EntityManager::class, $entityManager);
+		self::assertInstanceOf(EntityManager::class, $entityManager);
 
 		/** @var EventManager $eventManager */
 		$eventManager = $this->container->getByType(EventManager::class);
-		$this->assertInstanceOf(EventManager::class, $eventManager);
+		self::assertInstanceOf(EventManager::class, $eventManager);
 	}
 
 	public function testBeforeCompile(): void
 	{
-		$this->assertArrayHasKey('interval', Type::getTypesMap());
-		$this->assertInstanceOf(IntervalType::class, Type::getType('interval'));
+		self::assertArrayHasKey('interval', Type::getTypesMap());
+		self::assertInstanceOf(IntervalType::class, Type::getType('interval'));
 
-		$this->assertArrayHasKey('datetime', Type::getTypesMap());
-		$this->assertInstanceOf(DateTimeImmutableType::class, Type::getType('datetime'));
+		self::assertArrayHasKey('datetime', Type::getTypesMap());
+		self::assertInstanceOf(DateTimeImmutableType::class, Type::getType('datetime'));
 
 		/** @var EntityManager $entityManager */
 		$entityManager = $this->container->getByType(EntityManager::class);
 		$configuration = $entityManager->getConfiguration();
-		$this->assertNull($configuration->getCustomStringFunction('nonExistsFunctionName'));
-		$this->assertSame(CastFunction::class, $configuration->getCustomStringFunction('cast'));
+		self::assertNull($configuration->getCustomStringFunction('nonExistsFunctionName'));
+		self::assertSame(CastFunction::class, $configuration->getCustomStringFunction('cast'));
 	}
 }
