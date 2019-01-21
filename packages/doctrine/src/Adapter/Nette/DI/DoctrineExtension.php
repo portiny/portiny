@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Portiny\Doctrine\Adapter\Nette\DI;
 
 use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\EventManager;
 use Doctrine\Common\EventSubscriber;
@@ -202,7 +201,13 @@ class DoctrineExtension extends CompilerExtension
 		$configDefinition = $builder->getDefinition($name . '.config')
 			->setFactory(
 				'\Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration',
-				[array_values($this->entitySources), $config['debug'], $config['proxyDir'], NULL, FALSE]
+				[
+					array_values($this->entitySources),
+					$config['debug'],
+					$config['proxyDir'],
+					$this->getCache($name . '.array', $builder, 'array'),
+					FALSE,
+				]
 			)
 			->addSetup('setNamingStrategy', ['@' . $name . '.namingStrategy']);
 
@@ -318,25 +323,25 @@ class DoctrineExtension extends CompilerExtension
 
 	private function getCache(string $prefix, ContainerBuilder $containerBuilder, string $cacheType): string
 	{
-		$cacheServiceName = $containerBuilder->getByType(Cache::class);
-		if ($cacheServiceName !== NULL && strlen($cacheServiceName) > 0) {
-			return '@' . $cacheServiceName;
+		if ($containerBuilder->hasDefinition($prefix . '.cache')) {
+			return '@' . $prefix . '.cache';
 		}
 
 		$config = $this->parseConfig();
 
-		$cacheClass = ArrayCache::class;
-		if ($cacheType) {
-			switch ($cacheType) {
-				case 'redis':
-					$cacheClass = $config['cache']['redis']['class'];
-					break;
+		switch ($cacheType) {
+			case 'redis':
+				$cacheClass = $config['cache']['redis']['class'];
+				break;
 
-				case 'default':
-				default:
-					$cacheClass = DefaultCache::class;
-					break;
-			}
+			case 'array':
+				$cacheClass = ArrayCache::class;
+				break;
+
+			case 'default':
+			default:
+				$cacheClass = DefaultCache::class;
+				break;
 		}
 
 		$cacheDefinition = $containerBuilder->addDefinition($prefix . '.cache')
