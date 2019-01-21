@@ -26,11 +26,11 @@ class MutationFieldsProviderTest extends TestCase
 	{
 		$mutationField = $this->getMutationField();
 
-		$this->assertEmpty($this->mutationFieldsProvider->getFields());
+		self::assertEmpty($this->mutationFieldsProvider->getFields());
 
 		$this->mutationFieldsProvider->addField($mutationField);
 
-		$this->assertCount(1, $this->mutationFieldsProvider->getFields());
+		self::assertCount(1, $this->mutationFieldsProvider->getFields());
 	}
 
 	/**
@@ -41,7 +41,7 @@ class MutationFieldsProviderTest extends TestCase
 	{
 		$mutationField = $this->getMutationField();
 
-		$this->assertEmpty($this->mutationFieldsProvider->getFields());
+		self::assertEmpty($this->mutationFieldsProvider->getFields());
 
 		$this->mutationFieldsProvider->addField($mutationField);
 		$this->mutationFieldsProvider->addField($mutationField);
@@ -53,8 +53,8 @@ class MutationFieldsProviderTest extends TestCase
 		$this->mutationFieldsProvider->addField($mutationField);
 
 		$fields = $this->mutationFieldsProvider->getFields();
-		$this->assertCount(1, $fields);
-		$this->assertSame($mutationField, reset($fields));
+		self::assertCount(1, $fields);
+		self::assertSame($mutationField, reset($fields));
 	}
 
 	public function testConvertFieldsToArray(): void
@@ -63,18 +63,18 @@ class MutationFieldsProviderTest extends TestCase
 		$this->mutationFieldsProvider->addField($mutationField);
 
 		$output = $this->mutationFieldsProvider->convertFieldsToArray();
-		$this->assertSame('Some name', key($output));
+		self::assertSame('Some name', key($output));
 
 		$mutationFieldAsArray = reset($output);
-		$this->assertInstanceOf(StringType::class, $mutationFieldAsArray['type']);
-		$this->assertSame('Some description', $mutationFieldAsArray['description']);
-		$this->assertArrayHasKey('someArg', $mutationFieldAsArray['args']);
-		$this->assertArrayHasKey('type', $mutationFieldAsArray['args']['someArg']);
-		$this->assertInstanceOf(StringType::class, $mutationFieldAsArray['args']['someArg']['type']);
-		$this->assertTrue(is_callable($mutationFieldAsArray['resolve']));
+		self::assertInstanceOf(StringType::class, $mutationFieldAsArray['type']);
+		self::assertSame('Some description', $mutationFieldAsArray['description']);
+		self::assertArrayHasKey('someArg', $mutationFieldAsArray['args']);
+		self::assertArrayHasKey('type', $mutationFieldAsArray['args']['someArg']);
+		self::assertInstanceOf(StringType::class, $mutationFieldAsArray['args']['someArg']['type']);
+		self::assertTrue(is_callable($mutationFieldAsArray['resolve']));
 
 		$output = $this->mutationFieldsProvider->convertFieldsToArray([SomeMutationField::class]);
-		$this->assertEmpty($output);
+		self::assertEmpty($output);
 	}
 
 	private function getMutationField(): MutationFieldInterface

@@ -48,7 +48,8 @@ class EmailType extends ScalarType
 	public function parseLiteral($valueNode, ?array $variables = null)
 	{
 		if (! $valueNode instanceof StringValueNode) {
-			throw new Error('Can only parse strings got: ' . $valueNode->kind, $valueNode);
+			$kind = isset($valueNode->kind) ? $valueNode->kind : '';
+			throw new Error('Can only parse strings got: ' . $kind, $valueNode);
 		}
 
 		if (! filter_var($valueNode->value, FILTER_VALIDATE_EMAIL)) {

@@ -13,8 +13,8 @@ final class TypesTest extends TestCase
 		$emailType = Types::get(EmailType::class);
 		$sameEmailType = Types::get(EmailType::class);
 
-		$this->assertInstanceOf(EmailType::class, $emailType);
-		$this->assertInstanceOf(EmailType::class, $sameEmailType);
-		$this->assertSame($emailType, $sameEmailType);
+		self::assertInstanceOf(EmailType::class, $emailType);
+		self::assertInstanceOf(EmailType::class, $sameEmailType);
+		self::assertSame($emailType, $sameEmailType);
 	}
 }

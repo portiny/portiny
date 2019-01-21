@@ -10,6 +10,6 @@ final class GraphQLExtensionTest extends AbstractContainerTestCase
 	public function testLoadConfiguration(): void
 	{
 		$graphQLProcessor = $this->container->getByType(RequestProcessor::class);
-		$this->assertInstanceOf(RequestProcessor::class, $graphQLProcessor);
+		self::assertInstanceOf(RequestProcessor::class, $graphQLProcessor);
 	}
 }
