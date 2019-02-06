@@ -23,7 +23,7 @@
 		"nette/bootstrap": "^2.4",
 		"phpstan/phpstan": "^0.11",
 		"phpunit/phpunit": "^7.5",
-		"symplify/easy-coding-standard": "^5.2",
+		"symplify/easy-coding-standard": "^5.4",
 		"tracy/tracy": "^2.5"
 	},
 	"autoload": {

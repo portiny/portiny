@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Portiny\Doctrine\Adapter\Nette\DI;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\EventManager;
@@ -22,6 +26,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand;
@@ -41,6 +46,7 @@ use Nette\DI\ContainerBuilder;
 use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\PhpLiteral;
 use Nette\Utils\AssertionException;
 use Nette\Utils\Validators;
 use Portiny\Doctrine\Adapter\Nette\Tracy\DoctrineSQLPanel;
@@ -74,6 +80,7 @@ class DoctrineExtension extends CompilerExtension
 		],
 		'prefix' => 'doctrine.default',
 		'proxyDir' => '%tempDir%/cache/proxies',
+		'proxyNamespace' => 'DoctrineProxies',
 		'sourceDir' => NULL,
 		'entityManagerClassName' => EntityManager::class,
 		'defaultRepositoryClassName' => EntityRepository::class,
@@ -116,10 +123,35 @@ class DoctrineExtension extends CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$name = $config['prefix'];
 
+		$builder->addDefinition($name . '.namingStrategy')
+			->setType($config['namingStrategy']);
+
 		$configurationDefinition = $builder->addDefinition($name . '.config')
 			->setType(Configuration::class)
 			->addSetup('setFilterSchemaAssetsExpression', [$config['dbal']['schema_filter']])
-			->addSetup('setDefaultRepositoryClassName', [$config['defaultRepositoryClassName']]);
+			->addSetup('setDefaultRepositoryClassName', [$config['defaultRepositoryClassName']])
+			->addSetup('setProxyDir', [$config['proxyDir']])
+			->addSetup('setProxyNamespace', [$config['proxyNamespace']])
+			->addSetup('setAutoGenerateProxyClasses', [$config['debug']])
+			->addSetup('setNamingStrategy', ['@' . $name . '.namingStrategy']);
+
+		$builder->addDefinition($name . '.annotationReader')
+			->setType(AnnotationReader::class)
+			->setAutowired(false);
+
+		$metadataCache = $this->getCache($name . '.metadata', $builder, $config['metadataCache'] ?: 'array');
+		$builder->addDefinition($name . '.reader')
+			->setType(Reader::class)
+			->setFactory(CachedReader::class, ['@' . $name . '.annotationReader', $metadataCache, $config['debug']]);
+
+		$builder->addDefinition($name . '.annotationDriver')
+			->setFactory(AnnotationDriver::class, ['@' . $name . '.reader', array_values($this->entitySources)]);
+
+		$configurationDefinition->addSetup('setMetadataDriverImpl', ['@' . $name . '.annotationDriver']);
+
+		foreach ($config['functions'] as $functionName => $function) {
+			$configurationDefinition->addSetup('addCustomStringFunction', [$functionName, $function]);
+		}
 
 		if ($config['repositoryFactory']) {
 			$builder->addDefinition($name . '.repositoryFactory')
@@ -173,9 +205,6 @@ class DoctrineExtension extends CompilerExtension
 				[$config['connection'], '@' . $name . '.config', '@Doctrine\Common\EventManager']
 			);
 
-		$builder->addDefinition($name . '.namingStrategy')
-			->setType($config['namingStrategy']);
-
 		$builder->addDefinition($name . '.resolver')
 			->setType(ResolveTargetEntityListener::class);
 
@@ -198,23 +227,6 @@ class DoctrineExtension extends CompilerExtension
 
 		$builder = $this->getContainerBuilder();
 
-		$configDefinition = $builder->getDefinition($name . '.config')
-			->setFactory(
-				'\Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration',
-				[
-					array_values($this->entitySources),
-					$config['debug'],
-					$config['proxyDir'],
-					$this->getCache($name . '.array', $builder, 'array'),
-					FALSE,
-				]
-			)
-			->addSetup('setNamingStrategy', ['@' . $name . '.namingStrategy']);
-
-		foreach ($config['functions'] as $functionName => $function) {
-			$configDefinition->addSetup('addCustomStringFunction', [$functionName, $function]);
-		}
-
 		foreach ($this->classMappings as $source => $target) {
 			$builder->getDefinition($name . '.resolver')
 				->addSetup('addResolveTargetEntity', [$source, $target, []]);
@@ -232,17 +244,22 @@ class DoctrineExtension extends CompilerExtension
 	public function afterCompile(ClassType $classType): void
 	{
 		$initialize = $classType->methods['initialize'];
+
+		$initialize->addBody('?::registerUniqueLoader("class_exists");', [new PhpLiteral(AnnotationRegistry::class)]);
+
 		if ($this->hasIBarPanelInterface()) {
 			$initialize->addBody('$this->getByType(\'' . self::DOCTRINE_SQL_PANEL . '\')->bindToBar();');
 		}
 
-		$initialize->addBody(
-			'$filterCollection = $this->getByType(\'' . EntityManagerInterface::class . '\')->getFilters();'
-		);
 		$builder = $this->getContainerBuilder();
 		$filterDefinitions = $builder->findByType(SQLFilter::class);
-		foreach (array_keys($filterDefinitions) as $name) {
-			$initialize->addBody('$filterCollection->enable(\'' . $name . '\');');
+		if ($filterDefinitions !== []) {
+			$initialize->addBody(
+				'$filterCollection = $this->getByType(\'' . EntityManagerInterface::class . '\')->getFilters();'
+			);
+			foreach (array_keys($filterDefinitions) as $name) {
+				$initialize->addBody('$filterCollection->enable(\'' . $name . '\');');
+			}
 		}
 	}
 
