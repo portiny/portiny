@@ -6,7 +6,6 @@ use Elastica\Client;
 use Nette\DI\CompilerExtension;
 use Nette\PhpGenerator\ClassType;
 use Portiny\Elasticsearch\Adapter\Nette\Tracy\ElasticsearchPanel;
-use Tracy\IBarPanel;
 
 class ElasticsearchExtension extends CompilerExtension
 {
@@ -19,6 +18,7 @@ class ElasticsearchExtension extends CompilerExtension
 	 * @var array
 	 */
 	private $defaults = [
+		'debug' => '%debugMode%',
 		'clientClassName' => Client::class,
 		'connections' => [
 			[
@@ -68,10 +68,10 @@ class ElasticsearchExtension extends CompilerExtension
 				'bigintConversion' => $config['bigintConversion'],
 				'username' => $config['username'],
 				'password' => $config['password'],
-			], NULL, NULL])
-			->setAutowired(TRUE);
+			], null, null])
+			->setAutowired(true);
 
-		if ($this->hasIBarPanelInterface()) {
+		if ($config['debug'] === true) {
 			$builder->addDefinition($this->prefix('diagnosticsPanel'))
 				->setType(self::ELASTICSEARCH_PANEL);
 		}
@@ -82,14 +82,11 @@ class ElasticsearchExtension extends CompilerExtension
 	 */
 	public function afterCompile(ClassType $classType): void
 	{
-		$initialize = $classType->methods['initialize'];
-		if ($this->hasIBarPanelInterface()) {
+		$config = $this->validateConfig($this->defaults);
+
+		if ($config['debug'] === true) {
+			$initialize = $classType->methods['initialize'];
 			$initialize->addBody('$this->getByType(\'' . self::ELASTICSEARCH_PANEL . '\')->bindToBar();');
 		}
-	}
-
-	private function hasIBarPanelInterface(): bool
-	{
-		return interface_exists(IBarPanel::class);
 	}
 }

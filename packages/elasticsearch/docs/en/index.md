@@ -39,6 +39,7 @@ Via configuration you can change all [Elastica client behaviours](https://github
 elasticsearch:
     connections:
         {{host: localhost, port: 9201}, {host: 12.34.56.78, port: 1234}} # multiple hosts
+    debug: %debugMode%
     clientClassName: App\MyApp\Elasticsearch\MyClient # must extends from \Elastica\Client
     path: null
     url: null
