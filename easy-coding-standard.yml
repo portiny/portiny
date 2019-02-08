@@ -16,19 +16,10 @@ services:
     Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
         maxCognitiveComplexity: 9
 
-    Symplify\CodingStandard\Sniffs\DependencyInjection\NoClassInstantiationSniff:
-        extraAllowedClasses:
-            - Symplify\EasyCodingStandard\Error\Error
-            - Symplify\CodingStandard\FixerTokenWrapper\Naming\Name
-            - Symplify\TokenRunner\*
-            - Symplify\PackageBuilder\Reflection\PrivatesCaller
-
 parameters:
     indentation: tab
     exclude_checkers:
         - PHP_CodeSniffer\Standards\PSR2\Sniffs\ControlStructures\ControlStructureSpacingSniff
-        - PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\LowerCaseConstantSniff
-        - PhpCsFixer\Fixer\Casing\LowercaseConstantsFixer
         - Symplify\CodingStandard\Sniffs\DependencyInjection\NoClassInstantiationSniff
         - Symplify\CodingStandard\Sniffs\Property\DynamicPropertySniff
         - SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff
@@ -46,10 +37,6 @@ parameters:
             - packages/graphql/tests/Converter/QueryFieldConverterTest.php
             - packages/graphql/tests/Provider/QueryFieldsProviderTest.php
             - packages/graphql/tests/Provider/MutationFieldsProviderTest.php
-
-        Symplify\CodingStandard\Fixer\Naming\PropertyNameMatchingTypeFixer:
-            # contains float $totalTime
-            - packages/elasticsearch/src/Adapter/Nette/Tracy/ElasticsearchPanel.php
 
         Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
             - packages/doctrine/src/Adapter/Nette/Tracy/Helper.php
