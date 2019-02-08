@@ -51,7 +51,7 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 	private function createRequestParser(string $rawData): RequestParserInterface
 	{
 		$url = new UrlScript('https://portiny.org');
-		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () use ($rawData) {
+		$httpRequest = new Request($url, null, null, null, null, null, null, null, null, function () use ($rawData) {
 			return $rawData;
 		});
 

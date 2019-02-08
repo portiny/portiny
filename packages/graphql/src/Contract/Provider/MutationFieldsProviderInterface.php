@@ -19,5 +19,5 @@ interface MutationFieldsProviderInterface
 	 */
 	public function getFields(): array;
 
-	public function convertFieldsToArray(?array $allowedMutations = NULL): array;
+	public function convertFieldsToArray(?array $allowedMutations = null): array;
 }

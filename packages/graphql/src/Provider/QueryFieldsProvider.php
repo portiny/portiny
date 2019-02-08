@@ -37,7 +37,7 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function convertFieldsToArray(?array $allowedQueries = NULL): array
+	public function convertFieldsToArray(?array $allowedQueries = null): array
 	{
 		$fields = [];
 		foreach ($this->getFields() as $field) {

@@ -117,7 +117,7 @@ class QueryFieldsProviderTest extends TestCase
 			/**
 			 * {@inheritdoc}
 			 */
-			public function resolve(array $root, array $args, $context = NULL)
+			public function resolve(array $root, array $args, $context = null)
 			{
 				return 'resolved';
 			}

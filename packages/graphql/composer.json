@@ -11,13 +11,12 @@
 		"nette/di": "^2.4",
 		"nette/http": "^2.4",
 		"nette/utils": "^2.4",
-		"tracy/tracy": "^2.4",
+		"tracy/tracy": "^2.5",
 		"webonyx/graphql-php": "^0.13"
 	},
 	"require-dev": {
 		"nette/bootstrap": "^2.4",
-		"phpunit/phpunit": "^7.5",
-		"tracy/tracy": "^2.5"
+		"phpunit/phpunit": "^7.5"
 	},
 	"autoload": {
 		"psr-4": {

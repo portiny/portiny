@@ -37,7 +37,7 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function convertFieldsToArray(?array $allowedMutations = NULL): array
+	public function convertFieldsToArray(?array $allowedMutations = null): array
 	{
 		$fields = [];
 		foreach ($this->getFields() as $field) {

@@ -12,7 +12,7 @@ final class JsonRequestParserTest extends TestCase
 	public function testGetQuery(): void
 	{
 		$url = new UrlScript('https://portiny.org');
-		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () {
+		$httpRequest = new Request($url, null, null, null, null, null, null, null, null, function () {
 			return '{"query": "some query", "variables": {}}';
 		});
 		$jsonRequestParser = new JsonRequestParser($httpRequest);
@@ -23,7 +23,7 @@ final class JsonRequestParserTest extends TestCase
 	public function testGetVariables(): void
 	{
 		$url = new UrlScript('https://portiny.org');
-		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () {
+		$httpRequest = new Request($url, null, null, null, null, null, null, null, null, function () {
 			return '{"query": "some query", "variables": {"key": "value"}}';
 		});
 		$jsonRequestParser = new JsonRequestParser($httpRequest);
@@ -34,7 +34,7 @@ final class JsonRequestParserTest extends TestCase
 	public function testEmptyData(): void
 	{
 		$url = new UrlScript('https://portiny.org');
-		$httpRequest = new Request($url, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, function () {
+		$httpRequest = new Request($url, null, null, null, null, null, null, null, null, function () {
 			return '';
 		});
 		$jsonRequestParser = new JsonRequestParser($httpRequest);

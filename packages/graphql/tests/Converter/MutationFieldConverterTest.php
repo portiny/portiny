@@ -81,7 +81,7 @@ final class MutationFieldConverterTest extends AbstractContainerTestCase
 			/**
 			 * {@inheritdoc}
 			 */
-			public function resolve(array $root, array $args, $context = NULL)
+			public function resolve(array $root, array $args, $context = null)
 			{
 				return 'resolved';
 			}

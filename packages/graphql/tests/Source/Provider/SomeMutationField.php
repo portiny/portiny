@@ -44,7 +44,7 @@ final class SomeMutationField implements MutationFieldInterface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function resolve(array $root, array $args, $context = NULL)
+	public function resolve(array $root, array $args, $context = null)
 	{
 		return $args['someArg'] . ' resolved';
 	}

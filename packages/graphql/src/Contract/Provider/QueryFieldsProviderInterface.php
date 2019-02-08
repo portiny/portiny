@@ -19,5 +19,5 @@ interface QueryFieldsProviderInterface
 	 */
 	public function getFields(): array;
 
-	public function convertFieldsToArray(?array $allowedQueries = NULL): array;
+	public function convertFieldsToArray(?array $allowedQueries = null): array;
 }

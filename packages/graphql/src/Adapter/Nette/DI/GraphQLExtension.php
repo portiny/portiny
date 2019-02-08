@@ -22,7 +22,7 @@ final class GraphQLExtension extends CompilerExtension
 	 * @var array
 	 */
 	private static $defaults = [
-		'useOwnRequestParser' => FALSE,
+		'useOwnRequestParser' => false,
 	];
 
 	/**

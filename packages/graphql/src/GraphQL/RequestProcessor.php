@@ -45,10 +45,10 @@ final class RequestProcessor
 	public function process(
 		RequestParserInterface $requestParser,
 		array $rootValue = [],
-		$context = NULL,
-		?array $allowedQueries = NULL,
-		?array $allowedMutations = NULL,
-		?ILogger $logger = NULL
+		$context = null,
+		?array $allowedQueries = null,
+		?array $allowedMutations = null,
+		?ILogger $logger = null
 	): array {
 		try {
 			$result = GraphQL::executeQuery(
@@ -85,10 +85,10 @@ final class RequestProcessor
 		PromiseAdapter $promiseAdapter,
 		RequestParserInterface $requestParser,
 		array $rootValue = [],
-		$context = NULL,
-		?array $allowedQueries = NULL,
-		?array $allowedMutations = NULL,
-		?ILogger $logger = NULL
+		$context = null,
+		?array $allowedQueries = null,
+		?array $allowedMutations = null,
+		?ILogger $logger = null
 	): Promise {
 		try {
 			return GraphQL::promiseToExecute(
@@ -108,7 +108,7 @@ final class RequestProcessor
 		}
 	}
 
-	private function createSchema(?array $allowedQueries = NULL, ?array $allowedMutations = NULL): Schema
+	private function createSchema(?array $allowedQueries = null, ?array $allowedMutations = null): Schema
 	{
 		$configuration = [
 			'query' => $this->createQueryObject($allowedQueries),
@@ -127,7 +127,7 @@ final class RequestProcessor
 		return ! Debugger::$productionMode ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0;
 	}
 
-	private function createQueryObject(?array $allowedQueries = NULL): ObjectType
+	private function createQueryObject(?array $allowedQueries = null): ObjectType
 	{
 		return new ObjectType([
 			'name' => 'Query',
@@ -135,7 +135,7 @@ final class RequestProcessor
 		]);
 	}
 
-	private function createMutationObject(?array $allowedMutations = NULL): ObjectType
+	private function createMutationObject(?array $allowedMutations = null): ObjectType
 	{
 		return new ObjectType([
 			'name' => 'Mutation',

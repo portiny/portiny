@@ -44,7 +44,7 @@ final class SomeQueryField implements QueryFieldInterface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function resolve(array $root, array $args, $context = NULL)
+	public function resolve(array $root, array $args, $context = null)
 	{
 		return 'resolved ' . $args['someArg'];
 	}

@@ -77,7 +77,7 @@ class MutationFieldConverter
 			/**
 			 * {@inheritdoc}
 			 */
-			public function resolve(array $root, array $args, $context = NULL)
+			public function resolve(array $root, array $args, $context = null)
 			{
 				return $this->data['resolve']($root, $args, $context);
 			}

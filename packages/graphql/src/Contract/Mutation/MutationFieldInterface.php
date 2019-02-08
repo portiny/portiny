@@ -20,5 +20,5 @@ interface MutationFieldInterface
 	 * @param mixed|null $context
 	 * @return mixed
 	 */
-	public function resolve(array $root, array $args, $context = NULL);
+	public function resolve(array $root, array $args, $context = null);
 }
