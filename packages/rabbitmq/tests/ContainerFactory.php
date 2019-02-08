@@ -15,7 +15,7 @@ final class ContainerFactory
 		$tempDir = __DIR__ . '/temp/' . getmypid();
 
 		if (! file_exists($tempDir . '/log')) {
-			mkdir($tempDir . '/log', 0777, TRUE);
+			mkdir($tempDir . '/log', 0777, true);
 		}
 
 		register_shutdown_function(function (): void {

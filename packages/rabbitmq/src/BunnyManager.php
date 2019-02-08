@@ -21,7 +21,7 @@ final class BunnyManager
 	/**
 	 * @var bool
 	 */
-	private $isDeclared = FALSE;
+	private $isDeclared = false;
 
 	/**
 	 * @var Container
@@ -60,7 +60,7 @@ final class BunnyManager
 	public function getClient()
 	{
 		if ($this->client === null) {
-			if ($this->loop === NULL) {
+			if ($this->loop === null) {
 				$this->client = new Client($this->config['connection']);
 			} else {
 				$this->client = new AsyncClient($this->loop, $this->config['connection']);

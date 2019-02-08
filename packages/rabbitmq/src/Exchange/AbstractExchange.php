@@ -46,7 +46,7 @@ abstract class AbstractExchange
 			$this->isDurable(),
 			$this->isAutoDelete(),
 			$this->isInternal(),
-			FALSE,
+			false,
 			$this->getArguments()
 		);
 		if (! $frame instanceof MethodExchangeDeclareOkFrame) {
@@ -64,7 +64,7 @@ abstract class AbstractExchange
 				$exchangeBind->getDestination(),
 				$this->getName(),
 				$exchangeBind->getRoutingKey(),
-				FALSE,
+				false,
 				$exchangeBind->getArguments()
 			);
 			if (! $frame instanceof MethodExchangeBindOkFrame) {

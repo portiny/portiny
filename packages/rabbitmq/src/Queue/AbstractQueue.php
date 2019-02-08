@@ -17,7 +17,7 @@ abstract class AbstractQueue
 			$this->isDurable(),
 			$this->isExclusive(),
 			$this->isAutoDelete(),
-			FALSE,
+			false,
 			$this->getArguments()
 		);
 		if (! $frame instanceof MethodQueueDeclareOkFrame) {
@@ -29,7 +29,7 @@ abstract class AbstractQueue
 				$this->getName(),
 				$queueBind->getExchange(),
 				$queueBind->getRoutingKey(),
-				FALSE,
+				false,
 				$queueBind->getArguments()
 			);
 			if (! $frame instanceof MethodQueueBindOkFrame) {
