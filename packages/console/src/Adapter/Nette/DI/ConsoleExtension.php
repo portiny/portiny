@@ -20,9 +20,9 @@ class ConsoleExtension extends CompilerExtension
 	 * @var array
 	 */
 	private $defaults = [
-		'url' => NULL,
-		'autoExit' => NULL,
-		'catchExceptions' => NULL,
+		'url' => null,
+		'autoExit' => null,
+		'catchExceptions' => null,
 	];
 
 	/**
@@ -56,11 +56,11 @@ class ConsoleExtension extends CompilerExtension
 		$builder = $this->getContainerBuilder();
 		$applicationDefinition = $builder->getDefinitionByType(Application::class);
 
-		if ($config['autoExit'] !== NULL) {
+		if ($config['autoExit'] !== null) {
 			$applicationDefinition->addSetup('setAutoExit', [(bool) $config['autoExit']]);
 		}
 
-		if ($config['catchExceptions'] !== NULL) {
+		if ($config['catchExceptions'] !== null) {
 			$applicationDefinition->addSetup('setCatchExceptions', [(bool) $config['catchExceptions']]);
 		}
 
@@ -88,7 +88,7 @@ class ConsoleExtension extends CompilerExtension
 		$helperSetDefinition = $builder->getDefinitionByType(HelperSet::class);
 
 		foreach ($builder->findByType(HelperInterface::class) as $helperDefinition) {
-			$helperSetDefinition->addSetup('set', ['@' . $helperDefinition->getType(), NULL]);
+			$helperSetDefinition->addSetup('set', ['@' . $helperDefinition->getType(), null]);
 		}
 	}
 }
