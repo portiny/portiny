@@ -51,6 +51,7 @@ doctrine:
     debug: %debugMode%
     prefix: doctrine.default
     proxyDir: %tempDir%/proxies
+    proxyNamespace: DoctrineProxies
     sourceDir: %appDir%/Entity
     
     entityManagerClassName: \Doctrine\ORM\EntityManager

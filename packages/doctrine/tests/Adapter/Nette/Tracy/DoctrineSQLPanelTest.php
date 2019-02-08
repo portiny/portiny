@@ -24,7 +24,7 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 
 	public function testStartQuery(): void
 	{
-		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', NULL, NULL);
+		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', null, null);
 		$this->doctrineSQLPanel->stopQuery();
 
 		$queries = $this->doctrineSQLPanel->getQueries();
@@ -34,7 +34,7 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 
 	public function testStopQuery(): void
 	{
-		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', NULL, NULL);
+		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', null, null);
 		sleep(1);
 		$this->doctrineSQLPanel->stopQuery();
 
@@ -51,7 +51,7 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 		self::assertContains('<span title="Doctrine 2">', $this->doctrineSQLPanel->getTab());
 		self::assertContains('0 queries', $this->doctrineSQLPanel->getTab());
 
-		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', NULL, NULL);
+		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', null, null);
 		$this->doctrineSQLPanel->stopQuery();
 
 		self::assertContains('1 queries', $this->doctrineSQLPanel->getTab());
@@ -61,7 +61,7 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 	{
 		self::assertContains('<h2>Queries</h2>', $this->doctrineSQLPanel->getPanel());
 
-		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', NULL, NULL);
+		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', null, null);
 		$this->doctrineSQLPanel->stopQuery();
 
 		self::assertContains('<h1>Queries: 1, time:', $this->doctrineSQLPanel->getPanel());

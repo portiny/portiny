@@ -20,14 +20,14 @@ final class DefaultCache extends CacheProvider
 	/**
 	 * @var bool
 	 */
-	private $debugMode = FALSE;
+	private $debugMode = false;
 
 	/**
 	 * @var Cache
 	 */
 	private $cache;
 
-	public function __construct(IStorage $storage, string $namespace = self::CACHE_NS, bool $debugMode = FALSE)
+	public function __construct(IStorage $storage, string $namespace = self::CACHE_NS, bool $debugMode = false)
 	{
 		$this->cache = new Cache($storage, $namespace);
 		$this->debugMode = $debugMode;
@@ -39,7 +39,7 @@ final class DefaultCache extends CacheProvider
 	protected function doFetch($id)
 	{
 		$cached = $this->cache->load($id);
-		return $cached !== NULL ? $cached : FALSE;
+		return $cached !== null ? $cached : false;
 	}
 
 	/**
@@ -47,7 +47,7 @@ final class DefaultCache extends CacheProvider
 	 */
 	protected function doContains($id)
 	{
-		return $this->cache->load($id) !== NULL;
+		return $this->cache->load($id) !== null;
 	}
 
 	/**
@@ -58,7 +58,7 @@ final class DefaultCache extends CacheProvider
 	 */
 	protected function doSave($id, $data, $lifeTime = 0)
 	{
-		if ($this->debugMode !== TRUE) {
+		if ($this->debugMode !== true) {
 			return $this->doSaveDependingOnFiles($id, $data, [], $lifeTime);
 		}
 
@@ -72,7 +72,7 @@ final class DefaultCache extends CacheProvider
 
 		if (! empty($data)) {
 			$m = Strings::match($id, '#(?P<class>[^@$[\].]+)(?:\$(?P<prop>[^@$[\].]+))?\@\[Annot\]#i');
-			if ($m !== NULL && class_exists($m['class'])) {
+			if ($m !== null && class_exists($m['class'])) {
 				$files[] = self::getClassFilename($m['class']);
 			}
 		}
@@ -98,7 +98,7 @@ final class DefaultCache extends CacheProvider
 
 		$this->cache->save($id, $data, $dependencies);
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -106,9 +106,9 @@ final class DefaultCache extends CacheProvider
 	 */
 	protected function doDelete($id)
 	{
-		$this->cache->save($id, NULL);
+		$this->cache->save($id, null);
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -120,7 +120,7 @@ final class DefaultCache extends CacheProvider
 			Cache::TAGS => ['doctrine'],
 		]);
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -129,11 +129,11 @@ final class DefaultCache extends CacheProvider
 	protected function doGetStats()
 	{
 		return [
-			self::STATS_HITS => NULL,
-			self::STATS_MISSES => NULL,
-			self::STATS_UPTIME => NULL,
-			self::STATS_MEMORY_USAGE => NULL,
-			self::STATS_MEMORY_AVAILABLE => NULL,
+			self::STATS_HITS => null,
+			self::STATS_MISSES => null,
+			self::STATS_UPTIME => null,
+			self::STATS_MEMORY_USAGE => null,
+			self::STATS_MEMORY_AVAILABLE => null,
 		];
 	}
 

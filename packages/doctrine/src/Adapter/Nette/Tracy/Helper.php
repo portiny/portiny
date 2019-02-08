@@ -10,7 +10,7 @@ final class Helper
 	/**
 	 * Returns syntax highlighted SQL command.
 	 */
-	public static function dumpSql(string $sql, ?array $params = NULL, ?Connection $connection = NULL): string
+	public static function dumpSql(string $sql, ?array $params = null, ?Connection $connection = null): string
 	{
 		static $keywords1 = 'SELECT|(?:ON\s+DUPLICATE\s+KEY)?UPDATE|INSERT(?:\s+INTO)?|REPLACE(?:\s+INTO)?|'
 			. 'DELETE|CALL|UNION|FROM|WHERE|HAVING|GROUP\s+BY|ORDER\s+BY|LIMIT|OFFSET|SET|VALUES|LEFT\s+JOIN|'
@@ -71,7 +71,7 @@ final class Helper
 				if ($type === 'stream') {
 					$info = stream_get_meta_data($param);
 					return '<i' . (isset($info['uri']) ? ' title="' .
-							htmlspecialchars($info['uri'], ENT_NOQUOTES, 'UTF-8') . '"' : NULL)
+							htmlspecialchars($info['uri'], ENT_NOQUOTES, 'UTF-8') . '"' : null)
 						. '>&lt;' . htmlspecialchars($type, ENT_NOQUOTES, 'UTF-8') . ' resource&gt;</i> ';
 				}
 			}

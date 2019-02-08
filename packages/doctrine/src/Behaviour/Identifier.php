@@ -16,7 +16,7 @@ trait Identifier
 
 	public function __clone()
 	{
-		$this->id = NULL;
+		$this->id = null;
 	}
 
 	/**

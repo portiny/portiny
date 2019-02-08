@@ -60,7 +60,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	/**
 	 * @var bool
 	 */
-	private $sortQueries = FALSE;
+	private $sortQueries = false;
 
 	/**
 	 * @var array
@@ -80,7 +80,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	/**
 	 * {@inheritdoc}
 	 */
-	public function startQuery($sql, ?array $params = NULL, ?array $types = NULL): void
+	public function startQuery($sql, ?array $params = null, ?array $types = null): void
 	{
 		Debugger::timer('doctrine');
 
@@ -89,7 +89,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			self::DATA_INDEX_PARAMS => $params,
 			self::DATA_INDEX_TYPES => $types,
 			self::DATA_INDEX_TIME => 0,
-			self::DATA_INDEX_TRACE => debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE),
+			self::DATA_INDEX_TRACE => debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false),
 		];
 	}
 

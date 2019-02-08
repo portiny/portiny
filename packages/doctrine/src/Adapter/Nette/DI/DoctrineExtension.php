@@ -55,7 +55,6 @@ use Portiny\Doctrine\Contract\Provider\ClassMappingProviderInterface;
 use Portiny\Doctrine\Contract\Provider\EntitySourceProviderInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
-use Tracy\IBarPanel;
 
 class DoctrineExtension extends CompilerExtension
 {
@@ -76,17 +75,17 @@ class DoctrineExtension extends CompilerExtension
 		'dbal' => [
 			'type_overrides' => [],
 			'types' => [],
-			'schema_filter' => NULL,
+			'schema_filter' => null,
 		],
 		'prefix' => 'doctrine.default',
 		'proxyDir' => '%tempDir%/cache/proxies',
 		'proxyNamespace' => 'DoctrineProxies',
-		'sourceDir' => NULL,
+		'sourceDir' => null,
 		'entityManagerClassName' => EntityManager::class,
 		'defaultRepositoryClassName' => EntityRepository::class,
-		'repositoryFactory' => NULL,
+		'repositoryFactory' => null,
 		'namingStrategy' => UnderscoreNamingStrategy::class,
-		'sqlLogger' => NULL,
+		'sqlLogger' => null,
 		'targetEntityMappings' => [],
 		'metadata' => [],
 		'functions' => [],
@@ -96,7 +95,7 @@ class DoctrineExtension extends CompilerExtension
 		'resultCache' => 'default',
 		'hydrationCache' => 'default',
 		'secondLevelCache' => [
-			'enabled' => FALSE,
+			'enabled' => false,
 			'factoryClass' => DefaultCacheFactory::class,
 			'driver' => 'default',
 			'regions' => [
@@ -164,28 +163,28 @@ class DoctrineExtension extends CompilerExtension
 			$configurationDefinition->addSetup('setSQLLogger', ['@' . $name . '.sqlLogger']);
 		}
 
-		if ($config['metadataCache'] !== FALSE) {
+		if ($config['metadataCache'] !== false) {
 			$configurationDefinition->addSetup(
 				'setMetadataCacheImpl',
 				[$this->getCache($name . '.metadata', $builder, $config['metadataCache'])]
 			);
 		}
 
-		if ($config['queryCache'] !== FALSE) {
+		if ($config['queryCache'] !== false) {
 			$configurationDefinition->addSetup(
 				'setQueryCacheImpl',
 				[$this->getCache($name . '.query', $builder, $config['queryCache'])]
 			);
 		}
 
-		if ($config['resultCache'] !== FALSE) {
+		if ($config['resultCache'] !== false) {
 			$configurationDefinition->addSetup(
 				'setResultCacheImpl',
 				[$this->getCache($name . '.ormResult', $builder, $config['resultCache'])]
 			);
 		}
 
-		if ($config['hydrationCache'] !== FALSE) {
+		if ($config['hydrationCache'] !== false) {
 			$configurationDefinition->addSetup(
 				'setHydrationCacheImpl',
 				[$this->getCache($name . '.hydration', $builder, $config['hydrationCache'])]
@@ -208,7 +207,7 @@ class DoctrineExtension extends CompilerExtension
 		$builder->addDefinition($name . '.resolver')
 			->setType(ResolveTargetEntityListener::class);
 
-		if ($this->hasIBarPanelInterface()) {
+		if ($config['debug'] === true) {
 			$builder->addDefinition($this->prefix($name . '.diagnosticsPanel'))
 				->setType(self::DOCTRINE_SQL_PANEL);
 		}
@@ -243,11 +242,12 @@ class DoctrineExtension extends CompilerExtension
 	 */
 	public function afterCompile(ClassType $classType): void
 	{
+		$config = $this->getConfig(self::$defaults);
 		$initialize = $classType->methods['initialize'];
 
 		$initialize->addBody('?::registerUniqueLoader("class_exists");', [new PhpLiteral(AnnotationRegistry::class)]);
 
-		if ($this->hasIBarPanelInterface()) {
+		if ($config['debug'] === true) {
 			$initialize->addBody('$this->getByType(\'' . self::DOCTRINE_SQL_PANEL . '\')->bindToBar();');
 		}
 
@@ -290,7 +290,7 @@ class DoctrineExtension extends CompilerExtension
 		$logger = $builder->addDefinition($this->prefix($name . '.cacheLogger'))
 			->setType(CacheLogger::class)
 			->setFactory(CacheLoggerChain::class)
-			->setAutowired(FALSE);
+			->setAutowired(false);
 
 		if ($config['logging']) {
 			$logger->addSetup('setLogger', ['statistics', new Statement(StatisticsCacheLogger::class)]);
@@ -301,7 +301,7 @@ class DoctrineExtension extends CompilerExtension
 			->setType(CacheConfiguration::class)
 			->addSetup('setCacheFactory', [$this->prefix('@' . $name . '.cacheFactory')])
 			->addSetup('setCacheLogger', [$this->prefix('@' . $name . '.cacheLogger')])
-			->setAutowired(FALSE);
+			->setAutowired(false);
 
 		$configuration = $builder->getDefinitionByType(Configuration::class);
 		$configuration->addSetup('setSecondLevelCacheEnabled');
@@ -369,7 +369,7 @@ class DoctrineExtension extends CompilerExtension
 
 			$containerBuilder->addDefinition($prefix . '.redis')
 				->setType('\Redis')
-				->setAutowired(FALSE)
+				->setAutowired(false)
 				->addSetup('connect', [
 					$redisConfig['host'] ?? '127.0.0.1',
 					$redisConfig['port'] ?? null,
@@ -383,11 +383,6 @@ class DoctrineExtension extends CompilerExtension
 		}
 
 		return '@' . $prefix . '.cache';
-	}
-
-	private function hasIBarPanelInterface(): bool
-	{
-		return interface_exists(IBarPanel::class);
 	}
 
 	private function registerCommandsIntoConsole(ContainerBuilder $containerBuilder, string $name): void
@@ -479,6 +474,6 @@ class DoctrineExtension extends CompilerExtension
 	private function hasEventManager(ContainerBuilder $containerBuilder): bool
 	{
 		$eventManagerServiceName = $containerBuilder->getByType(EventManager::class);
-		return $eventManagerServiceName !== NULL && strlen($eventManagerServiceName) > 0;
+		return $eventManagerServiceName !== null && strlen($eventManagerServiceName) > 0;
 	}
 }

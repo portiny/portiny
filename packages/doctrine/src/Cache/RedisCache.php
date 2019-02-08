@@ -21,7 +21,7 @@ final class RedisCache extends DoctrineRedisCache
 		$value = $this->doFetch($id);
 		$this->prefetchCache[$id] = $value;
 
-		return $value !== FALSE;
+		return $value !== false;
 	}
 
 	/**
@@ -30,10 +30,10 @@ final class RedisCache extends DoctrineRedisCache
 	protected function doFetch($id)
 	{
 		// try load value from prefetch cache
-		$doFetch = $this->prefetchCache[$id] ?? NULL;
+		$doFetch = $this->prefetchCache[$id] ?? null;
 		$this->prefetchCache = [];
 
-		if ($doFetch === NULL) {
+		if ($doFetch === null) {
 			$doFetch = parent::doFetch($id);
 		}
 
