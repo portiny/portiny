@@ -168,13 +168,3 @@ You can define allowed mutations via `$requestProcessor->process($this->requestP
 
 ## Additional configuration
 If you have your own implementation of `\Portiny\GraphQL\Contract\Http\Request\RequestParserInterface` then register it via neon as service to suppress default implementation provided by this package.
-
-If you would like to create new instance of `\Portiny\GraphQL\Contract\Http\Request\RequestParserInterface` implementation then disable default implementation provided by this package via:
-
-```yml
-extensions:
-    graphql: Portiny\GraphQL\Adapter\Nette\DI\GraphQLExtension
-    
-graphql:
-    useOwnRequestParser: TRUE
-```

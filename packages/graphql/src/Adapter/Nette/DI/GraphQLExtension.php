@@ -19,13 +19,6 @@ use Portiny\GraphQL\Provider\QueryFieldsProvider;
 final class GraphQLExtension extends CompilerExtension
 {
 	/**
-	 * @var array
-	 */
-	private static $defaults = [
-		'useOwnRequestParser' => false,
-	];
-
-	/**
 	 * {@inheritdoc}
 	 */
 	public function loadConfiguration(): void
@@ -75,10 +68,9 @@ final class GraphQLExtension extends CompilerExtension
 
 	private function setupRequestProcessor(): void
 	{
-		$config = $this->getConfig(self::$defaults);
 		$containerBuilder = $this->getContainerBuilder();
 
-		if (! $containerBuilder->findByType(RequestParserInterface::class) && ! $config['useOwnRequestParser']) {
+		if (! $containerBuilder->findByType(RequestParserInterface::class)) {
 			$containerBuilder->addDefinition($this->prefix('jsonRequestParser'))
 				->setFactory(JsonRequestParser::class);
 		}
