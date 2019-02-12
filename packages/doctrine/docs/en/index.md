@@ -70,13 +70,13 @@ doctrine:
     functions:
         CAST: \App\Doctrine\MySQL\Functions\Cast
     
-    metadataCache: default   # options: FALSE, default (Nette Storage), redis
-    queryCache: default      # options: FALSE, default (Nette Storage), redis
-    resultCache: default     # options: FALSE, default (Nette Storage), redis
-    hydrationCache: default  # options: FALSE, default (Nette Storage), redis
+    metadataCache: default   # options: FALSE, default (Nette Storage), apcu, redis
+    queryCache: default      # options: FALSE, default (Nette Storage), apcu, redis
+    resultCache: default     # options: FALSE, default (Nette Storage), apcu, redis
+    hydrationCache: default  # options: FALSE, default (Nette Storage), apcu, redis
     secondLevelCache:
         enabled: FALSE
-        driver: default      # options: FALSE, default (Nette Storage), redis
+        driver: default      # options: FALSE, default (Nette Storage), apcu, redis
         factoryClass: \Doctrine\ORM\Cache\DefaultCacheFactory::class
         regions:
             defaultLifetime: 3600

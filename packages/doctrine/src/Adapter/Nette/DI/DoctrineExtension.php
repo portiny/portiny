@@ -8,7 +8,9 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\ChainCache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\EventManager;
 use Doctrine\Common\EventSubscriber;
@@ -347,12 +349,16 @@ class DoctrineExtension extends CompilerExtension
 		$config = $this->parseConfig();
 
 		switch ($cacheType) {
-			case 'redis':
-				$cacheClass = $config['cache']['redis']['class'];
+			case 'apcu':
+				$cacheClass = ApcuCache::class;
 				break;
 
 			case 'array':
 				$cacheClass = ArrayCache::class;
+				break;
+
+			case 'redis':
+				$cacheClass = $config['cache']['redis']['class'];
 				break;
 
 			case 'default':
@@ -361,8 +367,17 @@ class DoctrineExtension extends CompilerExtension
 				break;
 		}
 
-		$cacheDefinition = $containerBuilder->addDefinition($prefix . '.cache')
-			->setType($cacheClass);
+		$containerBuilder->addDefinition($prefix . '.cache1')
+			->setClass(ArrayCache::class)
+			->setAutowired(false);
+
+		$mainCacheDefinition = $containerBuilder->addDefinition($prefix . '.cache2')
+			->setType($cacheClass)
+			->setAutowired(false);
+
+		$containerBuilder->addDefinition($prefix . '.cache')
+			->setClass(ChainCache::class, [['@' . $prefix . '.cache1', '@' . $prefix . '.cache2']])
+			->setAutowired(false);
 
 		if ($cacheType === 'redis') {
 			$redisConfig = $config['cache']['redis'];
@@ -379,7 +394,7 @@ class DoctrineExtension extends CompilerExtension
 				])
 				->addSetup('select', [$redisConfig['database'] ?? 1]);
 
-			$cacheDefinition->addSetup('setRedis', ['@' . $prefix . '.redis']);
+			$mainCacheDefinition->addSetup('setRedis', ['@' . $prefix . '.redis']);
 		}
 
 		return '@' . $prefix . '.cache';
