@@ -368,7 +368,7 @@ class DoctrineExtension extends CompilerExtension
 		}
 
 		$containerBuilder->addDefinition($prefix . '.cache1')
-			->setClass(ArrayCache::class)
+			->setType(ArrayCache::class)
 			->setAutowired(false);
 
 		$mainCacheDefinition = $containerBuilder->addDefinition($prefix . '.cache2')
@@ -376,7 +376,7 @@ class DoctrineExtension extends CompilerExtension
 			->setAutowired(false);
 
 		$containerBuilder->addDefinition($prefix . '.cache')
-			->setClass(ChainCache::class, [['@' . $prefix . '.cache1', '@' . $prefix . '.cache2']])
+			->setType(ChainCache::class, [['@' . $prefix . '.cache1', '@' . $prefix . '.cache2']])
 			->setAutowired(false);
 
 		if ($cacheType === 'redis') {
