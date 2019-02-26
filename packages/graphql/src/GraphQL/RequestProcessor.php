@@ -13,12 +13,18 @@ use GraphQL\Type\Schema;
 use Portiny\GraphQL\Contract\Http\Request\RequestParserInterface;
 use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
 use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
+use Portiny\GraphQL\GraphQL\Schema\SchemaCacheProvider;
 use Throwable;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 final class RequestProcessor
 {
+	/**
+	 * @var bool
+	 */
+	private $schemaCache = false;
+
 	/**
 	 * @var MutationFieldsProviderInterface
 	 */
@@ -29,12 +35,24 @@ final class RequestProcessor
 	 */
 	private $queryFieldsProvider;
 
+	/**
+	 * @var SchemaCacheProvider
+	 */
+	private $schemaCacheProvider;
+
 	public function __construct(
 		MutationFieldsProviderInterface $mutationFieldsProvider,
-		QueryFieldsProviderInterface $queryFieldsProvider
+		QueryFieldsProviderInterface $queryFieldsProvider,
+		SchemaCacheProvider $schemaCacheProvider
 	) {
 		$this->mutationFieldsProvider = $mutationFieldsProvider;
 		$this->queryFieldsProvider = $queryFieldsProvider;
+		$this->schemaCacheProvider = $schemaCacheProvider;
+	}
+
+	public function setSchemaCache(bool $useSchemaCache): void
+	{
+		$this->schemaCache = $useSchemaCache;
 	}
 
 	/**
@@ -51,8 +69,17 @@ final class RequestProcessor
 		?ILogger $logger = null
 	): array {
 		try {
+			if ($this->schemaCache && $this->schemaCacheProvider->isCached()) {
+				$schema = $this->schemaCacheProvider->getSchema();
+			} else {
+				$schema = $this->createSchema($allowedQueries, $allowedMutations);
+				if ($this->schemaCache) {
+					$this->schemaCacheProvider->save($schema);
+				}
+			}
+
 			$result = GraphQL::executeQuery(
-				$this->createSchema($allowedQueries, $allowedMutations),
+				$schema,
 				$requestParser->getQuery(),
 				$rootValue,
 				$context,

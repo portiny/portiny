@@ -15,7 +15,19 @@ Enable the extension at your neon config file.
 
 ```yml
 extensions:
-    - Portiny\GraphQL\Adapter\Nette\DI\GraphQLExtension
+    graphql: Portiny\GraphQL\Adapter\Nette\DI\GraphQLExtension
+```
+
+
+## Configuration
+
+This extension can be configured by `graphql` section. Available configuration might look like this:
+
+```yml
+graphql:
+    schemaCache:
+        enabled: true # highly recommended for the production environment
+        cacheDir: %tempDir%/cache/graphql
 ```
 
 

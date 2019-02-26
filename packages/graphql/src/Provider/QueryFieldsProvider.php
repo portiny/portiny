@@ -34,6 +34,11 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 		return $this->fields;
 	}
 
+	public function getField(string $name): ?QueryFieldInterface
+	{
+		return $this->fields[$name] ?? null;
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

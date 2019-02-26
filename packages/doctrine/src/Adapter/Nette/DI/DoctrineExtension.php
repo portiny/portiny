@@ -376,7 +376,7 @@ class DoctrineExtension extends CompilerExtension
 			->setAutowired(false);
 
 		$containerBuilder->addDefinition($prefix . '.cache')
-			->setType(ChainCache::class, [['@' . $prefix . '.cache1', '@' . $prefix . '.cache2']])
+			->setFactory(ChainCache::class, [['@' . $prefix . '.cache1', '@' . $prefix . '.cache2']])
 			->setAutowired(false);
 
 		if ($cacheType === 'redis') {

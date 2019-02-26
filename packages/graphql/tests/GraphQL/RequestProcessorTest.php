@@ -6,6 +6,7 @@ use Nette\Http\Request;
 use Nette\Http\UrlScript;
 use Portiny\GraphQL\Contract\Http\Request\RequestParserInterface;
 use Portiny\GraphQL\GraphQL\RequestProcessor;
+use Portiny\GraphQL\GraphQL\Schema\SchemaCacheProvider;
 use Portiny\GraphQL\Http\Request\JsonRequestParser;
 use Portiny\GraphQL\Provider\MutationFieldsProvider;
 use Portiny\GraphQL\Provider\QueryFieldsProvider;
@@ -61,13 +62,15 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 	private function createRequestFactory(): RequestProcessor
 	{
 		$queryField = new SomeQueryField();
-		$queryFieldProvider = new QueryFieldsProvider();
-		$queryFieldProvider->addField($queryField);
+		$queryFieldsProvider = new QueryFieldsProvider();
+		$queryFieldsProvider->addField($queryField);
 
 		$mutationField = new SomeMutationField();
-		$mutationFieldProvider = new MutationFieldsProvider();
-		$mutationFieldProvider->addField($mutationField);
+		$mutationFieldsProvider = new MutationFieldsProvider();
+		$mutationFieldsProvider->addField($mutationField);
 
-		return new RequestProcessor($mutationFieldProvider, $queryFieldProvider);
+		$schemaCacheProvider = new SchemaCacheProvider('', $queryFieldsProvider, $mutationFieldsProvider);
+
+		return new RequestProcessor($mutationFieldsProvider, $queryFieldsProvider, $schemaCacheProvider);
 	}
 }

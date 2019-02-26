@@ -34,6 +34,11 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 		return $this->fields;
 	}
 
+	public function getField(string $name): ?MutationFieldInterface
+	{
+		return $this->fields[$name] ?? null;
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

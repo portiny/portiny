@@ -40,3 +40,7 @@ parameters:
 
         Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
             - packages/doctrine/src/Adapter/Nette/Tracy/Helper.php
+            - packages/graphql/src/GraphQL/Schema/SchemaCacheProvider.php
+
+        PHP_CodeSniffer\Standards\Generic\Sniffs\Metrics\NestingLevelSniff:
+            - packages/graphql/src/GraphQL/Schema/SchemaCacheProvider.php
