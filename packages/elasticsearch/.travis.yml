@@ -1,21 +1,14 @@
 language: php
 
-sudo: false
-
-php:
-  - 7.1
-
 matrix:
   include:
-    - php: 7.1
+    - php: 7.3
       env: PHPUNIT_FLAGS="--coverage-clover coverage.xml"
 
 install:
-  # install composer dependencies
   - composer install
 
 script:
-  # run tests
   - vendor/bin/phpunit $PHPUNIT_FLAGS
 
 after_script:

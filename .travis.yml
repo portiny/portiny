@@ -6,25 +6,9 @@ matrix:
       env:
         - PHPUNIT_FLAGS="--coverage-clover coverage.xml"
         - COMPOSER_FLAGS=""
-    - php: 7.1
-      env:
-        - CODING_STANDARD=true
-        - COMPOSER_FLAGS=""
-    - php: 7.1
-      env:
-        - PHPSTAN=true
-        - COMPOSER_FLAGS=""
     - php: 7.2
       env:
         - PHPUNIT_FLAGS="--coverage-clover coverage.xml"
-        - COMPOSER_FLAGS=""
-    - php: 7.2
-      env:
-        - CODING_STANDARD=true
-        - COMPOSER_FLAGS=""
-    - php: 7.2
-      env:
-        - PHPSTAN=true
         - COMPOSER_FLAGS=""
     - php: 7.3
       env:
