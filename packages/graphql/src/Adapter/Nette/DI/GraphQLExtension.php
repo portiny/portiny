@@ -22,6 +22,7 @@ final class GraphQLExtension extends CompilerExtension
 	 * @var array
 	 */
 	private static $defaults = [
+		'debug' => '%debugMode%',
 		'schemaCache' => [
 			'enabled' => false,
 			'cacheDir' => '%tempDir%/cache/graphql',
@@ -37,7 +38,7 @@ final class GraphQLExtension extends CompilerExtension
 		$containerBuilder = $this->getContainerBuilder();
 
 		$containerBuilder->addDefinition($this->prefix('requestProcessor'))
-			->setFactory(RequestProcessor::class)
+			->setFactory(RequestProcessor::class, [$config['debug']])
 			->addSetup('setSchemaCache', [$config['schemaCache']['enabled']]);
 
 		$containerBuilder->addDefinition($this->prefix('schemaCacheProvider'))

@@ -71,6 +71,6 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 
 		$schemaCacheProvider = new SchemaCacheProvider('', $queryFieldsProvider, $mutationFieldsProvider);
 
-		return new RequestProcessor($mutationFieldsProvider, $queryFieldsProvider, $schemaCacheProvider);
+		return new RequestProcessor(false, $mutationFieldsProvider, $queryFieldsProvider, $schemaCacheProvider);
 	}
 }

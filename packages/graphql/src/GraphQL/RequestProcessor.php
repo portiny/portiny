@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Portiny\GraphQL\GraphQL;
 
 use GraphQL\Error\Debug;
+use GraphQL\Error\FormattedError;
 use GraphQL\Executor\Promise\Promise;
 use GraphQL\Executor\Promise\PromiseAdapter;
 use GraphQL\GraphQL;
@@ -15,11 +16,15 @@ use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
 use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
 use Portiny\GraphQL\GraphQL\Schema\SchemaCacheProvider;
 use Throwable;
-use Tracy\Debugger;
 use Tracy\ILogger;
 
 final class RequestProcessor
 {
+	/**
+	 * @var bool
+	 */
+	private $debugMode = false;
+
 	/**
 	 * @var bool
 	 */
@@ -41,10 +46,12 @@ final class RequestProcessor
 	private $schemaCacheProvider;
 
 	public function __construct(
+		bool $debugMode,
 		MutationFieldsProviderInterface $mutationFieldsProvider,
 		QueryFieldsProviderInterface $queryFieldsProvider,
 		SchemaCacheProvider $schemaCacheProvider
 	) {
+		$this->debugMode = $debugMode;
 		$this->mutationFieldsProvider = $mutationFieldsProvider;
 		$this->queryFieldsProvider = $queryFieldsProvider;
 		$this->schemaCacheProvider = $schemaCacheProvider;
@@ -86,17 +93,14 @@ final class RequestProcessor
 				$requestParser->getVariables()
 			);
 
-			$output = $result->toArray($this->isDebug());
+			$output = $result->toArray($this->detectDebugLevel($logger));
 		} catch (Throwable $throwable) {
 			if ($logger) {
-				$logger->log($throwable);
+				$logger->log($throwable, ILogger::EXCEPTION);
 			}
 
 			$output = [
-				'error' => [
-					'message' => $throwable->getMessage(),
-					'code' => $throwable->getCode(),
-				],
+				'errors' => [FormattedError::createFromException($throwable, false, 'An error occurred.')],
 			];
 		}
 
@@ -149,9 +153,11 @@ final class RequestProcessor
 		return new Schema($configuration);
 	}
 
-	private function isDebug(): int
+	private function detectDebugLevel(?ILogger $logger): int
 	{
-		return ! Debugger::$productionMode ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : 0;
+		return $this->debugMode
+			? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE
+			: ($logger === null ? 0 : Debug::RETHROW_INTERNAL_EXCEPTIONS);
 	}
 
 	private function createQueryObject(?array $allowedQueries = null): ObjectType

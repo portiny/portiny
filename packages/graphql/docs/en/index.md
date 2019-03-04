@@ -25,6 +25,7 @@ This extension can be configured by `graphql` section. Available configuration m
 
 ```yml
 graphql:
+    debug: %debugMode%
     schemaCache:
         enabled: true # highly recommended for the production environment
         cacheDir: %tempDir%/cache/graphql
@@ -177,6 +178,9 @@ You can define allowed queries via `$requestProcessor->process($this->requestPar
 
 You can define allowed mutations via `$requestProcessor->process($this->requestParser, [], NULL, NULL, [App\GraphQL\Mutation\SimpleMutationField::class])`. By default are allowed all registered mutations.
 
+### Logger
+
+You can pass `\Tracy\ILogger` object instance for enable error logging.
 
 ## Additional configuration
 If you have your own implementation of `\Portiny\GraphQL\Contract\Http\Request\RequestParserInterface` then register it via neon as service to suppress default implementation provided by this package.
