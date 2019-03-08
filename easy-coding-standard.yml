@@ -18,19 +18,18 @@ services:
 
 parameters:
     indentation: tab
-    exclude_checkers:
-        - PHP_CodeSniffer\Standards\PSR2\Sniffs\ControlStructures\ControlStructureSpacingSniff
-        - Symplify\CodingStandard\Sniffs\DependencyInjection\NoClassInstantiationSniff
-        - Symplify\CodingStandard\Sniffs\Property\DynamicPropertySniff
-        - SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff
-        - Symplify\CodingStandard\Sniffs\Architecture\ExplicitExceptionSniff
-        - Symplify\CodingStandard\Sniffs\Naming\TraitNameSniff
-        - Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenStaticFunctionSniff
-        - Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff
-        - Symplify\CodingStandard\Fixer\Php\ClassStringToClassConstantFixer
-        - SlamCsFixer\FinalInternalClassFixer
-
     skip:
+        PHP_CodeSniffer\Standards\PSR2\Sniffs\ControlStructures\ControlStructureSpacingSniff:
+        Symplify\CodingStandard\Sniffs\DependencyInjection\NoClassInstantiationSniff:
+        Symplify\CodingStandard\Sniffs\Property\DynamicPropertySniff:
+        SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff:
+        Symplify\CodingStandard\Sniffs\Architecture\ExplicitExceptionSniff:
+        Symplify\CodingStandard\Sniffs\Naming\TraitNameSniff:
+        Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenStaticFunctionSniff:
+        Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff:
+        Symplify\CodingStandard\Fixer\Php\ClassStringToClassConstantFixer:
+        SlamCsFixer\FinalInternalClassFixer:
+        Symplify\CodingStandard\Sniffs\Architecture\DuplicatedClassShortNameSniff:
         Symplify\CodingStandard\Fixer\Solid\FinalInterfaceFixer:
             # contains anonymous class
             - packages/graphql/src/Converter/MutationFieldConverter.php

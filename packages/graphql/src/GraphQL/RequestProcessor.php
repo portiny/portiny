@@ -76,12 +76,13 @@ final class RequestProcessor
 		?ILogger $logger = null
 	): array {
 		try {
-			if ($this->schemaCache && $this->schemaCacheProvider->isCached()) {
-				$schema = $this->schemaCacheProvider->getSchema();
+			$cacheKey = $this->schemaCacheProvider->getCacheKey($allowedQueries, $allowedMutations);
+			if ($this->schemaCache && $this->schemaCacheProvider->isCached($cacheKey)) {
+				$schema = $this->schemaCacheProvider->getSchema($cacheKey);
 			} else {
 				$schema = $this->createSchema($allowedQueries, $allowedMutations);
 				if ($this->schemaCache) {
-					$this->schemaCacheProvider->save($schema);
+					$this->schemaCacheProvider->save($cacheKey, $schema);
 				}
 			}
 

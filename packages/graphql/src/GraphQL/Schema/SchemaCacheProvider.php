@@ -22,16 +22,6 @@ final class SchemaCacheProvider
 	/**
 	 * @var string
 	 */
-	private const SCHEMA_FILENAME = 'schema.php';
-
-	/**
-	 * @var string
-	 */
-	private const TYPES_FILENAME = 'types.php';
-
-	/**
-	 * @var string
-	 */
 	private $cacheDir;
 
 	/**
@@ -59,50 +49,55 @@ final class SchemaCacheProvider
 		$this->mutationFieldsProvider = $mutationFieldsProvider;
 	}
 
-	public function isCached(): bool
-	{
-		return file_exists($this->getSchemaCacheFile());
-	}
-
-	public function save(Schema $schema): void
-	{
-		// schema cache
-		$sdl = SchemaPrinter::doPrint($schema);
-		$documentNode = Parser::parse($sdl);
-		FileSystem::write(
-			$this->getSchemaCacheFile(),
-			"<?php\nreturn " . var_export(AST::toArray($documentNode), true) . ';'
-		);
-
-		// types cache
-		FileSystem::write($this->getTypesCacheFile(), serialize(Types::getTypeClasses()));
-	}
-
-	public function getSchema(): Schema
+	public function getSchema(string $cacheKey): Schema
 	{
 		if ($this->schema !== null) {
 			return $this->schema;
 		}
 
 		// load types from cache
-		Types::loadTypesFromClasses(unserialize(FileSystem::read($this->getTypesCacheFile())));
+		Types::loadTypesFromClasses(unserialize(FileSystem::read($this->getTypesCacheFile($cacheKey))));
 
 		// load schema from cache
 		/** @var DocumentNode $document */
-		$document = AST::fromArray(require $this->getSchemaCacheFile());
+		$document = AST::fromArray(require $this->getSchemaCacheFile($cacheKey));
 		$this->schema = BuildSchema::build($document, $this->getTypeConfigDecorator());
 
 		return $this->schema;
 	}
 
-	private function getSchemaCacheFile(): string
+	public function isCached(string $cacheKey): bool
 	{
-		return $this->cacheDir . '/' . self::SCHEMA_FILENAME;
+		return file_exists($this->getSchemaCacheFile($cacheKey));
 	}
 
-	private function getTypesCacheFile(): string
+	public function save(string $cacheKey, Schema $schema): void
 	{
-		return $this->cacheDir . '/' . self::TYPES_FILENAME;
+		// schema cache
+		$sdl = SchemaPrinter::doPrint($schema);
+		$documentNode = Parser::parse($sdl);
+		FileSystem::write(
+			$this->getSchemaCacheFile($cacheKey),
+			"<?php\nreturn " . var_export(AST::toArray($documentNode), true) . ';'
+		);
+
+		// types cache
+		FileSystem::write($this->getTypesCacheFile($cacheKey), serialize(Types::getTypeClasses()));
+	}
+
+	public function getCacheKey(?array $allowedQueries = null, ?array $allowedMutations = null): string
+	{
+		return md5(serialize($allowedQueries) . serialize($allowedMutations));
+	}
+
+	private function getTypesCacheFile(string $cacheKey): string
+	{
+		return $this->cacheDir . '/types-' . $cacheKey . '.php';
+	}
+
+	private function getSchemaCacheFile(string $cacheKey): string
+	{
+		return $this->cacheDir . '/schema-' . $cacheKey . '.php';
 	}
 
 	private function getTypeConfigDecorator(): Closure
