@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Portiny\Elasticsearch\Tests\Adapter\Nette\DI;
+namespace Portiny\ElasticsearchNette\Tests\DI;
 
 use Elastica\Client;
-use Portiny\Elasticsearch\Tests\AbstractContainerTestCase;
+use Portiny\ElasticsearchNette\Tests\AbstractContainerTestCase;
 
 class ElasticsearchExtensionTest extends AbstractContainerTestCase
 {

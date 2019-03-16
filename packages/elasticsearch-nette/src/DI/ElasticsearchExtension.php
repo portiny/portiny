@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Portiny\Elasticsearch\Adapter\Nette\DI;
+namespace Portiny\ElasticsearchNette\DI;
 
 use Elastica\Client;
 use Nette\DI\CompilerExtension;
 use Nette\PhpGenerator\ClassType;
-use Portiny\Elasticsearch\Adapter\Nette\Tracy\ElasticsearchPanel;
+use Portiny\ElasticsearchNette\Tracy\ElasticsearchPanel;
 
 class ElasticsearchExtension extends CompilerExtension
 {

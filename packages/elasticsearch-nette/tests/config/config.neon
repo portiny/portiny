@@ -1,5 +1,5 @@
 extensions:
-	elasticsearch: Portiny\Elasticsearch\Adapter\Nette\DI\ElasticsearchExtension
+	elasticsearch: Portiny\ElasticsearchNette\DI\ElasticsearchExtension
 
 elasticsearch:
 	connections:

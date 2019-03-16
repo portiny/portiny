@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Portiny\Elasticsearch\Tests\Adapter\Nette\Tracy;
+namespace Portiny\ElasticsearchNette\Tests\Tracy;
 
 use Elastica\Client;
-use Portiny\Elasticsearch\Adapter\Nette\Tracy\ElasticsearchPanel;
-use Portiny\Elasticsearch\Tests\AbstractContainerTestCase;
+use Portiny\ElasticsearchNette\Tests\AbstractContainerTestCase;
+use Portiny\ElasticsearchNette\Tracy\ElasticsearchPanel;
 
 class ElasticserachPanelTest extends AbstractContainerTestCase
 {

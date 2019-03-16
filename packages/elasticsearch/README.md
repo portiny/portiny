@@ -18,6 +18,11 @@ $ composer require portiny/elasticsearch
 ```
 
 
+## Installation for frameworks
+
+If you use **Nette Framework** please use [this extension](https://github.com/portiny/elasticsearch-nette).
+
+
 ## Resources
 
  * [Documentation](https://github.com/portiny/elasticsearch/blob/master/docs/en/index.md)

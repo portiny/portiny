@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Portiny\Elasticsearch\Adapter\Nette\Tracy;
+namespace Portiny\ElasticsearchNette\Tracy;
 
 use Elastica\Client;
 use Elastica\Request;

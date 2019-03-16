@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Portiny\Elasticsearch\Tests;
+namespace Portiny\ElasticsearchNette\Tests;
 
 use Nette\DI\Container;
 use PHPUnit\Framework\TestCase;
