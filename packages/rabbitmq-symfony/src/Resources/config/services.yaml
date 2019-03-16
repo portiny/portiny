@@ -1,0 +1,30 @@
+parameters:
+    portiny.rabbitmq.aliases: []
+    portiny.rabbitmq.connection:
+        host: 127.0.0.1
+        port: 5672
+        user: guest
+        password: guest
+        vhost: /
+        timeout: 1
+        heartbeat: 60.0
+        persistent: false
+        path: /
+        tcp_nodelay: false
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Portiny\RabbitMQ\Command\ConsumeCommand: ~
+    Portiny\RabbitMQ\Command\DeclareCommand: ~
+    Portiny\RabbitMQ\Producer\Producer: ~
+    Portiny\RabbitMQ\BunnyManager:
+        public: true
+        arguments:
+            - '%portiny.rabbitmq.connection%'
+            - '%portiny.rabbitmq.aliases%'
+            - !tagged portiny.rabbitmq.consumer
+            - !tagged portiny.rabbitmq.exchange
+            - !tagged portiny.rabbitmq.queue

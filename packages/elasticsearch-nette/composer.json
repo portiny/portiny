@@ -1,0 +1,29 @@
+{
+	"name": "portiny/elasticsearch-nette",
+	"description": "Portiny/Elasticsearch integration extension for Nette Framework.",
+	"keywords": ["php", "nette", "portiny", "elasticsearch", "elastica"],
+	"license": ["MIT"],
+	"authors": [
+		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
+	],
+	"require": {
+		"php": ">=7.1",
+		"nette/di": "^2.4",
+		"portiny/elasticsearch": "^3.0",
+		"tracy/tracy": "^2.5"
+	},
+	"require-dev": {
+		"nette/bootstrap": "^2.4",
+		"phpunit/phpunit": "^7.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"Portiny\\ElasticsearchNette\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Portiny\\ElasticsearchNette\\Tests\\": "tests"
+		}
+	}
+}

@@ -1,0 +1,18 @@
+extensions:
+	elasticsearch: Portiny\ElasticsearchNette\DI\ElasticsearchExtension
+
+elasticsearch:
+	connections:
+		{{host: localhost, port: 9201}, {host: 12.34.56.78, port: 1234}} # multiple hosts
+	path: some-path
+	url: http://some.url
+	proxy: 66.96.200.39:80
+	transport: Http
+	persistent: true
+	timeout: 5
+	roundRobin: false
+	log: false
+	retryOnConflict: 2
+	bigintConversion: false
+	username: someUserName
+	password: somePassword

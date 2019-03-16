@@ -1,0 +1,25 @@
+language: php
+
+matrix:
+  include:
+    - php: 7.3
+      env: PHPUNIT_FLAGS="--coverage-clover coverage.xml"
+
+install:
+  - composer install
+
+script:
+  - vendor/bin/phpunit $PHPUNIT_FLAGS
+
+after_script:
+  # upload coverage.xml file to Scrutinizer to analyze it
+  - |
+    if [[ "$PHPUNIT_FLAGS" != "" ]]; then
+      wget https://scrutinizer-ci.com/ocular.phar
+      php ocular.phar code-coverage:upload --format=php-clover coverage.xml
+    fi
+
+# do not send success notifications, they have no value
+notifications:
+  email:
+    on_success: never

@@ -1,6 +1,6 @@
 # Information
 
-This extension provide integration of [Bunny/Bunny](https://github.com/jakubkulhan/bunny) into Nette Framework.
+This extension provide integration of [Bunny/Bunny](https://github.com/jakubkulhan/bunny).
 
 
 ## Installation
@@ -10,49 +10,6 @@ The simplest way to install Portiny/RabbitMQ is using  [Composer](http://getcomp
 ```sh
 $ composer require portiny/rabbitmq
 ```
-
-Enable the extension at your neon config file.
-
-```yml
-extensions:
-    rabbitmq: Portiny\RabbitMQ\Adapter\Nette\DI\RabbitMQExtension
-```
-
-
-## Minimal configuration
-
-This extension can be configured by `rabbitmq` section like this:
-
-```yml
-rabbitmq:
-    connection:
-        host: localhost
-        port: 5672
-        # etc.
-```
-
-If your RabbitMQ service use default configuration you do not need to configure anything here.
-
-
-## Full configuration
-
-```yml
-rabbitmq:
-    connection:
-        host: 127.0.0.1
-        port: 5672
-        user: guest
-        password: guest
-        vhost: /
-        timeout: 1
-        heartbeat: 60.0
-        persistent: false
-        path: /
-        tcp_nodelay: false
-    aliases:
-        logger: App/Consumers/LogConsumer # now you can use key "logger" at "rabbitmq:consume" command as consumer name
-```
-
 
 ## Usage
 
@@ -189,9 +146,10 @@ final class LogConsumer extends AbstractConsumer
 }
 ```
 
-Then register example classes into Nette DI container.
+Then register example classes into DI container (syntax depends on your framework).
 
 ```yaml
+# Nette Framework (for integration use https://github.com/portiny/graphql-nette)
 services:
     - App\Service\Exchange\LogExchange
     - App\Service\Queue\LogQueue
@@ -199,9 +157,18 @@ services:
     - App\Service\Consumer\LogConsumer
 ```
 
+```yaml
+# Symfony Framework (for integration use https://github.com/portiny/graphql-symfony)
+services:
+    App\Service\Exchange\LogExchange: ~
+    App\Service\Queue\LogQueue: ~
+    App\Service\Producer\LogProducer: ~
+    App\Service\Consumer\LogConsumer: ~
+```
+
 ### Declaring exchange and queue into RabbitMQ
 
-You have two ways how to declare exchange and queue into RabbitMQ. If you use [Symfony/Console](https://symfony.com/doc/current/components/console.html) integrated via e.g. [Portiny/Console](https://github.com/portiny/console), [Contributte/Console](https://github.com/contributte/console) or [Kdyby/Console](https://github.com/Kdyby/Console) then simply run command `rabbitmq:declare`.
+You have two ways how to declare exchange and queue into RabbitMQ. If you use [Symfony/Console](https://symfony.com/doc/current/components/console.html) then simply run command `rabbitmq:declare`.
 
 ```bash
 bin/console rabbitmq:declare
@@ -274,33 +241,35 @@ final class ClickControl extends Control
 
 ### How to consume?
 
-You have two ways how to trigger consuming messages from RabbitMQ. If you use [Symfony/Console](https://symfony.com/doc/current/components/console.html) integrated via e.g. [Portiny/Console](https://github.com/portiny/console), [Contributte/Console](https://github.com/contributte/console) or [Kdyby/Console](https://github.com/Kdyby/Console) then simply run command `rabbitmq:consume`.
+At first add alias to `TestConsumer` (syntax depends on your framework).
+
+```yaml
+# Nette Framework (for integration use https://github.com/portiny/graphql-nette)
+rabbitmq:
+    aliases:
+        logger: App\Service\Consumer\LogConsumer
+```
+
+```yaml
+# Symfony Framework (for integration use https://github.com/portiny/graphql-symfony)
+parameters:
+    portiny.rabbitmq.aliases: 
+        logger: App\Service\Consumer\LogConsumer
+```
+
+Use [Symfony/Console](https://symfony.com/doc/current/components/console.html) and simply run command `rabbitmq:consume`.
 
 #### Consuming for limited message amount
 
 Consumer `App\Service\Consumer\LogConsumer` will consume 20 messages and then die.
 
 ```bash
-bin/console rabbitmq:consume App\\Service\\Consumer\\LogConsumer --messages 20
+bin/console rabbitmq:consume logger --messages 20
 ```
 
 #### Consuming for limited time
 
 Consumer `App\Service\Consumer\LogConsumer` will consumimg for 30 seconds and then die.
-
-```bash
-bin/console rabbitmq:consume App\\Service\\Consumer\\LogConsumer --time 30
-```
-
-If you don't like using FQDN at CLI (like me) you can use aliases. :)
-
-```yaml
-rabbitmq:
-    aliases:
-        logger: App\Service\Consumer\LogConsumer
-```
-
-Then you can use alias "logger" at `rabbitmq:consume` command.
 
 ```bash
 bin/console rabbitmq:consume logger --time 30

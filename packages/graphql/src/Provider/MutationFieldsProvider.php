@@ -16,6 +16,13 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 	 */
 	private $fields = [];
 
+	public function __construct(iterable $mutationFields = [])
+	{
+		foreach ($mutationFields as $mutationField) {
+			$this->addField($mutationField);
+		}
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

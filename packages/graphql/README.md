@@ -18,6 +18,13 @@ $ composer require portiny/graphql
 ```
 
 
+## Installation for frameworks
+
+If you use **Nette Framework** please use [this extension](https://github.com/portiny/graphql-nette).
+
+If you use **Symfony Framework** please use [this bundle](https://github.com/portiny/graphql-symfony).
+
+
 ## Resources
 
  * [Documentation](https://github.com/portiny/graphql/blob/master/docs/en/index.md)

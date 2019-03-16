@@ -4,11 +4,11 @@ namespace Portiny\GraphQL\Tests\Converter;
 
 use GraphQL\Type\Definition\StringType;
 use GraphQL\Type\Definition\Type;
+use PHPUnit\Framework\TestCase;
 use Portiny\GraphQL\Contract\Field\QueryFieldInterface;
 use Portiny\GraphQL\Converter\QueryFieldConverter;
-use Portiny\GraphQL\Tests\AbstractContainerTestCase;
 
-final class QueryFieldConverterTest extends AbstractContainerTestCase
+final class QueryFieldConverterTest extends TestCase
 {
 	public function testToArray(): void
 	{

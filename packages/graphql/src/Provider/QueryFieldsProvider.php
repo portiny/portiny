@@ -16,6 +16,13 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 	 */
 	private $fields = [];
 
+	public function __construct(iterable $queryFields = [])
+	{
+		foreach ($queryFields as $queryField) {
+			$this->addField($queryField);
+		}
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

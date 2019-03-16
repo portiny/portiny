@@ -4,11 +4,11 @@ namespace Portiny\GraphQL\Tests\Converter;
 
 use GraphQL\Type\Definition\StringType;
 use GraphQL\Type\Definition\Type;
+use PHPUnit\Framework\TestCase;
 use Portiny\GraphQL\Contract\Mutation\MutationFieldInterface;
 use Portiny\GraphQL\Converter\MutationFieldConverter;
-use Portiny\GraphQL\Tests\AbstractContainerTestCase;
 
-final class MutationFieldConverterTest extends AbstractContainerTestCase
+final class MutationFieldConverterTest extends TestCase
 {
 	public function testToArray(): void
 	{

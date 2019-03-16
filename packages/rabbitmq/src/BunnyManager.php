@@ -5,7 +5,7 @@ namespace Portiny\RabbitMQ;
 use Bunny\Async\Client as AsyncClient;
 use Bunny\Channel;
 use Bunny\Client;
-use Nette\DI\Container;
+use Portiny\RabbitMQ\Consumer\AbstractConsumer;
 use Portiny\RabbitMQ\Exchange\AbstractExchange;
 use Portiny\RabbitMQ\Queue\AbstractQueue;
 use React\EventLoop\LoopInterface;
@@ -14,19 +14,34 @@ use React\Promise\PromiseInterface;
 final class BunnyManager
 {
 	/**
-	 * @var array
-	 */
-	private $config = [];
-
-	/**
 	 * @var bool
 	 */
 	private $isDeclared = false;
 
 	/**
-	 * @var Container
+	 * @var array
 	 */
-	private $container;
+	private $connection = [];
+
+	/**
+	 * @var array
+	 */
+	private $aliases = [];
+
+	/**
+	 * @var iterable
+	 */
+	private $consumers = [];
+
+	/**
+	 * @var iterable
+	 */
+	private $exchanges = [];
+
+	/**
+	 * @var iterable
+	 */
+	private $queues = [];
 
 	/**
 	 * @var LoopInterface
@@ -43,10 +58,18 @@ final class BunnyManager
 	 */
 	private $channel;
 
-	public function __construct(Container $container, array $config)
-	{
-		$this->container = $container;
-		$this->config = $config;
+	public function __construct(
+		array $connection,
+		array $aliases,
+		iterable $consumers,
+		iterable $exchanges,
+		iterable $queues
+	) {
+		$this->connection = $connection;
+		$this->aliases = $aliases;
+		$this->consumers = $consumers;
+		$this->exchanges = $exchanges;
+		$this->queues = $queues;
 	}
 
 	public function setLoop(LoopInterface $loop): void
@@ -61,9 +84,9 @@ final class BunnyManager
 	{
 		if ($this->client === null) {
 			if ($this->loop === null) {
-				$this->client = new Client($this->config['connection']);
+				$this->client = new Client($this->connection);
 			} else {
-				$this->client = new AsyncClient($this->loop, $this->config['connection']);
+				$this->client = new AsyncClient($this->loop, $this->connection);
 			}
 		}
 
@@ -82,9 +105,19 @@ final class BunnyManager
 		return $this->channel;
 	}
 
-	public function getClassNameByAlias(string $alias): ?string
+	public function getConsumerByAlias(string $alias): ?AbstractConsumer
 	{
-		return $this->config['aliases'][$alias] ?? null;
+		$consumerClassName = $this->aliases[$alias] ?? null;
+		if ($consumerClassName !== null) {
+			/** @var AbstractConsumer $consumer */
+			foreach ($this->consumers as $consumer) {
+				if ($consumer instanceof $consumerClassName) {
+					return $consumer;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -139,24 +172,21 @@ final class BunnyManager
 
 	private function declareExchanges(Channel $channel): void
 	{
-		foreach ($this->config['exchanges'] as $exchangeClassName) {
-			/** @var AbstractExchange $exchange */
-			$exchange = $this->container->getByType($exchangeClassName);
+		/** @var AbstractExchange $exchange */
+		foreach ($this->exchanges as $exchange) {
 			$exchange->declare($channel);
 		}
 
-		foreach ($this->config['exchanges'] as $exchangeClassName) {
-			/** @var AbstractExchange $exchange */
-			$exchange = $this->container->getByType($exchangeClassName);
+		/** @var AbstractExchange $exchange */
+		foreach ($this->exchanges as $exchange) {
 			$exchange->declareBindings($channel);
 		}
 	}
 
 	private function declareQueues(Channel $channel): void
 	{
-		foreach ($this->config['queues'] as $queueClassName) {
-			/** @var AbstractQueue $queue */
-			$queue = $this->container->getByType($queueClassName);
+		/** @var AbstractQueue $queue */
+		foreach ($this->queues as $queue) {
 			$queue->declare($channel);
 		}
 	}
