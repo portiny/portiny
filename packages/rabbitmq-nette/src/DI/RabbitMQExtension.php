@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Portiny\RabbitMQ\Adapter\Nette\DI;
+namespace Portiny\RabbitMQNette\DI;
 
 use Nette\DI\CompilerExtension;
 use Nette\DI\ContainerBuilder;
@@ -9,7 +9,6 @@ use Portiny\RabbitMQ\Command\ConsumeCommand;
 use Portiny\RabbitMQ\Command\DeclareCommand;
 use Portiny\RabbitMQ\Consumer\AbstractConsumer;
 use Portiny\RabbitMQ\Exchange\AbstractExchange;
-use Portiny\RabbitMQ\Producer\AbstractProducer;
 use Portiny\RabbitMQ\Producer\Producer;
 use Portiny\RabbitMQ\Queue\AbstractQueue;
 use Symfony\Component\Console\Application;
@@ -77,22 +76,17 @@ final class RabbitMQExtension extends CompilerExtension
 
 		$config['consumers'] = [];
 		foreach ($containerBuilder->findByType(AbstractConsumer::class) as $serviceDefinition) {
-			$config['consumers'][] = $serviceDefinition->getType();
+			$config['consumers'][] = '@' . $serviceDefinition->getType();
 		}
 
 		$config['exchanges'] = [];
 		foreach ($containerBuilder->findByType(AbstractExchange::class) as $serviceDefinition) {
-			$config['exchanges'][] = $serviceDefinition->getType();
-		}
-
-		$config['publishers'] = [];
-		foreach ($containerBuilder->findByType(AbstractProducer::class) as $serviceDefinition) {
-			$config['publishers'][] = $serviceDefinition->getType();
+			$config['exchanges'][] = '@' . $serviceDefinition->getType();
 		}
 
 		$config['queues'] = [];
 		foreach ($containerBuilder->findByType(AbstractQueue::class) as $serviceDefinition) {
-			$config['queues'][] = $serviceDefinition->getType();
+			$config['queues'][] = '@' . $serviceDefinition->getType();
 		}
 
 		return $config;
@@ -101,7 +95,13 @@ final class RabbitMQExtension extends CompilerExtension
 	private function setupBunnyManager(ContainerBuilder $containerBuilder, array $config): void
 	{
 		$containerBuilder->addDefinition($this->prefix('bunnyManager'))
-			->setFactory(BunnyManager::class, ['@container', $config]);
+			->setFactory(BunnyManager::class, [
+				$config['connection'],
+				$config['aliases'],
+				$config['consumers'],
+				$config['exchanges'],
+				$config['queues'],
+			]);
 	}
 
 	private function hasSymfonyConsole(): bool

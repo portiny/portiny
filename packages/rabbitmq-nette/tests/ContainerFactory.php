@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Portiny\RabbitMQ\Tests;
+namespace Portiny\RabbitMQNette\Tests;
 
 use Nette\Configurator;
 use Nette\DI\Container;

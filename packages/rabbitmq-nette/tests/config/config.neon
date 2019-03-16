@@ -1,5 +1,5 @@
 extensions:
-	rabbitmq: Portiny\RabbitMQ\Adapter\Nette\DI\RabbitMQExtension
+	rabbitmq: Portiny\RabbitMQNette\DI\RabbitMQExtension
 
 services:
 	- Portiny\RabbitMQ\Tests\Source\TestConsumer

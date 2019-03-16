@@ -18,6 +18,13 @@ $ composer require portiny/rabbitmq
 ```
 
 
+## Installation for frameworks
+
+If you use **Nette Framework** please use [this extension](https://github.com/portiny/rabbitmq-nette).
+
+If you use **Symfony Framework** please use [this bundle](https://github.com/portiny/rabbitmq-symfony).
+
+
 ## Resources
 
  * [Documentation](https://github.com/portiny/rabbitmq/blob/master/docs/en/index.md)

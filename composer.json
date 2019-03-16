@@ -36,7 +36,9 @@
 			"Portiny\\GraphQL\\": "packages/graphql/src",
 			"Portiny\\GraphQLNette\\": "packages/graphql-nette/src",
 			"Portiny\\GraphQLSymfony\\": "packages/graphql-symfony/src",
-			"Portiny\\RabbitMQ\\": "packages/rabbitmq/src"
+			"Portiny\\RabbitMQ\\": "packages/rabbitmq/src",
+			"Portiny\\RabbitMQNette\\": "packages/rabbitmq-nette/src",
+			"Portiny\\RabbitMQSymfony\\": "packages/rabbitmq-symfony/src"
 		}
 	},
 	"autoload-dev": {
@@ -47,7 +49,9 @@
 			"Portiny\\GraphQL\\Tests\\": "packages/graphql/tests",
 			"Portiny\\GraphQLNette\\Tests\\": "packages/graphql-nette/tests",
 			"Portiny\\GraphQLSymfony\\Tests\\": "packages/graphql-symfony/tests",
-			"Portiny\\RabbitMQ\\Tests\\": "packages/rabbitmq/tests"
+			"Portiny\\RabbitMQ\\Tests\\": "packages/rabbitmq/tests",
+			"Portiny\\RabbitMQNette\\Tests\\": "packages/rabbitmq-nette/tests",
+			"Portiny\\RabbitMQSymfony\\Tests\\": "packages/rabbitmq-symfony/tests"
 		}
 	},
 	"scripts": {

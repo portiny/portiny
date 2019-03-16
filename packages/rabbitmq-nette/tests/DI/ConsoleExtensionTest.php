@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Portiny\RabbitMQ\Tests\Adapter\Nette\DI;
+namespace Portiny\RabbitMQNette\Tests\DI;
 
 use Portiny\RabbitMQ\BunnyManager;
-use Portiny\RabbitMQ\Tests\AbstractContainerTestCase;
+use Portiny\RabbitMQNette\Tests\AbstractContainerTestCase;
 
 final class ConsoleExtensionTest extends AbstractContainerTestCase
 {

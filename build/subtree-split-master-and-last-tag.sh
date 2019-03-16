@@ -10,5 +10,7 @@ git subsplit publish --heads="master" --tags=$LAST_TAG packages/graphql:git@gith
 git subsplit publish --heads="master" --tags=$LAST_TAG packages/graphql-nette:git@github.com:portiny/graphql-nette.git
 git subsplit publish --heads="master" --tags=$LAST_TAG packages/graphql-symfony:git@github.com:portiny/graphql-symfony.git
 git subsplit publish --heads="master" --tags=$LAST_TAG packages/rabbitmq:git@github.com:portiny/rabbitmq.git
+git subsplit publish --heads="master" --tags=$LAST_TAG packages/rabbitmq-nette:git@github.com:portiny/rabbitmq-nette.git
+git subsplit publish --heads="master" --tags=$LAST_TAG packages/rabbitmq-symfony:git@github.com:portiny/rabbitmq-symfony.git
 
 rm -rf .subsplit/

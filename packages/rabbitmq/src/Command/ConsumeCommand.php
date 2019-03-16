@@ -3,7 +3,6 @@
 namespace Portiny\RabbitMQ\Command;
 
 use Bunny\Channel;
-use Nette\DI\Container;
 use Portiny\RabbitMQ\BunnyManager;
 use Portiny\RabbitMQ\Consumer\AbstractConsumer;
 use Symfony\Component\Console\Command\Command;
@@ -18,17 +17,11 @@ final class ConsumeCommand extends Command
 	 */
 	private $bunnyManager;
 
-	/**
-	 * @var Container
-	 */
-	private $container;
-
-	public function __construct(BunnyManager $bunnyManager, Container $container)
+	public function __construct(BunnyManager $bunnyManager)
 	{
 		parent::__construct();
 
 		$this->bunnyManager = $bunnyManager;
-		$this->container = $container;
 	}
 
 	/**
@@ -48,12 +41,16 @@ final class ConsumeCommand extends Command
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): ?int
 	{
-		/** @var string $consumer */
-		$consumer = $input->getArgument('consumer');
+		/** @var string $consumerName */
+		$consumerName = $input->getArgument('consumer');
 		$numberOfMessages = $this->getNumberOfMessages($input);
 		$secondsToRun = $this->getSecondsToRun($input);
 
-		$consumerClassName = $this->bunnyManager->getClassNameByAlias($consumer) ?: $consumer;
+		$consumer = $this->bunnyManager->getConsumerByAlias($consumerName);
+		if ($consumer === null) {
+			$output->writeln('<error>Consumer not found!</error>');
+			return -1;
+		}
 
 		/** @var Channel $channel */
 		$channel = $this->bunnyManager->getChannel();
@@ -61,7 +58,6 @@ final class ConsumeCommand extends Command
 		$output->writeln('<info>Consuming...</info>');
 
 		/** @var AbstractConsumer $consumer */
-		$consumer = $this->container->getByType($consumerClassName);
 		$consumer->consume($channel, $numberOfMessages);
 
 		$this->bunnyManager->getClient()->run($secondsToRun);
