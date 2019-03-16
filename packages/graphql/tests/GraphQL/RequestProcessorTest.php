@@ -2,19 +2,17 @@
 
 namespace Portiny\GraphQL\Tests\GraphQL;
 
-use Nette\Http\Request;
-use Nette\Http\UrlScript;
+use PHPUnit\Framework\TestCase;
 use Portiny\GraphQL\Contract\Http\Request\RequestParserInterface;
 use Portiny\GraphQL\GraphQL\RequestProcessor;
 use Portiny\GraphQL\GraphQL\Schema\SchemaCacheProvider;
 use Portiny\GraphQL\Http\Request\JsonRequestParser;
 use Portiny\GraphQL\Provider\MutationFieldsProvider;
 use Portiny\GraphQL\Provider\QueryFieldsProvider;
-use Portiny\GraphQL\Tests\AbstractContainerTestCase;
 use Portiny\GraphQL\Tests\Source\Provider\SomeMutationField;
 use Portiny\GraphQL\Tests\Source\Provider\SomeQueryField;
 
-final class RequestProcessorTest extends AbstractContainerTestCase
+final class RequestProcessorTest extends TestCase
 {
 	/**
 	 * {@inheritdoc}
@@ -51,12 +49,7 @@ final class RequestProcessorTest extends AbstractContainerTestCase
 
 	private function createRequestParser(string $rawData): RequestParserInterface
 	{
-		$url = new UrlScript('https://portiny.org');
-		$httpRequest = new Request($url, null, null, null, null, null, null, null, null, function () use ($rawData) {
-			return $rawData;
-		});
-
-		return new JsonRequestParser($httpRequest);
+		return new JsonRequestParser($rawData);
 	}
 
 	private function createRequestFactory(): RequestProcessor

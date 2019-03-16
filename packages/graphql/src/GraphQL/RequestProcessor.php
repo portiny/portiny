@@ -15,8 +15,8 @@ use Portiny\GraphQL\Contract\Http\Request\RequestParserInterface;
 use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
 use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
 use Portiny\GraphQL\GraphQL\Schema\SchemaCacheProvider;
+use Psr\Log\LoggerInterface;
 use Throwable;
-use Tracy\ILogger;
 
 final class RequestProcessor
 {
@@ -73,7 +73,7 @@ final class RequestProcessor
 		$context = null,
 		?array $allowedQueries = null,
 		?array $allowedMutations = null,
-		?ILogger $logger = null
+		?LoggerInterface $logger = null
 	): array {
 		try {
 			$cacheKey = $this->schemaCacheProvider->getCacheKey($allowedQueries, $allowedMutations);
@@ -97,7 +97,7 @@ final class RequestProcessor
 			$output = $result->toArray($this->detectDebugLevel($logger));
 		} catch (Throwable $throwable) {
 			if ($logger) {
-				$logger->log($throwable, ILogger::EXCEPTION);
+				$logger->error((string) $throwable);
 			}
 
 			$output = [
@@ -120,7 +120,7 @@ final class RequestProcessor
 		$context = null,
 		?array $allowedQueries = null,
 		?array $allowedMutations = null,
-		?ILogger $logger = null
+		?LoggerInterface $logger = null
 	): Promise {
 		try {
 			return GraphQL::promiseToExecute(
@@ -133,7 +133,7 @@ final class RequestProcessor
 			);
 		} catch (Throwable $throwable) {
 			if ($logger) {
-				$logger->log($throwable);
+				$logger->error((string) $throwable);
 			}
 
 			return $promiseAdapter->createRejected($throwable);
@@ -154,7 +154,7 @@ final class RequestProcessor
 		return new Schema($configuration);
 	}
 
-	private function detectDebugLevel(?ILogger $logger): int
+	private function detectDebugLevel(?LoggerInterface $logger): int
 	{
 		return $this->debugMode
 			? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE

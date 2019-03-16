@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Portiny\GraphQL\Tests\Adapter\Nette\DI;
+namespace Portiny\GraphQLNette\Tests\DI;
 
 use Portiny\GraphQL\GraphQL\RequestProcessor;
-use Portiny\GraphQL\Tests\AbstractContainerTestCase;
+use Portiny\GraphQLNette\Tests\AbstractContainerTestCase;
 
 final class GraphQLExtensionTest extends AbstractContainerTestCase
 {

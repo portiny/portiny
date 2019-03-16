@@ -1,6 +1,6 @@
 {
-	"name": "portiny/graphql",
-	"description": "Lightweight GraphQL integration extension for Nette framework.",
+	"name": "portiny/graphql-nette",
+	"description": "Portiny/GraphQL integration extension for Nette Framework.",
 	"keywords": ["php", "nette", "portiny", "graphql", "api"],
 	"license": ["MIT"],
 	"authors": [
@@ -8,21 +8,21 @@
 	],
 	"require": {
 		"php": "^7.1",
-		"nette/utils": "^2.4",
-		"psr/log": "^1.1",
-		"webonyx/graphql-php": "^0.13"
+		"nette/di": "^2.4",
+		"portiny/graphql": "^3.0"
 	},
 	"require-dev": {
+		"nette/bootstrap": "^2.4",
 		"phpunit/phpunit": "^7.5"
 	},
 	"autoload": {
 		"psr-4": {
-			"Portiny\\GraphQL\\": "src"
+			"Portiny\\GraphQLNette\\": "src"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Portiny\\GraphQL\\Tests\\": "tests"
+			"Portiny\\GraphQLNette\\Tests\\": "tests"
 		}
 	}
 }

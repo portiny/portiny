@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Portiny\GraphQL\Http\Request;
 
-use Nette\Http\IRequest;
 use Nette\Utils\Json;
 use Portiny\GraphQL\Contract\Http\Request\RequestParserInterface;
 
@@ -15,10 +14,9 @@ final class JsonRequestParser implements RequestParserInterface
 	 */
 	private $data = [];
 
-	public function __construct(IRequest $httpRequest)
+	public function __construct(string $json)
 	{
-		$rawData = $httpRequest->getRawBody();
-		$this->data = Json::decode($rawData ?: '{}', Json::FORCE_ARRAY);
+		$this->data = Json::decode($json ?: '{}', Json::FORCE_ARRAY);
 	}
 
 	/**

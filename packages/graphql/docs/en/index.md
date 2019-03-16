@@ -1,6 +1,6 @@
 # Information
 
-This extension provide integration of [Webonyx GraphQL](http://webonyx.github.io/graphql-php/) into Nette Framework.
+This package provide integration of [Webonyx GraphQL](http://webonyx.github.io/graphql-php/).
 
 
 ## Installation
@@ -10,27 +10,6 @@ The simplest way to install Portiny/GraphQL is using  [Composer](http://getcompo
 ```sh
 $ composer require portiny/graphql
 ```
-
-Enable the extension at your neon config file.
-
-```yml
-extensions:
-    graphql: Portiny\GraphQL\Adapter\Nette\DI\GraphQLExtension
-```
-
-
-## Configuration
-
-This extension can be configured by `graphql` section. Available configuration might look like this:
-
-```yml
-graphql:
-    debug: %debugMode%
-    schemaCache:
-        enabled: true # highly recommended for the production environment
-        cacheDir: %tempDir%/cache/graphql
-```
-
 
 ## Usage
 
@@ -113,47 +92,42 @@ services:
     - App\GraphQL\Query\SimpleQueryField
 ```
 
-### Presenter
+### Processing
 
-To process GraphQL request we must use `Portiny\GraphQL\GraphQL\RequestProcessor` at presenter action.
+To process GraphQL request we must use `Portiny\GraphQL\GraphQL\RequestProcessor`.
 
 ```php
 <?php
 
 declare(strict_types = 1);
 
-namespace App\Modules\GraphQLModule\FrontModule\Presenters;
+namespace App\Modules\GraphQLModule;
 
-use Nette\Application\UI\Presenter;
-use Portiny\GraphQL\Contract\Http\Request\RequestParserInterface;
 use Portiny\GraphQL\GraphQL\RequestProcessor;
 
 
-class GraphQLPresenter extends Presenter
+class GraphQLExecutor
 {
-
-    /**
-     * @var RequestParserInterface
-     */
-    private $requestParser;
-
+	
     /**
      * @var RequestProcessor
      */
     private $requestProcessor;
 
 
-    public function __construct(RequestParserInterface $requestParser, RequestProcessor $requestProcessor) 
+    public function __construct(RequestProcessor $requestProcessor) 
     {
-        $this->requestParser = $requestParser;
         $this->requestProcessor = $requestProcessor;
     }
 
 
-    public function actionDefault()
+    public function execute(): string
     {
-        $this->sendJson(
-            $this->requestProcessor->process($this->requestParser)
+    	$requestBody = '...'; // get body from http request
+    	$requestParser = new JsonRequestParser($requestBody);
+    	
+        return json_encode(
+            $this->requestProcessor->process($requestParser)
         );
     }
 

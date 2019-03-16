@@ -14,8 +14,11 @@
 		"nette/di": "^2.4",
 		"nette/http": "^2.4",
 		"nette/utils": "^2.4",
+		"psr/log": "^1.1",
 		"ruflin/elastica": "^6.1",
+		"symfony/config": "^4.2",
 		"symfony/console": "^4.2",
+		"symfony/dependency-injection": "^4.2",
 		"tracy/tracy": "^2.5",
 		"webonyx/graphql-php": "^0.13"
 	},
@@ -31,6 +34,8 @@
 			"Portiny\\Doctrine\\": "packages/doctrine/src",
 			"Portiny\\Elasticsearch\\": "packages/elasticsearch/src",
 			"Portiny\\GraphQL\\": "packages/graphql/src",
+			"Portiny\\GraphQLNette\\": "packages/graphql-nette/src",
+			"Portiny\\GraphQLSymfony\\": "packages/graphql-symfony/src",
 			"Portiny\\RabbitMQ\\": "packages/rabbitmq/src"
 		}
 	},
@@ -40,6 +45,8 @@
 			"Portiny\\Doctrine\\Tests\\": "packages/doctrine/tests",
 			"Portiny\\Elasticsearch\\Tests\\": "packages/elasticsearch/tests",
 			"Portiny\\GraphQL\\Tests\\": "packages/graphql/tests",
+			"Portiny\\GraphQLNette\\Tests\\": "packages/graphql-nette/tests",
+			"Portiny\\GraphQLSymfony\\Tests\\": "packages/graphql-symfony/tests",
 			"Portiny\\RabbitMQ\\Tests\\": "packages/rabbitmq/tests"
 		}
 	},

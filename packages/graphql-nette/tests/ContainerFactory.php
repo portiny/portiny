@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Portiny\GraphQL\Tests;
+namespace Portiny\GraphQLNette\Tests;
 
 use Nette\Configurator;
 use Nette\DI\Container;

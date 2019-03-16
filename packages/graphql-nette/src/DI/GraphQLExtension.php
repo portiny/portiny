@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Portiny\GraphQL\Adapter\Nette\DI;
+namespace Portiny\GraphQLNette\DI;
 
 use Nette\DI\CompilerExtension;
 use Portiny\GraphQL\Contract\Field\QueryFieldInterface;
-use Portiny\GraphQL\Contract\Http\Request\RequestParserInterface;
 use Portiny\GraphQL\Contract\Mutation\MutationFieldInterface;
 use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
 use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
 use Portiny\GraphQL\GraphQL\RequestProcessor;
 use Portiny\GraphQL\GraphQL\Schema\SchemaCacheProvider;
-use Portiny\GraphQL\Http\Request\JsonRequestParser;
 use Portiny\GraphQL\Provider\MutationFieldsProvider;
 use Portiny\GraphQL\Provider\QueryFieldsProvider;
 
@@ -52,7 +50,6 @@ final class GraphQLExtension extends CompilerExtension
 	{
 		$this->setupMutationFieldProvider();
 		$this->setupQueryFieldProvider();
-		$this->setupRequestParser();
 	}
 
 	private function setupMutationFieldProvider(): void
@@ -80,16 +77,6 @@ final class GraphQLExtension extends CompilerExtension
 		$queryFieldDefinitions = $containerBuilder->findByType(QueryFieldInterface::class);
 		foreach ($queryFieldDefinitions as $queryFieldDefinition) {
 			$queryFieldProvider->addSetup('addField', ['@' . $queryFieldDefinition->getType()]);
-		}
-	}
-
-	private function setupRequestParser(): void
-	{
-		$containerBuilder = $this->getContainerBuilder();
-
-		if (! $containerBuilder->findByType(RequestParserInterface::class)) {
-			$containerBuilder->addDefinition($this->prefix('jsonRequestParser'))
-				->setFactory(JsonRequestParser::class);
 		}
 	}
 }

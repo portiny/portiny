@@ -1,0 +1,29 @@
+parameters:
+    portiny.graphql.settings.debug: '%kernel.debug%'
+    portiny.graphql.schema_cache.enabled: false
+    portiny.graphql.schema_cache.cache_dir: '%kernel.cache_dir%/graphql'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Portiny\GraphQL\Provider\MutationFieldsProvider:
+        arguments:
+            - !tagged portiny.graphql.mutation_field
+    Portiny\GraphQL\Provider\QueryFieldsProvider:
+        arguments:
+            - !tagged portiny.graphql.query_field
+    Portiny\GraphQL\GraphQL\RequestProcessor:
+        arguments:
+            - '%portiny.graphql.settings.debug%'
+        calls:
+            - method: setSchemaCache
+              arguments:
+                  - '%portiny.graphql.schema_cache.enabled%'
+    Portiny\GraphQL\GraphQL\Schema\SchemaCacheProvider:
+        arguments:
+            - '%portiny.graphql.schema_cache.cache_dir%'
+
+    Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface: '@Portiny\GraphQL\Provider\MutationFieldsProvider'
+    Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface: '@Portiny\GraphQL\Provider\QueryFieldsProvider'

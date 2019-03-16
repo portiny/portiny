@@ -1,0 +1,28 @@
+{
+	"name": "portiny/graphql-symfony",
+	"description": "Portiny/GraphQL integration extension for Symfony Framework.",
+	"keywords": ["php", "symfony", "portiny", "graphql", "api"],
+	"license": ["MIT"],
+	"authors": [
+		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
+	],
+	"require": {
+		"php": "^7.1",
+		"portiny/graphql": "^3.0",
+		"symfony/config": "^4.2",
+		"symfony/dependency-injection": "^4.2"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^7.5"
+	},
+	"autoload": {
+		"psr-4": {
+			"Portiny\\GraphQLSymfony\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Portiny\\GraphQLSymfony\\Tests\\": "tests"
+		}
+	}
+}
