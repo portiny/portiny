@@ -18,12 +18,12 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Portiny\\Elasticsearch\\": "src"
+			"Portiny\\ElasticsearchNette\\": "src"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Portiny\\Elasticsearch\\Tests\\": "tests"
+			"Portiny\\ElasticsearchNette\\Tests\\": "tests"
 		}
 	}
 }

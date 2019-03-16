@@ -149,7 +149,7 @@ final class LogConsumer extends AbstractConsumer
 Then register example classes into DI container (syntax depends on your framework).
 
 ```yaml
-# Nette Framework
+# Nette Framework (for integration use https://github.com/portiny/graphql-nette)
 services:
     - App\Service\Exchange\LogExchange
     - App\Service\Queue\LogQueue
@@ -158,7 +158,7 @@ services:
 ```
 
 ```yaml
-# Symfony Framework
+# Symfony Framework (for integration use https://github.com/portiny/graphql-symfony)
 services:
     App\Service\Exchange\LogExchange: ~
     App\Service\Queue\LogQueue: ~
@@ -244,14 +244,14 @@ final class ClickControl extends Control
 At first add alias to `TestConsumer` (syntax depends on your framework).
 
 ```yaml
-# Nette Framework
+# Nette Framework (for integration use https://github.com/portiny/graphql-nette)
 rabbitmq:
     aliases:
         logger: App\Service\Consumer\LogConsumer
 ```
 
 ```yaml
-# Symfony Framework
+# Symfony Framework (for integration use https://github.com/portiny/graphql-symfony)
 parameters:
     portiny.rabbitmq.aliases: 
         logger: App\Service\Consumer\LogConsumer

@@ -40,7 +40,7 @@ Enable auto-tagging for queries and mutations classes:
 
 ```yaml
 services:
-    instanceof:
+    _instanceof:
         Portiny\GraphQL\Contract\Mutation\MutationFieldInterface:
             tags: ['portiny.graphql.mutation_field']
         Portiny\GraphQL\Contract\Field\QueryFieldInterface:

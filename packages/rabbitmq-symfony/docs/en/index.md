@@ -40,7 +40,7 @@ Enable auto-tagging for queries and mutations classes:
 
 ```yaml
 services:
-    instanceof:
+    _instanceof:
         Portiny\RabbitMQ\Consumer\AbstractConsumer:
             tags: ['portiny.rabbitmq.consumer']
         Portiny\RabbitMQ\Exchange\AbstractExchange:
