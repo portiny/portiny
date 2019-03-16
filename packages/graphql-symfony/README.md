@@ -9,7 +9,7 @@
 
 ## Installation
 
-The simplest way to install Portiny/GraphQL is using  [Composer](http://getcomposer.org/):
+The simplest way to install Portiny/GraphQL-Symfony is using  [Composer](http://getcomposer.org/):
 
 ```sh
 $ composer require portiny/graphql-symfony
