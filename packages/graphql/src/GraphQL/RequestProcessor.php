@@ -97,7 +97,7 @@ final class RequestProcessor
 			$output = $result->toArray($this->detectDebugLevel($logger));
 		} catch (Throwable $throwable) {
 			if ($logger) {
-				$logger->error((string) $throwable);
+				$logger->error((string) $throwable, $throwable->getTrace());
 			}
 
 			$output = [
