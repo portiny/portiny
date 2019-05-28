@@ -62,7 +62,7 @@
 			"@check-cs",
 			"@phpstan"
 		],
-		"phpunit": "vendor/bin/phpunit",
+		"phpunit": "vendor/bin/phpunit --do-not-cache-result",
 		"check-cs": "vendor/bin/ecs check packages",
 		"fix-cs": "vendor/bin/ecs check packages --fix",
 		"phpstan": "vendor/bin/phpstan analyse packages --level max --configuration phpstan.neon"

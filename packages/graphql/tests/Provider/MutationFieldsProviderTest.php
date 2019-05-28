@@ -36,8 +36,8 @@ class MutationFieldsProviderTest extends TestCase
 
 	public function testAddFieldAlreadyExists(): void
 	{
-		self::expectException(ExistingMutationFieldException::class);
-		self::expectExceptionMessage('Mutation field with name "Some name" is already registered.');
+		$this->expectException(ExistingMutationFieldException::class);
+		$this->expectExceptionMessage('Mutation field with name "Some name" is already registered.');
 
 		$mutationField = $this->getMutationField();
 

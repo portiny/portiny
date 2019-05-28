@@ -27,8 +27,8 @@ final class UrlTypeTest extends TestCase
 
 	public function testParseValueNotValidUrl(): void
 	{
-		self::expectException(UnexpectedValueException::class);
-		self::expectExceptionMessage('Cannot represent value as URL: test');
+		$this->expectException(UnexpectedValueException::class);
+		$this->expectExceptionMessage('Cannot represent value as URL: test');
 
 		$urlType = new UrlType();
 
@@ -45,8 +45,8 @@ final class UrlTypeTest extends TestCase
 
 	public function testParseLiteralNotValidUrl(): void
 	{
-		self::expectException(Error::class);
-		self::expectExceptionMessage('Not a valid URL');
+		$this->expectException(Error::class);
+		$this->expectExceptionMessage('Not a valid URL');
 
 		$urlType = new UrlType();
 		$stringValueNode = new StringValueNode(['value' => 'test']);
@@ -56,8 +56,8 @@ final class UrlTypeTest extends TestCase
 
 	public function testParseLiteralNotValidNode(): void
 	{
-		self::expectException(Error::class);
-		self::expectExceptionMessage('Can only parse strings got: BooleanValue');
+		$this->expectException(Error::class);
+		$this->expectExceptionMessage('Can only parse strings got: BooleanValue');
 
 		$urlType = new UrlType();
 		$booleanValueNode = new BooleanValueNode(['value' => null]);

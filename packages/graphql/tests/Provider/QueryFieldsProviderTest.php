@@ -36,8 +36,8 @@ class QueryFieldsProviderTest extends TestCase
 
 	public function testAddFieldAlreadyExists(): void
 	{
-		self::expectException(ExistingQueryFieldException::class);
-		self::expectExceptionMessage('Query field with name "Some name" is already registered.');
+		$this->expectException(ExistingQueryFieldException::class);
+		$this->expectExceptionMessage('Query field with name "Some name" is already registered.');
 
 		$queryField = $this->getQueryField();
 

@@ -27,8 +27,8 @@ final class EmailTypeTest extends TestCase
 
 	public function testParseValueNotValidEmail(): void
 	{
-		self::expectException(UnexpectedValueException::class);
-		self::expectExceptionMessage('Cannot represent value as email: test');
+		$this->expectException(UnexpectedValueException::class);
+		$this->expectExceptionMessage('Cannot represent value as email: test');
 
 		$emailType = new EmailType();
 
@@ -45,8 +45,8 @@ final class EmailTypeTest extends TestCase
 
 	public function testParseLiteralNotValidEmail(): void
 	{
-		self::expectException(Error::class);
-		self::expectExceptionMessage('Not a valid email');
+		$this->expectException(Error::class);
+		$this->expectExceptionMessage('Not a valid email');
 
 		$emailType = new EmailType();
 		$stringValueNode = new StringValueNode(['value' => 'test']);
@@ -56,8 +56,8 @@ final class EmailTypeTest extends TestCase
 
 	public function testParseLiteralNotValidNode(): void
 	{
-		self::expectException(Error::class);
-		self::expectExceptionMessage('Can only parse strings got: BooleanValue');
+		$this->expectException(Error::class);
+		$this->expectExceptionMessage('Can only parse strings got: BooleanValue');
 
 		$emailType = new EmailType();
 		$booleanValueNode = new BooleanValueNode(['value' => null]);
