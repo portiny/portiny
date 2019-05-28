@@ -2,6 +2,7 @@
 
 namespace Portiny\GraphQL\Tests\GraphQL\Type\Scalar;
 
+use GraphQL\Error\Error;
 use GraphQL\Language\AST\BooleanValueNode;
 use GraphQL\Language\AST\StringValueNode;
 use PHPUnit\Framework\TestCase;
@@ -24,12 +25,11 @@ final class UrlTypeTest extends TestCase
 		self::assertSame('https://portiny.org', $urlType->parseValue('https://portiny.org'));
 	}
 
-	/**
-	 * @expectedException UnexpectedValueException
-	 * @expectedExceptionMessage Cannot represent value as URL: test
-	 */
 	public function testParseValueNotValidUrl(): void
 	{
+		self::expectException(UnexpectedValueException::class);
+		self::expectExceptionMessage('Cannot represent value as URL: test');
+
 		$urlType = new UrlType();
 
 		self::assertSame('test', $urlType->parseValue('test'));
@@ -43,24 +43,22 @@ final class UrlTypeTest extends TestCase
 		self::assertSame('https://portiny.org', $urlType->parseLiteral($stringValueNode));
 	}
 
-	/**
-	 * @expectedException \GraphQL\Error\Error
-	 * @expectedExceptionMessage Not a valid URL
-	 */
 	public function testParseLiteralNotValidUrl(): void
 	{
+		self::expectException(Error::class);
+		self::expectExceptionMessage('Not a valid URL');
+
 		$urlType = new UrlType();
 		$stringValueNode = new StringValueNode(['value' => 'test']);
 
 		self::assertSame('test', $urlType->parseLiteral($stringValueNode));
 	}
 
-	/**
-	 * @expectedException \GraphQL\Error\Error
-	 * @expectedExceptionMessage Can only parse strings got: BooleanValue
-	 */
 	public function testParseLiteralNotValidNode(): void
 	{
+		self::expectException(Error::class);
+		self::expectExceptionMessage('Can only parse strings got: BooleanValue');
+
 		$urlType = new UrlType();
 		$booleanValueNode = new BooleanValueNode(['value' => null]);
 

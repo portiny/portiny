@@ -2,6 +2,7 @@
 
 namespace Portiny\GraphQL\Tests\GraphQL\Type\Scalar;
 
+use GraphQL\Error\Error;
 use GraphQL\Language\AST\BooleanValueNode;
 use GraphQL\Language\AST\StringValueNode;
 use PHPUnit\Framework\TestCase;
@@ -24,12 +25,11 @@ final class EmailTypeTest extends TestCase
 		self::assertSame('test@test.test', $emailType->parseValue('test@test.test'));
 	}
 
-	/**
-	 * @expectedException UnexpectedValueException
-	 * @expectedExceptionMessage Cannot represent value as email: test
-	 */
 	public function testParseValueNotValidEmail(): void
 	{
+		self::expectException(UnexpectedValueException::class);
+		self::expectExceptionMessage('Cannot represent value as email: test');
+
 		$emailType = new EmailType();
 
 		self::assertSame('test', $emailType->parseValue('test'));
@@ -43,24 +43,22 @@ final class EmailTypeTest extends TestCase
 		self::assertSame('test@test.test', $emailType->parseLiteral($stringValueNode));
 	}
 
-	/**
-	 * @expectedException \GraphQL\Error\Error
-	 * @expectedExceptionMessage Not a valid email
-	 */
 	public function testParseLiteralNotValidEmail(): void
 	{
+		self::expectException(Error::class);
+		self::expectExceptionMessage('Not a valid email');
+
 		$emailType = new EmailType();
 		$stringValueNode = new StringValueNode(['value' => 'test']);
 
 		self::assertSame('test', $emailType->parseLiteral($stringValueNode));
 	}
 
-	/**
-	 * @expectedException \GraphQL\Error\Error
-	 * @expectedExceptionMessage Can only parse strings got: BooleanValue
-	 */
 	public function testParseLiteralNotValidNode(): void
 	{
+		self::expectException(Error::class);
+		self::expectExceptionMessage('Can only parse strings got: BooleanValue');
+
 		$emailType = new EmailType();
 		$booleanValueNode = new BooleanValueNode(['value' => null]);
 

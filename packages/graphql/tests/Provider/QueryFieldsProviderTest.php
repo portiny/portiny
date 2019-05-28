@@ -7,6 +7,7 @@ use GraphQL\Type\Definition\Type;
 use PHPUnit\Framework\TestCase;
 use Portiny\GraphQL\Contract\Field\QueryFieldInterface;
 use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
+use Portiny\GraphQL\Exception\Provider\ExistingQueryFieldException;
 use Portiny\GraphQL\Provider\QueryFieldsProvider;
 use Portiny\GraphQL\Tests\Source\Provider\SomeQueryField;
 
@@ -33,12 +34,11 @@ class QueryFieldsProviderTest extends TestCase
 		self::assertCount(1, $this->queryFieldsProvider->getFields());
 	}
 
-	/**
-	 * @expectedException \Portiny\GraphQL\Exception\Provider\ExistingQueryFieldException
-	 * @expectedExceptionMessage Query field with name "Some name" is already registered.
-	 */
 	public function testAddFieldAlreadyExists(): void
 	{
+		self::expectException(ExistingQueryFieldException::class);
+		self::expectExceptionMessage('Query field with name "Some name" is already registered.');
+
 		$queryField = $this->getQueryField();
 
 		self::assertEmpty($this->queryFieldsProvider->getFields());

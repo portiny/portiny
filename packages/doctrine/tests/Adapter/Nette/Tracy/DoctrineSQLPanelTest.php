@@ -48,22 +48,22 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 
 	public function testGetTab(): void
 	{
-		self::assertContains('<span title="Doctrine 2">', $this->doctrineSQLPanel->getTab());
-		self::assertContains('0 queries', $this->doctrineSQLPanel->getTab());
+		self::assertStringContainsString('<span title="Doctrine 2">', $this->doctrineSQLPanel->getTab());
+		self::assertStringContainsString('0 queries', $this->doctrineSQLPanel->getTab());
 
 		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', null, null);
 		$this->doctrineSQLPanel->stopQuery();
 
-		self::assertContains('1 queries', $this->doctrineSQLPanel->getTab());
+		self::assertStringContainsString('1 queries', $this->doctrineSQLPanel->getTab());
 	}
 
 	public function testGetPanel(): void
 	{
-		self::assertContains('<h2>Queries</h2>', $this->doctrineSQLPanel->getPanel());
+		self::assertStringContainsString('<h2>Queries</h2>', $this->doctrineSQLPanel->getPanel());
 
 		$this->doctrineSQLPanel->startQuery('SELECT 1 FROM dual', null, null);
 		$this->doctrineSQLPanel->stopQuery();
 
-		self::assertContains('<h1>Queries: 1, time:', $this->doctrineSQLPanel->getPanel());
+		self::assertStringContainsString('<h1>Queries: 1, time:', $this->doctrineSQLPanel->getPanel());
 	}
 }

@@ -7,6 +7,7 @@ use GraphQL\Type\Definition\Type;
 use PHPUnit\Framework\TestCase;
 use Portiny\GraphQL\Contract\Mutation\MutationFieldInterface;
 use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
+use Portiny\GraphQL\Exception\Provider\ExistingMutationFieldException;
 use Portiny\GraphQL\Provider\MutationFieldsProvider;
 use Portiny\GraphQL\Tests\Source\Provider\SomeMutationField;
 
@@ -33,12 +34,11 @@ class MutationFieldsProviderTest extends TestCase
 		self::assertCount(1, $this->mutationFieldsProvider->getFields());
 	}
 
-	/**
-	 * @expectedException \Portiny\GraphQL\Exception\Provider\ExistingMutationFieldException
-	 * @expectedExceptionMessage Mutation field with name "Some name" is already registered.
-	 */
 	public function testAddFieldAlreadyExists(): void
 	{
+		self::expectException(ExistingMutationFieldException::class);
+		self::expectExceptionMessage('Mutation field with name "Some name" is already registered.');
+
 		$mutationField = $this->getMutationField();
 
 		self::assertEmpty($this->mutationFieldsProvider->getFields());
