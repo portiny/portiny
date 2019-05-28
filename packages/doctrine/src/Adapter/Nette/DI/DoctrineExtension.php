@@ -213,9 +213,6 @@ class DoctrineExtension extends CompilerExtension
 			$builder->addDefinition($this->prefix($name . '.diagnosticsPanel'))
 				->setType(self::DOCTRINE_SQL_PANEL);
 		}
-
-		// import Doctrine commands into Symfony/Console if exists
-		$this->registerCommandsIntoConsole($builder, $name);
 	}
 
 	/**
@@ -237,6 +234,9 @@ class DoctrineExtension extends CompilerExtension
 		$this->processDbalTypeOverrides($name, $config['dbal']['type_overrides']);
 		$this->processEventSubscribers($name);
 		$this->processFilters();
+
+		// import Doctrine commands into Symfony/Console if exists
+		$this->registerCommandsIntoConsole($builder, $name);
 	}
 
 	/**
@@ -400,36 +400,6 @@ class DoctrineExtension extends CompilerExtension
 		return '@' . $prefix . '.cache';
 	}
 
-	private function registerCommandsIntoConsole(ContainerBuilder $containerBuilder, string $name): void
-	{
-		if ($this->hasSymfonyConsole()) {
-			$commands = [
-				ConvertMappingCommand::class,
-				CreateCommand::class,
-				DropCommand::class,
-				GenerateEntitiesCommand::class,
-				GenerateProxiesCommand::class,
-				ImportCommand::class,
-				MetadataCommand::class,
-				QueryCommand::class,
-				ResultCommand::class,
-				UpdateCommand::class,
-				ValidateSchemaCommand::class,
-			];
-			foreach ($commands as $index => $command) {
-				$containerBuilder->addDefinition($name . '.command.' . $index)
-					->setType($command);
-			}
-
-			$helperSets = $containerBuilder->findByType(HelperSet::class);
-			if (! empty($helperSets)) {
-				/** @var ServiceDefinition $helperSet */
-				$helperSet = reset($helperSets);
-				$helperSet->addSetup('set', [new Statement(EntityManagerHelper::class), 'em']);
-			}
-		}
-	}
-
 	private function processDbalTypes(string $name, array $types): void
 	{
 		$builder = $this->getContainerBuilder();
@@ -481,14 +451,44 @@ class DoctrineExtension extends CompilerExtension
 		}
 	}
 
-	private function hasSymfonyConsole(): bool
+	private function registerCommandsIntoConsole(ContainerBuilder $containerBuilder, string $name): void
 	{
-		return class_exists(Application::class);
+		if ($this->hasSymfonyConsole()) {
+			$commands = [
+				ConvertMappingCommand::class,
+				CreateCommand::class,
+				DropCommand::class,
+				GenerateEntitiesCommand::class,
+				GenerateProxiesCommand::class,
+				ImportCommand::class,
+				MetadataCommand::class,
+				QueryCommand::class,
+				ResultCommand::class,
+				UpdateCommand::class,
+				ValidateSchemaCommand::class,
+			];
+			foreach ($commands as $index => $command) {
+				$containerBuilder->addDefinition($name . '.command.' . $index)
+					->setType($command);
+			}
+
+			$helperSets = $containerBuilder->findByType(HelperSet::class);
+			if (! empty($helperSets)) {
+				/** @var ServiceDefinition $helperSet */
+				$helperSet = reset($helperSets);
+				$helperSet->addSetup('set', [new Statement(EntityManagerHelper::class), 'em']);
+			}
+		}
 	}
 
 	private function hasEventManager(ContainerBuilder $containerBuilder): bool
 	{
 		$eventManagerServiceName = $containerBuilder->getByType(EventManager::class);
 		return $eventManagerServiceName !== null && strlen($eventManagerServiceName) > 0;
+	}
+
+	private function hasSymfonyConsole(): bool
+	{
+		return class_exists(Application::class);
 	}
 }

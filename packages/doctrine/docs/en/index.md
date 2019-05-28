@@ -31,6 +31,7 @@ doctrine:
         user: username
         password: password
         dbname: database
+    sourceDir: %appDir%/Entity
 ```
 
 
