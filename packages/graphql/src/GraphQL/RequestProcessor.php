@@ -77,9 +77,11 @@ final class RequestProcessor
 	): array {
 		try {
 			$cacheKey = $this->schemaCacheProvider->getCacheKey($allowedQueries, $allowedMutations);
+			$schema = null;
 			if ($this->schemaCache && $this->schemaCacheProvider->isCached($cacheKey)) {
 				$schema = $this->schemaCacheProvider->getSchema($cacheKey);
-			} else {
+			}
+			if ($schema === null) {
 				$schema = $this->createSchema($allowedQueries, $allowedMutations);
 				if ($this->schemaCache) {
 					$this->schemaCacheProvider->save($cacheKey, $schema);

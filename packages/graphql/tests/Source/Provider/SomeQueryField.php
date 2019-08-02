@@ -29,7 +29,9 @@ final class SomeQueryField implements QueryFieldInterface
 	public function getArgs(): array
 	{
 		return [
-			'someArg' => ['type' => Type::string()],
+			'someArg' => [
+				'type' => Type::string(),
+			],
 		];
 	}
 

@@ -12,7 +12,6 @@ use GraphQL\Type\Schema;
 use GraphQL\Utils\AST;
 use GraphQL\Utils\BuildSchema;
 use GraphQL\Utils\SchemaPrinter;
-use Nette\Utils\FileSystem;
 use Portiny\GraphQL\Contract\Provider\MutationFieldsProviderInterface;
 use Portiny\GraphQL\Contract\Provider\QueryFieldsProviderInterface;
 use Portiny\GraphQL\GraphQL\Type\Types;
@@ -49,14 +48,18 @@ final class SchemaCacheProvider
 		$this->mutationFieldsProvider = $mutationFieldsProvider;
 	}
 
-	public function getSchema(string $cacheKey): Schema
+	public function getSchema(string $cacheKey): ?Schema
 	{
 		if ($this->schema !== null) {
 			return $this->schema;
 		}
 
 		// load types from cache
-		Types::loadTypesFromClasses(unserialize(FileSystem::read($this->getTypesCacheFile($cacheKey))));
+		$cacheContent = file_get_contents($this->getTypesCacheFile($cacheKey));
+		if ($cacheContent === false) {
+			return null;
+		}
+		Types::loadTypesFromClasses(unserialize($cacheContent));
 
 		// load schema from cache
 		/** @var DocumentNode $document */
@@ -76,13 +79,13 @@ final class SchemaCacheProvider
 		// schema cache
 		$sdl = SchemaPrinter::doPrint($schema);
 		$documentNode = Parser::parse($sdl);
-		FileSystem::write(
+		file_put_contents(
 			$this->getSchemaCacheFile($cacheKey),
 			"<?php\nreturn " . var_export(AST::toArray($documentNode), true) . ';'
 		);
 
 		// types cache
-		FileSystem::write($this->getTypesCacheFile($cacheKey), serialize(Types::getTypeClasses()));
+		file_put_contents($this->getTypesCacheFile($cacheKey), serialize(Types::getTypeClasses()));
 	}
 
 	public function getCacheKey(?array $allowedQueries = null, ?array $allowedMutations = null): string
@@ -92,11 +95,13 @@ final class SchemaCacheProvider
 
 	private function getTypesCacheFile(string $cacheKey): string
 	{
+		@mkdir($this->cacheDir, 0777, true); //@ - may exists
 		return $this->cacheDir . '/types-' . $cacheKey . '.php';
 	}
 
 	private function getSchemaCacheFile(string $cacheKey): string
 	{
+		@mkdir($this->cacheDir, 0777, true); //@ - may exists
 		return $this->cacheDir . '/schema-' . $cacheKey . '.php';
 	}
 

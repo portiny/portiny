@@ -29,7 +29,9 @@ final class SomeMutationField implements MutationFieldInterface
 	public function getArgs(): array
 	{
 		return [
-			'someArg' => ['type' => Type::string()],
+			'someArg' => [
+				'type' => Type::string(),
+			],
 		];
 	}
 

@@ -19,13 +19,16 @@ class ElasticsearchExtensionTest extends AbstractContainerTestCase
 		$client = $this->container->getByType(Client::class);
 
 		self::assertSame(
-			[1 => [
-				'host' => 'localhost',
-				'port' => 9201,
-			], [
-				'host' => '12.34.56.78',
-				'port' => 1234,
-			]],
+			[
+				1 => [
+					'host' => 'localhost',
+					'port' => 9201,
+				],
+				[
+					'host' => '12.34.56.78',
+					'port' => 1234,
+				],
+			],
 			$client->getConfig('connections')
 		);
 		self::assertSame('some-path', $client->getConfig('path'));

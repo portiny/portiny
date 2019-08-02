@@ -66,7 +66,9 @@ final class MutationFieldConverterTest extends TestCase
 			public function getArgs(): array
 			{
 				return [
-					'someArg' => ['type' => Type::string()],
+					'someArg' => [
+						'type' => Type::string(),
+					],
 				];
 			}
 
