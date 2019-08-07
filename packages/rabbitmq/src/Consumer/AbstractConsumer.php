@@ -9,6 +9,7 @@ use Bunny\Message;
 use Bunny\Protocol\MethodBasicConsumeOkFrame;
 use InvalidArgumentException;
 use React\Promise\PromiseInterface;
+use Throwable;
 
 abstract class AbstractConsumer
 {
@@ -30,6 +31,11 @@ abstract class AbstractConsumer
 	/**
 	 * @var int
 	 */
+	public const MESSAGE_REJECT_REQUEUE = 4;
+
+	/**
+	 * @var int
+	 */
 	private $consumedMessages = 0;
 
 	/**
@@ -41,7 +47,12 @@ abstract class AbstractConsumer
 
 		return $channel->consume(
 			function (Message $message, Channel $channel, $client) use ($numberOfMessages): void {
-				$result = $this->process($message);
+				try {
+					$result = $this->process($message);
+				} catch (Throwable $throwable) {
+					$channel->reject($message);
+					throw $throwable;
+				}
 
 				switch ($result) {
 					case self::MESSAGE_ACK:
@@ -53,7 +64,11 @@ abstract class AbstractConsumer
 					case self::MESSAGE_REJECT:
 						$channel->reject($message, false);
 						break;
+					case self::MESSAGE_REJECT_REQUEUE:
+						$channel->reject($message);
+						break;
 					default:
+						$channel->reject($message);
 						throw new InvalidArgumentException('Unknown return value of consumer');
 				}
 
