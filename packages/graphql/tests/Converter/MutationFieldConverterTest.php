@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Tests\Converter;
 
@@ -10,6 +10,7 @@ use Portiny\GraphQL\Converter\MutationFieldConverter;
 
 final class MutationFieldConverterTest extends TestCase
 {
+
 	public function testToArray(): void
 	{
 		$mutationField = $this->getMutationField();
@@ -26,6 +27,7 @@ final class MutationFieldConverterTest extends TestCase
 		self::assertTrue(is_callable($mutationFieldAsArray['resolve']));
 	}
 
+
 	public function testToObject(): void
 	{
 		$mutationField = $this->getMutationField();
@@ -41,9 +43,11 @@ final class MutationFieldConverterTest extends TestCase
 		self::assertSame('resolved', $output->resolve([], ['someArg' => '']));
 	}
 
+
 	private function getMutationField(): MutationFieldInterface
 	{
 		return new class() implements MutationFieldInterface {
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -52,6 +56,7 @@ final class MutationFieldConverterTest extends TestCase
 				return 'Some name';
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -59,6 +64,7 @@ final class MutationFieldConverterTest extends TestCase
 			{
 				return 'Some description';
 			}
+
 
 			/**
 			 * {@inheritdoc}
@@ -72,6 +78,7 @@ final class MutationFieldConverterTest extends TestCase
 				];
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -80,6 +87,7 @@ final class MutationFieldConverterTest extends TestCase
 				return Type::string();
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -87,6 +95,8 @@ final class MutationFieldConverterTest extends TestCase
 			{
 				return 'resolved';
 			}
+
 		};
 	}
+
 }

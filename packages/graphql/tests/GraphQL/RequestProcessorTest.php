@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Tests\GraphQL;
 
@@ -14,6 +14,7 @@ use Portiny\GraphQL\Tests\Source\Provider\SomeQueryField;
 
 final class RequestProcessorTest extends TestCase
 {
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -21,6 +22,7 @@ final class RequestProcessorTest extends TestCase
 	{
 		parent::setUp();
 	}
+
 
 	public function testProcess(): void
 	{
@@ -47,10 +49,12 @@ final class RequestProcessorTest extends TestCase
 		self::assertSame('someValue resolved', $output['data']['someMutationName']);
 	}
 
+
 	private function createRequestParser(string $rawData): RequestParserInterface
 	{
 		return new JsonRequestParser($rawData);
 	}
+
 
 	private function createRequestFactory(): RequestProcessor
 	{
@@ -66,4 +70,5 @@ final class RequestProcessorTest extends TestCase
 
 		return new RequestProcessor(false, $mutationFieldsProvider, $queryFieldsProvider, $schemaCacheProvider);
 	}
+
 }

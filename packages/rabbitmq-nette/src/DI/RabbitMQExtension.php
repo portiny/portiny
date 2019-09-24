@@ -1,9 +1,11 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQNette\DI;
 
 use Nette\DI\CompilerExtension;
 use Nette\DI\ContainerBuilder;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
 use Portiny\RabbitMQ\BunnyManager;
 use Portiny\RabbitMQ\Command\ConsumeCommand;
 use Portiny\RabbitMQ\Command\DeclareCommand;
@@ -11,28 +13,31 @@ use Portiny\RabbitMQ\Consumer\AbstractConsumer;
 use Portiny\RabbitMQ\Exchange\AbstractExchange;
 use Portiny\RabbitMQ\Producer\Producer;
 use Portiny\RabbitMQ\Queue\AbstractQueue;
+use stdClass;
 use Symfony\Component\Console\Application;
 
 final class RabbitMQExtension extends CompilerExtension
 {
-	/**
-	 * @var array
-	 */
-	private $defaults = [
-		'aliases' => [],
-		'connection' => [
-			'host' => '127.0.0.1',
-			'port' => 5672,
-			'user' => 'guest',
-			'password' => 'guest',
-			'vhost' => '/',
-			'timeout' => 1,
-			'heartbeat' => 60.0,
-			'persistent' => false,
-			'path' => '/',
-			'tcp_nodelay' => false,
-		],
-	];
+
+	public function getConfigSchema(): Schema
+	{
+		return Expect::structure([
+			'aliases' => Expect::array(),
+			'connection' => Expect::structure([
+				'host' => Expect::string('127.0.0.1'),
+				'port' => Expect::int(5672)->nullable(),
+				'user' => Expect::string('guest')->nullable(),
+				'password' => Expect::string('guest')->nullable(),
+				'vhost' => Expect::string('/'),
+				'timeout' => Expect::int(1),
+				'heartbeat' => Expect::float(60.0),
+				'persistent' => Expect::bool(false),
+				'path' => Expect::string('/'),
+				'tcp_nodelay' => Expect::bool(false),
+			]),
+		]);
+	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -48,6 +53,7 @@ final class RabbitMQExtension extends CompilerExtension
 		$this->registerCommandsIntoConsole($builder);
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -58,6 +64,7 @@ final class RabbitMQExtension extends CompilerExtension
 
 		$this->setupBunnyManager($builder, $config);
 	}
+
 
 	private function registerCommandsIntoConsole(ContainerBuilder $containerBuilder): void
 	{
@@ -70,42 +77,47 @@ final class RabbitMQExtension extends CompilerExtension
 		}
 	}
 
-	private function createConfig(ContainerBuilder $containerBuilder): array
+
+	private function createConfig(ContainerBuilder $containerBuilder): stdClass
 	{
-		$config = $this->validateConfig($this->defaults);
+		/** @var stdClass $config */
+		$config = (object) $this->config;
 
-		$config['consumers'] = [];
+		$config->consumers = [];
 		foreach ($containerBuilder->findByType(AbstractConsumer::class) as $serviceDefinition) {
-			$config['consumers'][] = '@' . $serviceDefinition->getType();
+			$config->consumers[] = '@' . $serviceDefinition->getType();
 		}
 
-		$config['exchanges'] = [];
+		$config->exchanges = [];
 		foreach ($containerBuilder->findByType(AbstractExchange::class) as $serviceDefinition) {
-			$config['exchanges'][] = '@' . $serviceDefinition->getType();
+			$config->exchanges[] = '@' . $serviceDefinition->getType();
 		}
 
-		$config['queues'] = [];
+		$config->queues = [];
 		foreach ($containerBuilder->findByType(AbstractQueue::class) as $serviceDefinition) {
-			$config['queues'][] = '@' . $serviceDefinition->getType();
+			$config->queues[] = '@' . $serviceDefinition->getType();
 		}
 
 		return $config;
 	}
 
-	private function setupBunnyManager(ContainerBuilder $containerBuilder, array $config): void
+
+	private function setupBunnyManager(ContainerBuilder $containerBuilder, stdClass $config): void
 	{
 		$containerBuilder->addDefinition($this->prefix('bunnyManager'))
 			->setFactory(BunnyManager::class, [
-				$config['connection'],
-				$config['aliases'],
-				$config['consumers'],
-				$config['exchanges'],
-				$config['queues'],
+				(array) $config->connection,
+				$config->aliases,
+				$config->consumers,
+				$config->exchanges,
+				$config->queues,
 			]);
 	}
+
 
 	private function hasSymfonyConsole(): bool
 	{
 		return class_exists(Application::class);
 	}
+
 }

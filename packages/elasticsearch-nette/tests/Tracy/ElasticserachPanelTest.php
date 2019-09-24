@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\ElasticsearchNette\Tests\Tracy;
 
@@ -13,6 +13,7 @@ class ElasticserachPanelTest extends AbstractContainerTestCase
 	 */
 	private $elasticsearchPanel;
 
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -22,6 +23,7 @@ class ElasticserachPanelTest extends AbstractContainerTestCase
 		$this->elasticsearchPanel = new ElasticsearchPanel($client);
 	}
 
+
 	public function testGetTab(): void
 	{
 		self::assertStringContainsString('<span title="Elasticsearch">', $this->elasticsearchPanel->getTab());
@@ -30,10 +32,12 @@ class ElasticserachPanelTest extends AbstractContainerTestCase
 		// TODO: test send request to mockup client
 	}
 
+
 	public function testGetPanel(): void
 	{
 		self::assertStringContainsString('<h2>Queries</h2>', $this->elasticsearchPanel->getPanel());
 
 		// TODO: test send request to mockup client
 	}
+
 }

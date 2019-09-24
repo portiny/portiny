@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Tests\Adapter\Nette\Tracy;
 
@@ -13,6 +13,7 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 	 */
 	private $doctrineSQLPanel;
 
+
 	protected function setUp(): void
 	{
 		parent::setUp();
@@ -21,6 +22,7 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 		$entityManager = $this->container->getByType(EntityManager::class);
 		$this->doctrineSQLPanel = new DoctrineSQLPanel($entityManager);
 	}
+
 
 	public function testStartQuery(): void
 	{
@@ -31,6 +33,7 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 		self::assertCount(1, $queries);
 		self::assertSame('SELECT 1 FROM dual', reset($queries)[0]);
 	}
+
 
 	public function testStopQuery(): void
 	{
@@ -46,6 +49,7 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 		self::assertTrue($firstQuery[3] > 0);
 	}
 
+
 	public function testGetTab(): void
 	{
 		self::assertStringContainsString('<span title="Doctrine 2">', $this->doctrineSQLPanel->getTab());
@@ -57,6 +61,7 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 		self::assertStringContainsString('1 queries', $this->doctrineSQLPanel->getTab());
 	}
 
+
 	public function testGetPanel(): void
 	{
 		self::assertStringContainsString('<h2>Queries</h2>', $this->doctrineSQLPanel->getPanel());
@@ -66,4 +71,5 @@ class DoctrineSQLPanelTest extends AbstractContainerTestCase
 
 		self::assertStringContainsString('<h1>Queries: 1, time:', $this->doctrineSQLPanel->getPanel());
 	}
+
 }

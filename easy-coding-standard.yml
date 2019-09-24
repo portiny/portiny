@@ -6,15 +6,33 @@ imports:
     - { resource: 'vendor/symplify/easy-coding-standard/config/set/common.yaml' }
 
 services:
-    # code complexity
+    # code structure & complexity
     PHP_CodeSniffer\Standards\Generic\Sniffs\Files\LineLengthSniff:
         absoluteLineLimit: 120
     PHP_CodeSniffer\Standards\Generic\Sniffs\Metrics\CyclomaticComplexitySniff:
-        absoluteComplexity: 10
+        absoluteComplexity: 12
     PHP_CodeSniffer\Standards\Generic\Sniffs\Metrics\NestingLevelSniff:
-        absoluteNestingLevel: 4
+        absoluteNestingLevel: 5
+    PHP_CodeSniffer\Standards\Squiz\Sniffs\WhiteSpace\FunctionSpacingSniff:
+        spacingBeforeFirst: 1
+        spacingAfterLast: 1
     Symplify\CodingStandard\Sniffs\CleanCode\CognitiveComplexitySniff:
-        maxCognitiveComplexity: 9
+        maxCognitiveComplexity: 10
+    SlevomatCodingStandard\Sniffs\Classes\TraitUseSpacingSniff:
+        linesCountBeforeFirstUse: 1
+        linesCountAfterLastUse: 2
+    SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff:
+        newlinesCountBetweenOpenTagAndDeclare: 0
+        newlinesCountAfterDeclare: 2
+        spacesCountAroundEqualsSign: 1
+
+    # PHP
+    SlevomatCodingStandard\Sniffs\TypeHints\UselessConstantTypeHintSniff:
+
+    # Use statements
+    SlevomatCodingStandard\Sniffs\Namespaces\AlphabeticallySortedUsesSniff:
+    SlevomatCodingStandard\Sniffs\Namespaces\UnusedUsesSniff:
+        searchAnnotations: true
 
 parameters:
     indentation: tab
@@ -23,13 +41,24 @@ parameters:
         Symplify\CodingStandard\Sniffs\DependencyInjection\NoClassInstantiationSniff:
         Symplify\CodingStandard\Sniffs\Property\DynamicPropertySniff:
         SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff:
+        PhpCsFixer\Fixer\Operator\NewWithBracesFixer:
+        PhpCsFixer\Fixer\ClassNotation\ClassAttributesSeparationFixer:
+        Symplify\CodingStandard\Fixer\ClassNotation\LastPropertyAndFirstMethodSeparationFixer:
+        PhpCsFixer\Fixer\Basic\BracesFixer:
+        PhpCsFixer\Fixer\ClassNotation\NoBlankLinesAfterClassOpeningFixer:
+        PHP_CodeSniffer\Standards\Squiz\Sniffs\Functions\MultiLineFunctionDeclarationSniff:
+        PhpCsFixer\Fixer\LanguageConstruct\DeclareEqualNormalizeFixer:
+        Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenStaticFunctionSniff:
+        PHP_CodeSniffer\Standards\Squiz\Sniffs\WhiteSpace\SuperfluousWhitespaceSniff:
+        Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenReferenceSniff:
         Symplify\CodingStandard\Sniffs\Architecture\ExplicitExceptionSniff:
         Symplify\CodingStandard\Sniffs\Naming\TraitNameSniff:
-        Symplify\CodingStandard\Sniffs\CleanCode\ForbiddenStaticFunctionSniff:
-        Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff:
-        Symplify\CodingStandard\Fixer\Php\ClassStringToClassConstantFixer:
-        SlamCsFixer\FinalInternalClassFixer:
+        Symplify\CodingStandard\Fixer\ControlStructure\PregDelimiterFixer:
+        Symplify\CodingStandard\Sniffs\Commenting\VarConstantCommentSniff:
         Symplify\CodingStandard\Sniffs\Architecture\DuplicatedClassShortNameSniff:
+        Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff:
+        Symplify\CodingStandard\Fixer\Php\ClassStringToClassConstantFixer: ~
+        Symplify\CodingStandard\Fixer\Naming\PropertyNameMatchingTypeFixer: ~
         Symplify\CodingStandard\Fixer\Solid\FinalInterfaceFixer:
             # contains anonymous class
             - packages/graphql/src/Converter/MutationFieldConverter.php

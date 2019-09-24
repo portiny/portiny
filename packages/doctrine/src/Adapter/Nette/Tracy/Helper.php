@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Adapter\Nette\Tracy;
 
@@ -7,6 +7,7 @@ use Nette\Utils\Strings;
 
 final class Helper
 {
+
 	/**
 	 * Returns syntax highlighted SQL command.
 	 */
@@ -81,4 +82,5 @@ final class Helper
 
 		return '<pre class="dump">' . trim($sql) . "</pre>\n";
 	}
+
 }

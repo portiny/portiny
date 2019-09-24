@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Adapter\Nette\DI;
 
@@ -49,70 +47,81 @@ use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpLiteral;
+use Nette\Schema\Expect;
+use Nette\Schema\Schema;
 use Nette\Utils\AssertionException;
 use Nette\Utils\Validators;
 use Portiny\Doctrine\Adapter\Nette\Tracy\DoctrineSQLPanel;
 use Portiny\Doctrine\Cache\DefaultCache;
 use Portiny\Doctrine\Contract\Provider\ClassMappingProviderInterface;
 use Portiny\Doctrine\Contract\Provider\EntitySourceProviderInterface;
+use stdClass;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 
 class DoctrineExtension extends CompilerExtension
 {
-	/**
-	 * @var string
-	 */
 	private const DOCTRINE_SQL_PANEL = DoctrineSQLPanel::class;
 
 	private $classMappings = [];
 
 	private $entitySources = [];
 
-	/**
-	 * @var array
-	 */
-	private static $defaults = [
-		'debug' => '%debugMode%',
-		'dbal' => [
-			'type_overrides' => [],
-			'types' => [],
-			'schema_filter' => null,
-		],
-		'prefix' => 'doctrine.default',
-		'proxyDir' => '%tempDir%/cache/proxies',
-		'proxyNamespace' => 'DoctrineProxies',
-		'sourceDir' => null,
-		'entityManagerClassName' => EntityManager::class,
-		'defaultRepositoryClassName' => EntityRepository::class,
-		'repositoryFactory' => null,
-		'namingStrategy' => UnderscoreNamingStrategy::class,
-		'sqlLogger' => null,
-		'targetEntityMappings' => [],
-		'metadata' => [],
-		'functions' => [],
-		// caches
-		'metadataCache' => 'default',
-		'queryCache' => 'default',
-		'resultCache' => 'default',
-		'hydrationCache' => 'default',
-		'secondLevelCache' => [
-			'enabled' => false,
-			'factoryClass' => DefaultCacheFactory::class,
-			'driver' => 'default',
-			'regions' => [
-				'defaultLifetime' => 3600,
-				'defaultLockLifetime' => 60,
-			],
-			'fileLockRegionDirectory' => '%tempDir%/cache/Doctrine.Cache.Locks',
-			'logging' => '%debugMode%',
-		],
-		'cache' => [
-			'redis' => [
-				'class' => RedisCache::class,
-			],
-		],
-	];
+
+	public function getConfigSchema(): Schema
+	{
+		return Expect::structure([
+			'debug' => Expect::bool(false),
+			'connection' => Expect::structure([
+				'driver' => Expect::string('pdo_mysql'),
+				'host' => Expect::string('localhost')->nullable(),
+				'port' => Expect::int(3306)->nullable(),
+				'user' => Expect::string('username')->nullable(),
+				'password' => Expect::string('password')->nullable(),
+				'dbname' => Expect::string('dbname')->nullable(),
+				'memory' => Expect::bool(false)->nullable(),
+			]),
+			'dbal' => Expect::structure([
+				'type_overrides' => Expect::array()->default([]),
+				'types' => Expect::array()->default([]),
+				'schema_filter' => Expect::string()->nullable(),
+			]),
+			'prefix' => Expect::string('doctrine.default'),
+			'proxyDir' => Expect::string('%tempDir%/cache/proxies'),
+			'proxyNamespace' => Expect::string('DoctrineProxies'),
+			'sourceDir' => Expect::string()->nullable(),
+			'entityManagerClassName' => Expect::string(EntityManager::class),
+			'defaultRepositoryClassName' => Expect::string(EntityRepository::class),
+			'repositoryFactory' => Expect::string()->nullable(),
+			'namingStrategy' => Expect::string(UnderscoreNamingStrategy::class),
+			'sqlLogger' => Expect::string()->nullable(),
+			'targetEntityMappings' => Expect::array()->default([]),
+			'metadata' => Expect::array()->default([]),
+			'functions' => Expect::array()->default([]),
+			// caches
+			'metadataCache' => Expect::string('default'),
+			'queryCache' => Expect::string('default'),
+			'resultCache' => Expect::string('default'),
+			'hydrationCache' => Expect::string('default'),
+			'secondLevelCache' => Expect::structure([
+				'enabled' => Expect::bool(false),
+				'factoryClass' => Expect::string(DefaultCacheFactory::class),
+				'driver' => Expect::string('default'),
+				'regions' => Expect::structure([
+					'defaultLifetime' => Expect::int(3600),
+					'defaultLockLifetime' => Expect::int(60),
+				]),
+				'fileLockRegionDirectory' => Expect::string('%tempDir%/cache/Doctrine.Cache.Locks'),
+				'logging' => Expect::bool(false),
+			]),
+			'cache' => Expect::structure([
+				'redis' => Expect::structure([
+					'class' => Expect::string(RedisCache::class),
+				]),
+			]),
+		]);
+	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -122,106 +131,111 @@ class DoctrineExtension extends CompilerExtension
 		$config = $this->parseConfig();
 
 		$builder = $this->getContainerBuilder();
-		$name = $config['prefix'];
+		$name = $config->prefix;
 
 		$builder->addDefinition($name . '.namingStrategy')
-			->setType($config['namingStrategy']);
+			->setType($config->namingStrategy);
 
 		$configurationDefinition = $builder->addDefinition($name . '.config')
 			->setType(Configuration::class)
-			->addSetup('setFilterSchemaAssetsExpression', [$config['dbal']['schema_filter']])
-			->addSetup('setDefaultRepositoryClassName', [$config['defaultRepositoryClassName']])
-			->addSetup('setProxyDir', [$config['proxyDir']])
-			->addSetup('setProxyNamespace', [$config['proxyNamespace']])
-			->addSetup('setAutoGenerateProxyClasses', [$config['debug']])
+			->addSetup('setFilterSchemaAssetsExpression', [$config->dbal->schema_filter])
+			->addSetup('setDefaultRepositoryClassName', [$config->defaultRepositoryClassName])
+			->addSetup('setProxyDir', [$config->proxyDir])
+			->addSetup('setProxyNamespace', [$config->proxyNamespace])
+			->addSetup('setAutoGenerateProxyClasses', [$config->debug])
 			->addSetup('setNamingStrategy', ['@' . $name . '.namingStrategy']);
 
 		$builder->addDefinition($name . '.annotationReader')
 			->setType(AnnotationReader::class)
 			->setAutowired(false);
 
-		$metadataCache = $this->getCache($name . '.metadata', $builder, $config['metadataCache'] ?: 'array');
+		$metadataCache = $this->getCache($name . '.metadata', $builder, $config->metadataCache ?: 'array');
 		$builder->addDefinition($name . '.reader')
 			->setType(Reader::class)
-			->setFactory(CachedReader::class, ['@' . $name . '.annotationReader', $metadataCache, $config['debug']]);
+			->setFactory(CachedReader::class, ['@' . $name . '.annotationReader', $metadataCache, $config->debug]);
 
 		$builder->addDefinition($name . '.annotationDriver')
 			->setFactory(AnnotationDriver::class, ['@' . $name . '.reader', array_values($this->entitySources)]);
 
 		$configurationDefinition->addSetup('setMetadataDriverImpl', ['@' . $name . '.annotationDriver']);
 
-		foreach ($config['functions'] as $functionName => $function) {
+		foreach ($config->functions as $functionName => $function) {
 			$configurationDefinition->addSetup('addCustomStringFunction', [$functionName, $function]);
 		}
 
-		if ($config['repositoryFactory']) {
+		if ($config->repositoryFactory) {
 			$builder->addDefinition($name . '.repositoryFactory')
-				->setType($config['repositoryFactory']);
+				->setType($config->repositoryFactory);
 			$configurationDefinition->addSetup('setRepositoryFactory', ['@' . $name . '.repositoryFactory']);
 		}
-		if ($config['sqlLogger']) {
+		if ($config->sqlLogger) {
 			$builder->addDefinition($name . '.sqlLogger')
-				->setType($config['sqlLogger']);
+				->setType($config->sqlLogger);
 			$configurationDefinition->addSetup('setSQLLogger', ['@' . $name . '.sqlLogger']);
 		}
 
-		if ($config['metadataCache'] !== false) {
+		if ($config->metadataCache !== false) {
 			$configurationDefinition->addSetup(
 				'setMetadataCacheImpl',
-				[$this->getCache($name . '.metadata', $builder, $config['metadataCache'])]
+				[$this->getCache($name . '.metadata', $builder, $config->metadataCache)]
 			);
 		}
 
-		if ($config['queryCache'] !== false) {
+		if ($config->queryCache !== false) {
 			$configurationDefinition->addSetup(
 				'setQueryCacheImpl',
-				[$this->getCache($name . '.query', $builder, $config['queryCache'])]
+				[$this->getCache($name . '.query', $builder, $config->queryCache)]
 			);
 		}
 
-		if ($config['resultCache'] !== false) {
+		if ($config->resultCache !== false) {
 			$configurationDefinition->addSetup(
 				'setResultCacheImpl',
-				[$this->getCache($name . '.ormResult', $builder, $config['resultCache'])]
+				[$this->getCache($name . '.ormResult', $builder, $config->resultCache)]
 			);
 		}
 
-		if ($config['hydrationCache'] !== false) {
+		if ($config->hydrationCache !== false) {
 			$configurationDefinition->addSetup(
 				'setHydrationCacheImpl',
-				[$this->getCache($name . '.hydration', $builder, $config['hydrationCache'])]
+				[$this->getCache($name . '.hydration', $builder, $config->hydrationCache)]
 			);
 		}
 
-		$this->processSecondLevelCache($name, $config['secondLevelCache']);
+		$this->processSecondLevelCache($name, $config->secondLevelCache);
 
 		$builder->addDefinition($name . '.connection')
 			->setType(Connection::class)
 			->setFactory('@' . $name . '.entityManager::getConnection');
 
 		$builder->addDefinition($name . '.entityManager')
-			->setType($config['entityManagerClassName'])
+			->setType($config->entityManagerClassName)
 			->setFactory(
-				$config['entityManagerClassName'] . '::create',
-				[$config['connection'], '@' . $name . '.config', '@Doctrine\Common\EventManager']
+				$config->entityManagerClassName . '::create',
+				[(array) $config->connection, '@' . $name . '.config', '@Doctrine\Common\EventManager']
 			);
 
 		$builder->addDefinition($name . '.resolver')
 			->setType(ResolveTargetEntityListener::class);
 
-		if ($config['debug'] === true) {
+		if ($config->debug === true) {
 			$builder->addDefinition($this->prefix($name . '.diagnosticsPanel'))
 				->setType(self::DOCTRINE_SQL_PANEL);
 		}
+
+		// import Doctrine commands into Symfony/Console if exists
+		$this->registerCommandsIntoConsole($builder, $name);
 	}
+
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function beforeCompile(): void
 	{
-		$config = $this->getConfig(self::$defaults);
-		$name = $config['prefix'];
+		/** @var stdClass $config */
+		$config = (object) $this->config;
+		$name = $config->prefix;
 
 		$builder = $this->getContainerBuilder();
 
@@ -230,26 +244,25 @@ class DoctrineExtension extends CompilerExtension
 				->addSetup('addResolveTargetEntity', [$source, $target, []]);
 		}
 
-		$this->processDbalTypes($name, $config['dbal']['types']);
-		$this->processDbalTypeOverrides($name, $config['dbal']['type_overrides']);
+		$this->processDbalTypes($name, $config->dbal->types);
+		$this->processDbalTypeOverrides($name, $config->dbal->type_overrides);
 		$this->processEventSubscribers($name);
 		$this->processFilters();
-
-		// import Doctrine commands into Symfony/Console if exists
-		$this->registerCommandsIntoConsole($builder, $name);
 	}
+
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function afterCompile(ClassType $classType): void
 	{
-		$config = $this->getConfig(self::$defaults);
+		/** @var stdClass $config */
+		$config = (object) $this->config;
 		$initialize = $classType->methods['initialize'];
 
 		$initialize->addBody('?::registerUniqueLoader("class_exists");', [new PhpLiteral(AnnotationRegistry::class)]);
 
-		if ($config['debug'] === true) {
+		if ($config->debug === true) {
 			$initialize->addBody('$this->getByType(\'' . self::DOCTRINE_SQL_PANEL . '\')->bindToBar();');
 		}
 
@@ -265,28 +278,27 @@ class DoctrineExtension extends CompilerExtension
 		}
 	}
 
-	protected function processSecondLevelCache($name, array $config): void
+
+	protected function processSecondLevelCache($name, stdClass $config): void
 	{
-		if (! $config['enabled']) {
+		if (! $config->enabled) {
 			return;
 		}
 
 		$builder = $this->getContainerBuilder();
 
-		$cacheService = $this->getCache($name . '.secondLevel', $builder, $config['driver']);
+		$cacheService = $this->getCache($name . '.secondLevel', $builder, $config->driver);
 
+		$cacheFactoryId = '@' . $name . '.cacheRegionsConfiguration';
 		$builder->addDefinition($this->prefix($name . '.cacheFactory'))
 			->setType(CacheFactory::class)
-			->setFactory($config['factoryClass'], [
-				$this->prefix('@' . $name . '.cacheRegionsConfiguration'),
-				$cacheService,
-			])
-			->addSetup('setFileLockRegionDirectory', [$config['fileLockRegionDirectory']]);
+			->setFactory($config->factoryClass, [$this->prefix($cacheFactoryId), $cacheService])
+			->addSetup('setFileLockRegionDirectory', [$config->fileLockRegionDirectory]);
 
 		$builder->addDefinition($this->prefix($name . '.cacheRegionsConfiguration'))
 			->setFactory(RegionsConfiguration::class, [
-				$config['regions']['defaultLifetime'],
-				$config['regions']['defaultLockLifetime'],
+				$config->regions->defaultLifetime,
+				$config->regions->defaultLockLifetime,
 			]);
 
 		$logger = $builder->addDefinition($this->prefix($name . '.cacheLogger'))
@@ -294,7 +306,7 @@ class DoctrineExtension extends CompilerExtension
 			->setFactory(CacheLoggerChain::class)
 			->setAutowired(false);
 
-		if ($config['logging']) {
+		if ($config->logging) {
 			$logger->addSetup('setLogger', ['statistics', new Statement(StatisticsCacheLogger::class)]);
 		}
 
@@ -310,14 +322,17 @@ class DoctrineExtension extends CompilerExtension
 		$configuration->addSetup('setSecondLevelCacheConfiguration', ['@' . $cacheConfigName]);
 	}
 
+
 	/**
 	 * @throws AssertionException
 	 */
-	private function parseConfig(): array
+	private function parseConfig(): stdClass
 	{
-		$config = $this->getConfig(self::$defaults);
-		$this->classMappings = $config['targetEntityMappings'];
-		$this->entitySources = $config['metadata'];
+		/** @var stdClass $config */
+		$config = (object) $this->config;
+
+		$this->classMappings = $config->targetEntityMappings;
+		$this->entitySources = $config->metadata;
 
 		foreach ($this->compiler->getExtensions() as $extension) {
 			if ($extension instanceof ClassMappingProviderInterface) {
@@ -333,12 +348,13 @@ class DoctrineExtension extends CompilerExtension
 			}
 		}
 
-		if ($config['sourceDir']) {
-			$this->entitySources[] = $config['sourceDir'];
+		if ($config->sourceDir) {
+			$this->entitySources[] = $config->sourceDir;
 		}
 
 		return $config;
 	}
+
 
 	private function getCache(string $prefix, ContainerBuilder $containerBuilder, string $cacheType): string
 	{
@@ -358,7 +374,7 @@ class DoctrineExtension extends CompilerExtension
 				break;
 
 			case 'redis':
-				$cacheClass = $config['cache']['redis']['class'];
+				$cacheClass = $config->cache->redis->class;
 				break;
 
 			case 'default':
@@ -380,19 +396,19 @@ class DoctrineExtension extends CompilerExtension
 			->setAutowired(false);
 
 		if ($cacheType === 'redis') {
-			$redisConfig = $config['cache']['redis'];
+			$redisConfig = $config->cache->redis;
 
 			$containerBuilder->addDefinition($prefix . '.redis')
 				->setType('\Redis')
 				->setAutowired(false)
 				->addSetup('connect', [
-					$redisConfig['host'] ?? '127.0.0.1',
-					$redisConfig['port'] ?? null,
-					$redisConfig['timeout'] ?? 0.0,
-					$redisConfig['reserved'] ?? null,
-					$redisConfig['retryInterval'] ?? 0,
+					$redisConfig->host ?? '127.0.0.1',
+					$redisConfig->port ?? null,
+					$redisConfig->timeout ?? 0.0,
+					$redisConfig->reserved ?? null,
+					$redisConfig->retryInterval ?? 0,
 				])
-				->addSetup('select', [$redisConfig['database'] ?? 1]);
+				->addSetup('select', [$redisConfig->database ?? 1]);
 
 			$mainCacheDefinition->addSetup('setRedis', ['@' . $prefix . '.redis']);
 		}
@@ -400,56 +416,6 @@ class DoctrineExtension extends CompilerExtension
 		return '@' . $prefix . '.cache';
 	}
 
-	private function processDbalTypes(string $name, array $types): void
-	{
-		$builder = $this->getContainerBuilder();
-		$entityManagerDefinition = $builder->getDefinition($name . '.entityManager');
-
-		foreach ($types as $type => $className) {
-			$entityManagerDefinition->addSetup(
-				'if ( ! Doctrine\DBAL\Types\Type::hasType(?)) { Doctrine\DBAL\Types\Type::addType(?, ?); }',
-				[$type, $type, $className]
-			);
-		}
-	}
-
-	private function processDbalTypeOverrides(string $name, array $types): void
-	{
-		$builder = $this->getContainerBuilder();
-		$entityManagerDefinition = $builder->getDefinition($name . '.entityManager');
-
-		foreach ($types as $type => $className) {
-			$entityManagerDefinition->addSetup('Doctrine\DBAL\Types\Type::overrideType(?, ?);', [$type, $className]);
-		}
-	}
-
-	private function processEventSubscribers(string $name): void
-	{
-		$builder = $this->getContainerBuilder();
-
-		if ($this->hasEventManager($builder)) {
-			$eventManagerDefinition = $builder->getDefinition($builder->getByType(EventManager::class))
-				->addSetup('addEventListener', [Events::loadClassMetadata, '@' . $name . '.resolver']);
-		} else {
-			$eventManagerDefinition = $builder->addDefinition($name . '.eventManager')
-				->setType(EventManager::class)
-				->addSetup('addEventListener', [Events::loadClassMetadata, '@' . $name . '.resolver']);
-		}
-
-		foreach (array_keys($builder->findByType(EventSubscriber::class)) as $serviceName) {
-			$eventManagerDefinition->addSetup('addEventSubscriber', ['@' . $serviceName]);
-		}
-	}
-
-	private function processFilters(): void
-	{
-		$builder = $this->getContainerBuilder();
-
-		$configurationService = $builder->getDefinitionByType(Configuration::class);
-		foreach ($builder->findByType(SQLFilter::class) as $name => $filterDefinition) {
-			$configurationService->addSetup('addFilter', [$name, $filterDefinition->getType()]);
-		}
-	}
 
 	private function registerCommandsIntoConsole(ContainerBuilder $containerBuilder, string $name): void
 	{
@@ -481,14 +447,72 @@ class DoctrineExtension extends CompilerExtension
 		}
 	}
 
+
+	private function processDbalTypes(string $name, array $types): void
+	{
+		$builder = $this->getContainerBuilder();
+		$entityManagerDefinition = $builder->getDefinition($name . '.entityManager');
+
+		foreach ($types as $type => $className) {
+			$entityManagerDefinition->addSetup(
+				'if ( ! Doctrine\DBAL\Types\Type::hasType(?)) { Doctrine\DBAL\Types\Type::addType(?, ?); }',
+				[$type, $type, $className]
+			);
+		}
+	}
+
+
+	private function processDbalTypeOverrides(string $name, array $types): void
+	{
+		$builder = $this->getContainerBuilder();
+		$entityManagerDefinition = $builder->getDefinition($name . '.entityManager');
+
+		foreach ($types as $type => $className) {
+			$entityManagerDefinition->addSetup('Doctrine\DBAL\Types\Type::overrideType(?, ?);', [$type, $className]);
+		}
+	}
+
+
+	private function processEventSubscribers(string $name): void
+	{
+		$builder = $this->getContainerBuilder();
+
+		if ($this->hasEventManager($builder)) {
+			$eventManagerDefinition = $builder->getDefinition((string) $builder->getByType(EventManager::class))
+				->addSetup('addEventListener', [Events::loadClassMetadata, '@' . $name . '.resolver']);
+		} else {
+			$eventManagerDefinition = $builder->addDefinition($name . '.eventManager')
+				->setType(EventManager::class)
+				->addSetup('addEventListener', [Events::loadClassMetadata, '@' . $name . '.resolver']);
+		}
+
+		foreach (array_keys($builder->findByType(EventSubscriber::class)) as $serviceName) {
+			$eventManagerDefinition->addSetup('addEventSubscriber', ['@' . $serviceName]);
+		}
+	}
+
+
+	private function processFilters(): void
+	{
+		$builder = $this->getContainerBuilder();
+
+		$configurationService = $builder->getDefinitionByType(Configuration::class);
+		foreach ($builder->findByType(SQLFilter::class) as $name => $filterDefinition) {
+			$configurationService->addSetup('addFilter', [$name, $filterDefinition->getType()]);
+		}
+	}
+
+
+	private function hasSymfonyConsole(): bool
+	{
+		return class_exists(Application::class);
+	}
+
+
 	private function hasEventManager(ContainerBuilder $containerBuilder): bool
 	{
 		$eventManagerServiceName = $containerBuilder->getByType(EventManager::class);
 		return $eventManagerServiceName !== null && strlen($eventManagerServiceName) > 0;
 	}
 
-	private function hasSymfonyConsole(): bool
-	{
-		return class_exists(Application::class);
-	}
 }

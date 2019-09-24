@@ -2,3 +2,11 @@ parameters:
 	excludes_analyse:
 		- %rootDir%/packages/doctrine/src/Adapter/Nette/Tracy/Helper.php
 		- %rootDir%/packages/*/tests/temp/*
+
+	ignoreErrors:
+		# Nette/DI
+		- '#^Call to an undefined method Nette\\DI\\Definitions\\Definition::addSetup\(\)\.$#'
+		- '#^Call to an undefined method Nette\\DI\\Definitions\\Definition::setFactory\(\)\.$#'
+
+	reportUnmatchedIgnoredErrors: FALSE
+

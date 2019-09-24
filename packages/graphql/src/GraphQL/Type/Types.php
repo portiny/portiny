@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\GraphQL\Type;
 
@@ -13,6 +11,7 @@ final class Types
 	 */
 	private static $types = [];
 
+
 	public static function get(string $className): Type
 	{
 		if (! isset(self::$types[$className])) {
@@ -21,6 +20,7 @@ final class Types
 
 		return self::$types[$className];
 	}
+
 
 	public static function findByName(string $name): ?Type
 	{
@@ -33,6 +33,7 @@ final class Types
 		return null;
 	}
 
+
 	public static function getTypeClasses(): array
 	{
 		$typeClasses = [];
@@ -43,10 +44,12 @@ final class Types
 		return $typeClasses;
 	}
 
+
 	public static function loadTypesFromClasses(array $classes): void
 	{
 		foreach ($classes as $class) {
 			self::get($class);
 		}
 	}
+
 }

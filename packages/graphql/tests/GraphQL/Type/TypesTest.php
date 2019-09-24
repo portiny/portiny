@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Tests\GraphQL\Type;
 
@@ -8,6 +8,7 @@ use Portiny\GraphQL\GraphQL\Type\Types;
 
 final class TypesTest extends TestCase
 {
+
 	public function testGet(): void
 	{
 		$emailType = Types::get(EmailType::class);
@@ -17,4 +18,5 @@ final class TypesTest extends TestCase
 		self::assertInstanceOf(EmailType::class, $sameEmailType);
 		self::assertSame($emailType, $sameEmailType);
 	}
+
 }

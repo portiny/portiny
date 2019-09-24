@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Tests\Source;
 
@@ -8,6 +8,7 @@ use Doctrine\ORM\Query\SqlWalker;
 
 class CastFunction extends FunctionNode
 {
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -16,7 +17,9 @@ class CastFunction extends FunctionNode
 		return 'CAST()';
 	}
 
+
 	public function parse(Parser $parser): void
 	{
 	}
+
 }

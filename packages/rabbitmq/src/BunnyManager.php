@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ;
 
@@ -58,6 +58,7 @@ final class BunnyManager
 	 */
 	private $channel;
 
+
 	public function __construct(
 		array $connection,
 		array $aliases,
@@ -72,10 +73,12 @@ final class BunnyManager
 		$this->queues = $queues;
 	}
 
+
 	public function setLoop(LoopInterface $loop): void
 	{
 		$this->loop = $loop;
 	}
+
 
 	/**
 	 * @return Client|AsyncClient
@@ -93,6 +96,7 @@ final class BunnyManager
 		return $this->client;
 	}
 
+
 	/**
 	 * @return Channel|PromiseInterface
 	 */
@@ -104,6 +108,7 @@ final class BunnyManager
 
 		return $this->channel;
 	}
+
 
 	public function getConsumerByAlias(string $alias): ?AbstractConsumer
 	{
@@ -119,6 +124,7 @@ final class BunnyManager
 
 		return null;
 	}
+
 
 	/**
 	 * @return bool|PromiseInterface
@@ -150,6 +156,7 @@ final class BunnyManager
 		return true;
 	}
 
+
 	/**
 	 * @return Channel|PromiseInterface
 	 */
@@ -170,6 +177,7 @@ final class BunnyManager
 		return $client->channel();
 	}
 
+
 	private function declareExchanges(Channel $channel): void
 	{
 		/** @var AbstractExchange $exchange */
@@ -183,6 +191,7 @@ final class BunnyManager
 		}
 	}
 
+
 	private function declareQueues(Channel $channel): void
 	{
 		/** @var AbstractQueue $queue */
@@ -190,4 +199,5 @@ final class BunnyManager
 			$queue->declare($channel);
 		}
 	}
+
 }

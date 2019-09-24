@@ -15,7 +15,7 @@ Enable the extension at your neon config file.
 
 ```yml
 extensions:
-    rabbitmq: Portiny\RabbitMQ\Adapter\Nette\DI\RabbitMQExtension
+    rabbitmq: Portiny\RabbitMQNette\DI\RabbitMQExtension
 ```
 
 

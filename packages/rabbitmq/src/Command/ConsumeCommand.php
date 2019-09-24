@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ\Command;
 
@@ -17,12 +17,14 @@ final class ConsumeCommand extends Command
 	 */
 	private $bunnyManager;
 
+
 	public function __construct(BunnyManager $bunnyManager)
 	{
 		parent::__construct();
 
 		$this->bunnyManager = $bunnyManager;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -35,6 +37,7 @@ final class ConsumeCommand extends Command
 			->addOption('messages', 'm', InputArgument::OPTIONAL, 'Amount of messages to consume')
 			->addOption('time', 't', InputArgument::OPTIONAL, 'Max seconds for consumer to run');
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -65,6 +68,7 @@ final class ConsumeCommand extends Command
 		return 0;
 	}
 
+
 	protected function getNumberOfMessages(InputInterface $input): ?int
 	{
 		/** @var string|int $messages */
@@ -73,6 +77,7 @@ final class ConsumeCommand extends Command
 		return $messages ? (int) $messages : null;
 	}
 
+
 	protected function getSecondsToRun(InputInterface $input)
 	{
 		/** @var string|int $seconds */
@@ -80,4 +85,5 @@ final class ConsumeCommand extends Command
 
 		return $seconds ? (int) $seconds : null;
 	}
+
 }

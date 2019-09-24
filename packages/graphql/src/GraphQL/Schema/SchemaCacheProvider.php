@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\GraphQL\Schema;
 
@@ -38,6 +37,7 @@ final class SchemaCacheProvider
 	 */
 	private $schema;
 
+
 	public function __construct(
 		string $cacheDir,
 		QueryFieldsProviderInterface $queryFieldsProvider,
@@ -47,6 +47,7 @@ final class SchemaCacheProvider
 		$this->queryFieldsProvider = $queryFieldsProvider;
 		$this->mutationFieldsProvider = $mutationFieldsProvider;
 	}
+
 
 	public function getSchema(string $cacheKey): ?Schema
 	{
@@ -69,10 +70,12 @@ final class SchemaCacheProvider
 		return $this->schema;
 	}
 
+
 	public function isCached(string $cacheKey): bool
 	{
 		return file_exists($this->getSchemaCacheFile($cacheKey));
 	}
+
 
 	public function save(string $cacheKey, Schema $schema): void
 	{
@@ -88,10 +91,12 @@ final class SchemaCacheProvider
 		file_put_contents($this->getTypesCacheFile($cacheKey), serialize(Types::getTypeClasses()));
 	}
 
+
 	public function getCacheKey(?array $allowedQueries = null, ?array $allowedMutations = null): string
 	{
 		return md5(serialize($allowedQueries) . serialize($allowedMutations));
 	}
+
 
 	private function getTypesCacheFile(string $cacheKey): string
 	{
@@ -99,11 +104,13 @@ final class SchemaCacheProvider
 		return $this->cacheDir . '/types-' . $cacheKey . '.php';
 	}
 
+
 	private function getSchemaCacheFile(string $cacheKey): string
 	{
 		@mkdir($this->cacheDir, 0777, true); //@ - may exists
 		return $this->cacheDir . '/schema-' . $cacheKey . '.php';
 	}
+
 
 	private function getTypeConfigDecorator(): Closure
 	{
@@ -153,4 +160,5 @@ final class SchemaCacheProvider
 			return $typeConfig;
 		};
 	}
+
 }

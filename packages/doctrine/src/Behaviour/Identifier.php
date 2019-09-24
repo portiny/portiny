@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Behaviour;
 
@@ -14,10 +14,12 @@ trait Identifier
 	 */
 	private $id;
 
+
 	public function __clone()
 	{
 		$this->id = null;
 	}
+
 
 	/**
 	 * @return int
@@ -26,4 +28,5 @@ trait Identifier
 	{
 		return $this->id;
 	}
+
 }

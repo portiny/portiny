@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ\Queue;
 
@@ -24,6 +24,7 @@ final class QueueBind
 	 */
 	private $arguments = [];
 
+
 	public function __construct(string $exchange, string $routingKey = '', bool $nowait = false, array $arguments = [])
 	{
 		$this->exchange = $exchange;
@@ -32,23 +33,28 @@ final class QueueBind
 		$this->arguments = $arguments;
 	}
 
+
 	public function getExchange(): string
 	{
 		return $this->exchange;
 	}
+
 
 	public function getRoutingKey(): string
 	{
 		return $this->routingKey;
 	}
 
+
 	public function isNowait(): bool
 	{
 		return $this->nowait;
 	}
 
+
 	public function getArguments(): array
 	{
 		return $this->arguments;
 	}
+
 }

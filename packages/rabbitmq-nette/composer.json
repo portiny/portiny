@@ -8,11 +8,11 @@
 	],
 	"require": {
 		"php": ">=7.1",
-		"nette/di": "^2.4",
+		"nette/di": "^3.0",
 		"portiny/rabbitmq": "^3.0"
 	},
 	"require-dev": {
-		"nette/bootstrap": "^2.4",
+		"nette/bootstrap": "^3.0",
 		"phpunit/phpunit": "^8.3"
 	},
 	"autoload": {

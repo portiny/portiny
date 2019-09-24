@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Tests\GraphQL\Type\Scalar;
 
@@ -11,6 +11,7 @@ use UnexpectedValueException;
 
 final class UrlTypeTest extends TestCase
 {
+
 	public function testSerialize(): void
 	{
 		$urlType = new UrlType();
@@ -18,12 +19,14 @@ final class UrlTypeTest extends TestCase
 		self::assertSame('https://portiny.org', $urlType->serialize('https://portiny.org'));
 	}
 
+
 	public function testParseValue(): void
 	{
 		$urlType = new UrlType();
 
 		self::assertSame('https://portiny.org', $urlType->parseValue('https://portiny.org'));
 	}
+
 
 	public function testParseValueNotValidUrl(): void
 	{
@@ -35,6 +38,7 @@ final class UrlTypeTest extends TestCase
 		self::assertSame('test', $urlType->parseValue('test'));
 	}
 
+
 	public function testParseLiteral(): void
 	{
 		$urlType = new UrlType();
@@ -42,6 +46,7 @@ final class UrlTypeTest extends TestCase
 
 		self::assertSame('https://portiny.org', $urlType->parseLiteral($stringValueNode));
 	}
+
 
 	public function testParseLiteralNotValidUrl(): void
 	{
@@ -54,6 +59,7 @@ final class UrlTypeTest extends TestCase
 		self::assertSame('test', $urlType->parseLiteral($stringValueNode));
 	}
 
+
 	public function testParseLiteralNotValidNode(): void
 	{
 		$this->expectException(Error::class);
@@ -64,4 +70,5 @@ final class UrlTypeTest extends TestCase
 
 		self::assertSame('test', $urlType->parseLiteral($booleanValueNode));
 	}
+
 }

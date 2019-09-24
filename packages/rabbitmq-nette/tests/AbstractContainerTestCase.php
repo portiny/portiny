@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQNette\Tests;
 
@@ -12,6 +12,7 @@ abstract class AbstractContainerTestCase extends TestCase
 	 */
 	protected $container;
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -19,4 +20,5 @@ abstract class AbstractContainerTestCase extends TestCase
 	{
 		$this->container = ContainerFactory::create();
 	}
+
 }

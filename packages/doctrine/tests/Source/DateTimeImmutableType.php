@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Tests\Source;
 
@@ -12,15 +10,14 @@ use Doctrine\DBAL\Types\DateTimeType;
 
 class DateTimeImmutableType extends DateTimeType
 {
-	/**
-	 * @var string
-	 */
 	public const NAME = 'datetime_immutable';
+
 
 	public function getName(): string
 	{
 		return static::NAME;
 	}
+
 
 	/**
 	 * @param DateTimeImmutable|string|null $value
@@ -50,6 +47,7 @@ class DateTimeImmutableType extends DateTimeType
 		return $dateTime;
 	}
 
+
 	/**
 	 * @param DateTimeInterface|null $value
 	 * @return string|null
@@ -72,8 +70,10 @@ class DateTimeImmutableType extends DateTimeType
 		throw ConversionException::conversionFailed($value, $this->getName());
 	}
 
+
 	public function requiresSQLCommentHint(AbstractPlatform $platform): bool
 	{
 		return true;
 	}
+
 }

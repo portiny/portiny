@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ\Exchange;
 
@@ -9,30 +9,16 @@ use Bunny\Protocol\MethodExchangeDeclareOkFrame;
 
 abstract class AbstractExchange
 {
-	/**
-	 * @var string
-	 */
 	public const TYPE_DIRECT = 'direct';
 
-	/**
-	 * @var string
-	 */
 	public const TYPE_HEADERS = 'headers';
 
-	/**
-	 * @var string
-	 */
 	public const TYPE_FANOUT = 'fanout';
 
-	/**
-	 * @var string
-	 */
 	public const TYPE_TOPIC = 'topic';
 
-	/**
-	 * @var array
-	 */
 	public const AVAILABLE_TYPES = [self::TYPE_DIRECT, self::TYPE_HEADERS, self::TYPE_FANOUT, self::TYPE_TOPIC];
+
 
 	/**
 	 * @throws BunnyException
@@ -53,6 +39,7 @@ abstract class AbstractExchange
 			throw new BunnyException(sprintf('Could not declare exchange "%s".', $this->getName()));
 		}
 	}
+
 
 	/**
 	 * @throws BunnyException
@@ -80,7 +67,9 @@ abstract class AbstractExchange
 		}
 	}
 
+
 	abstract protected function getName(): string;
+
 
 	/**
 	 * @return ExchangeBind[]
@@ -90,38 +79,46 @@ abstract class AbstractExchange
 		return [];
 	}
 
+
 	protected function getType(): string
 	{
 		return self::TYPE_DIRECT;
 	}
+
 
 	protected function isPassive(): bool
 	{
 		return false;
 	}
 
+
 	protected function isDurable(): bool
 	{
 		return false;
 	}
+
 
 	protected function isAutoDelete(): bool
 	{
 		return false;
 	}
 
+
 	protected function isInternal(): bool
 	{
 		return false;
 	}
+
 
 	protected function isNoWait(): bool
 	{
 		return false;
 	}
 
+
 	protected function getArguments(): array
 	{
 		return [];
 	}
+
 }

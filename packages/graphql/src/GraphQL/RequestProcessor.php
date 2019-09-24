@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\GraphQL;
 
@@ -45,6 +43,7 @@ final class RequestProcessor
 	 */
 	private $schemaCacheProvider;
 
+
 	public function __construct(
 		bool $debugMode,
 		MutationFieldsProviderInterface $mutationFieldsProvider,
@@ -57,10 +56,12 @@ final class RequestProcessor
 		$this->schemaCacheProvider = $schemaCacheProvider;
 	}
 
+
 	public function setSchemaCache(bool $useSchemaCache): void
 	{
 		$this->schemaCache = $useSchemaCache;
 	}
+
 
 	/**
 	 * @param mixed|null $context
@@ -110,6 +111,7 @@ final class RequestProcessor
 		return $output;
 	}
 
+
 	/**
 	 * @param mixed|null $context
 	 * @param array|null $allowedQueries
@@ -142,6 +144,7 @@ final class RequestProcessor
 		}
 	}
 
+
 	private function createSchema(?array $allowedQueries = null, ?array $allowedMutations = null): Schema
 	{
 		$configuration = [
@@ -156,12 +159,14 @@ final class RequestProcessor
 		return new Schema($configuration);
 	}
 
+
 	private function detectDebugLevel(?LoggerInterface $logger): int
 	{
 		return $this->debugMode
 			? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE
 			: ($logger === null ? 0 : Debug::RETHROW_INTERNAL_EXCEPTIONS);
 	}
+
 
 	private function createQueryObject(?array $allowedQueries = null): ObjectType
 	{
@@ -171,6 +176,7 @@ final class RequestProcessor
 		]);
 	}
 
+
 	private function createMutationObject(?array $allowedMutations = null): ObjectType
 	{
 		return new ObjectType([
@@ -178,4 +184,5 @@ final class RequestProcessor
 			'fields' => $this->mutationFieldsProvider->convertFieldsToArray($allowedMutations),
 		]);
 	}
+
 }

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ\Command;
 
@@ -14,6 +14,7 @@ final class DeclareCommand extends Command
 	 */
 	private $bunnyManager;
 
+
 	public function __construct(BunnyManager $bunnyManager)
 	{
 		parent::__construct();
@@ -21,11 +22,13 @@ final class DeclareCommand extends Command
 		$this->bunnyManager = $bunnyManager;
 	}
 
+
 	protected function configure(): void
 	{
 		$this->setName('rabbitmq:declare')
 			->setDescription('Creates all exchanges and queues.');
 	}
+
 
 	protected function execute(InputInterface $input, OutputInterface $output): ?int
 	{
@@ -37,4 +40,5 @@ final class DeclareCommand extends Command
 
 		return 0;
 	}
+
 }

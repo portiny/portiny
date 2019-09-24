@@ -15,7 +15,7 @@ Enable the extension at your neon config file.
 
 ```yml
 extensions:
-    elasticsearch: Portiny\Elasticsearch\Adapter\Nette\DI\ElasticsearchExtension
+    elasticsearch: \Portiny\ElasticsearchNette\DI\ElasticsearchExtension
 ```
 
 **This extension use default Elasticsearch host and port** `(localhost:9200)` configuration. If your Elasticsearch run on a another host or multiple hosts (like cluster) follow next part called *"Simple configuration"*.

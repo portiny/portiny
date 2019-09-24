@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Converter;
 
@@ -9,6 +7,7 @@ use Portiny\GraphQL\Contract\Mutation\MutationFieldInterface;
 
 class MutationFieldConverter
 {
+
 	public static function toArray(MutationFieldInterface $mutationField): array
 	{
 		return [
@@ -23,6 +22,7 @@ class MutationFieldConverter
 		];
 	}
 
+
 	public static function toObject(array $data): MutationFieldInterface
 	{
 		return new class($data) implements MutationFieldInterface {
@@ -36,11 +36,13 @@ class MutationFieldConverter
 			 */
 			private $data = [];
 
+
 			public function __construct(array $data)
 			{
 				$this->name = (string) key($data);
 				$this->data = (array) reset($data);
 			}
+
 
 			/**
 			 * {@inheritdoc}
@@ -50,6 +52,7 @@ class MutationFieldConverter
 				return $this->name;
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -57,6 +60,7 @@ class MutationFieldConverter
 			{
 				return $this->data['description'];
 			}
+
 
 			/**
 			 * {@inheritdoc}
@@ -66,6 +70,7 @@ class MutationFieldConverter
 				return $this->data['args'];
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -74,6 +79,7 @@ class MutationFieldConverter
 				return $this->data['type'];
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -81,6 +87,8 @@ class MutationFieldConverter
 			{
 				return $this->data['resolve']($root, $args, $context);
 			}
+
 		};
 	}
+
 }

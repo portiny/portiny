@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Console\Tests\Adapter\Nette\DI;
 
@@ -9,11 +9,13 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 final class ConsoleExtensionTest extends AbstractContainerTestCase
 {
+
 	public function testLoadConfiguration(): void
 	{
 		$application = $this->container->getByType(Application::class);
 		self::assertInstanceOf(Application::class, $application);
 	}
+
 
 	public function testBeforeCompile(): void
 	{
@@ -26,6 +28,7 @@ final class ConsoleExtensionTest extends AbstractContainerTestCase
 		self::assertTrue($application->has('print-request-url'));
 		self::assertInstanceOf(PrintRequestUrlCommand::class, $application->get('print-request-url'));
 	}
+
 
 	public function testExecution(): void
 	{
@@ -41,4 +44,5 @@ final class ConsoleExtensionTest extends AbstractContainerTestCase
 		$output = $commandTester->getDisplay();
 		self::assertSame('https://portiny.org/', $output);
 	}
+
 }
