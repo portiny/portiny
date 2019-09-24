@@ -24,6 +24,7 @@ This extension can be configured by `doctrine` section. The minimal configuratio
 
 ```yml
 doctrine:
+    debug: %debugMode%
     connection:
         driver: pdo_mysql
         host: localhost

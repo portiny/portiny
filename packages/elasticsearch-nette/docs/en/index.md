@@ -26,6 +26,7 @@ This extension can be configured by `elasticsearch` section. The basic configura
 
 ```yml
 elasticsearch:
+    debug: %debugMode%
     connections:
         {{host: localhost, port: 9201}, {host: 12.34.56.78, port: 1234}} # multiple hosts
 ```
