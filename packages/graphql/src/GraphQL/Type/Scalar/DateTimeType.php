@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\GraphQL\Type\Scalar;
 
@@ -24,6 +22,7 @@ class DateTimeType extends ScalarType
 	 */
 	public $description = 'This scalar type represents time data, represented as an ISO-8601 encoded UTC date string.';
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -37,6 +36,7 @@ class DateTimeType extends ScalarType
 		return $value->format(DateTime::ATOM);
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -44,6 +44,7 @@ class DateTimeType extends ScalarType
 	{
 		return DateTimeImmutable::createFromFormat(DateTime::ATOM, $value) ?: null;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -56,4 +57,5 @@ class DateTimeType extends ScalarType
 
 		return null;
 	}
+
 }

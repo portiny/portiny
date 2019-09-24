@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Tests\Source\Provider;
 
@@ -7,6 +7,7 @@ use Portiny\GraphQL\Contract\Mutation\MutationFieldInterface;
 
 final class SomeMutationField implements MutationFieldInterface
 {
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -15,6 +16,7 @@ final class SomeMutationField implements MutationFieldInterface
 		return 'someMutationName';
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -22,6 +24,7 @@ final class SomeMutationField implements MutationFieldInterface
 	{
 		return 'Some description';
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -35,6 +38,7 @@ final class SomeMutationField implements MutationFieldInterface
 		];
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -43,6 +47,7 @@ final class SomeMutationField implements MutationFieldInterface
 		return Type::string();
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -50,4 +55,5 @@ final class SomeMutationField implements MutationFieldInterface
 	{
 		return $args['someArg'] . ' resolved';
 	}
+
 }

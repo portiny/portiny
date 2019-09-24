@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ\Tests;
 
@@ -17,12 +16,14 @@ final class BunnyManagerTest extends TestCase
 	 */
 	private $bunnyManager;
 
+
 	protected function setUp(): void
 	{
 		parent::setUp();
 
 		$this->bunnyManager = $this->createBunnyManager();
 	}
+
 
 	public function testGetClient(): void
 	{
@@ -31,6 +32,7 @@ final class BunnyManagerTest extends TestCase
 		self::assertInstanceOf(Client::class, $client);
 		self::assertSame($client, $this->bunnyManager->getClient());
 	}
+
 
 	public function testGetAsyncClient(): void
 	{
@@ -43,11 +45,13 @@ final class BunnyManagerTest extends TestCase
 		self::assertSame($client, $this->bunnyManager->getClient());
 	}
 
+
 	public function testGetClassNameByAlias(): void
 	{
 		self::assertInstanceOf(TestConsumer::class, $this->bunnyManager->getConsumerByAlias('myAlias'));
 		self::assertNull($this->bunnyManager->getConsumerByAlias('nonExisting'));
 	}
+
 
 	protected function createBunnyManager(): BunnyManager
 	{
@@ -72,4 +76,5 @@ final class BunnyManagerTest extends TestCase
 			[]
 		);
 	}
+
 }

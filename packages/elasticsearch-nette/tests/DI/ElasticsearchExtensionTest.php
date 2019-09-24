@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\ElasticsearchNette\Tests\DI;
 
@@ -7,11 +7,13 @@ use Portiny\ElasticsearchNette\Tests\AbstractContainerTestCase;
 
 class ElasticsearchExtensionTest extends AbstractContainerTestCase
 {
+
 	public function testLoadConfiguration(): void
 	{
 		$client = $this->container->getByType(Client::class);
 		self::assertInstanceOf(Client::class, $client);
 	}
+
 
 	public function testClientSetup(): void
 	{
@@ -44,4 +46,5 @@ class ElasticsearchExtensionTest extends AbstractContainerTestCase
 		self::assertSame('someUserName', $client->getConfig('username'));
 		self::assertSame('somePassword', $client->getConfig('password'));
 	}
+
 }

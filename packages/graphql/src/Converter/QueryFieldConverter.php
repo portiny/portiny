@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Converter;
 
@@ -9,6 +7,7 @@ use Portiny\GraphQL\Contract\Field\QueryFieldInterface;
 
 final class QueryFieldConverter
 {
+
 	public static function toArray(QueryFieldInterface $queryField): array
 	{
 		return [
@@ -23,6 +22,7 @@ final class QueryFieldConverter
 		];
 	}
 
+
 	public static function toObject(array $data): QueryFieldInterface
 	{
 		return new class($data) implements QueryFieldInterface {
@@ -36,11 +36,13 @@ final class QueryFieldConverter
 			 */
 			private $data = [];
 
+
 			public function __construct(array $data)
 			{
 				$this->name = (string) key($data);
 				$this->data = (array) reset($data);
 			}
+
 
 			/**
 			 * {@inheritdoc}
@@ -50,6 +52,7 @@ final class QueryFieldConverter
 				return $this->name;
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -57,6 +60,7 @@ final class QueryFieldConverter
 			{
 				return $this->data['description'];
 			}
+
 
 			/**
 			 * {@inheritdoc}
@@ -66,6 +70,7 @@ final class QueryFieldConverter
 				return $this->data['args'];
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -74,6 +79,7 @@ final class QueryFieldConverter
 				return $this->data['type'];
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -81,6 +87,8 @@ final class QueryFieldConverter
 			{
 				return $this->data['resolve']($root, $args, $context);
 			}
+
 		};
 	}
+
 }

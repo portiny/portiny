@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Tests\Source;
 
@@ -12,10 +10,8 @@ use InvalidArgumentException;
 
 class IntervalType extends Type
 {
-	/**
-	 * @var string
-	 */
 	public const NAME = 'interval';
+
 
 	/**
 	 * {@inheritdoc}
@@ -25,6 +21,7 @@ class IntervalType extends Type
 		return self::NAME;
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -32,6 +29,7 @@ class IntervalType extends Type
 	{
 		return self::NAME;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -67,6 +65,7 @@ class IntervalType extends Type
 
 		return trim($sql);
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -119,4 +118,5 @@ class IntervalType extends Type
 
 		return $interval;
 	}
+
 }

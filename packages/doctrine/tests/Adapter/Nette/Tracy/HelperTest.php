@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Tests\Adapter\Nette\Tracy;
 
@@ -7,6 +7,7 @@ use Portiny\Doctrine\Adapter\Nette\Tracy\Helper;
 
 final class HelperTest extends TestCase
 {
+
 	public function testDumpSql(): void
 	{
 		self::assertSame(
@@ -16,4 +17,5 @@ final class HelperTest extends TestCase
 			Helper::dumpSql('SELECT 1 FROM dual')
 		);
 	}
+
 }

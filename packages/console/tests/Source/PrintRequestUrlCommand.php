@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Console\Tests\Source;
 
@@ -14,6 +14,7 @@ final class PrintRequestUrlCommand extends Command
 	 */
 	private $request;
 
+
 	public function __construct(IRequest $request)
 	{
 		parent::__construct();
@@ -21,11 +22,13 @@ final class PrintRequestUrlCommand extends Command
 		$this->request = $request;
 	}
 
+
 	protected function configure(): void
 	{
 		$this->setName('print-request-url')
 			->setDescription('Print request URL');
 	}
+
 
 	protected function execute(InputInterface $input, OutputInterface $output): ?int
 	{
@@ -33,4 +36,5 @@ final class PrintRequestUrlCommand extends Command
 
 		return 0;
 	}
+
 }

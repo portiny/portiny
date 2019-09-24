@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Provider;
 
@@ -16,12 +14,14 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 	 */
 	private $fields = [];
 
+
 	public function __construct(iterable $queryFields = [])
 	{
 		foreach ($queryFields as $queryField) {
 			$this->addField($queryField);
 		}
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -33,6 +33,7 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 		$this->fields[$queryField->getName()] = $queryField;
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -41,10 +42,12 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 		return $this->fields;
 	}
 
+
 	public function getField(string $name): ?QueryFieldInterface
 	{
 		return $this->fields[$name] ?? null;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -63,6 +66,7 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 		return $fields;
 	}
 
+
 	/**
 	 * @throws ExistingQueryFieldException
 	 */
@@ -74,4 +78,5 @@ final class QueryFieldsProvider implements QueryFieldsProviderInterface
 			);
 		}
 	}
+
 }

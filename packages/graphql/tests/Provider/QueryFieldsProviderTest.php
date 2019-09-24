@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Tests\Provider;
 
@@ -18,10 +18,12 @@ class QueryFieldsProviderTest extends TestCase
 	 */
 	private $queryFieldsProvider;
 
+
 	protected function setUp(): void
 	{
 		$this->queryFieldsProvider = new QueryFieldsProvider();
 	}
+
 
 	public function testAddField(): void
 	{
@@ -33,6 +35,7 @@ class QueryFieldsProviderTest extends TestCase
 
 		self::assertCount(1, $this->queryFieldsProvider->getFields());
 	}
+
 
 	public function testAddFieldAlreadyExists(): void
 	{
@@ -47,6 +50,7 @@ class QueryFieldsProviderTest extends TestCase
 		$this->queryFieldsProvider->addField($queryField);
 	}
 
+
 	public function testGetFields(): void
 	{
 		$queryField = $this->getQueryField();
@@ -56,6 +60,7 @@ class QueryFieldsProviderTest extends TestCase
 		self::assertCount(1, $fields);
 		self::assertSame($queryField, reset($fields));
 	}
+
 
 	public function testConvertFieldsToArray(): void
 	{
@@ -77,9 +82,11 @@ class QueryFieldsProviderTest extends TestCase
 		self::assertEmpty($output);
 	}
 
+
 	private function getQueryField(): QueryFieldInterface
 	{
 		return new class() implements QueryFieldInterface {
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -88,6 +95,7 @@ class QueryFieldsProviderTest extends TestCase
 				return 'Some name';
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -95,6 +103,7 @@ class QueryFieldsProviderTest extends TestCase
 			{
 				return 'Some description';
 			}
+
 
 			/**
 			 * {@inheritdoc}
@@ -108,6 +117,7 @@ class QueryFieldsProviderTest extends TestCase
 				];
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -116,6 +126,7 @@ class QueryFieldsProviderTest extends TestCase
 				return Type::string();
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -123,6 +134,8 @@ class QueryFieldsProviderTest extends TestCase
 			{
 				return 'resolved';
 			}
+
 		};
 	}
+
 }

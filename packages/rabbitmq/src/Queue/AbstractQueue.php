@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ\Queue;
 
@@ -9,6 +9,7 @@ use Bunny\Protocol\MethodQueueDeclareOkFrame;
 
 abstract class AbstractQueue
 {
+
 	final public function declare(Channel $channel): void
 	{
 		$frame = $channel->queueDeclare(
@@ -45,37 +46,45 @@ abstract class AbstractQueue
 		}
 	}
 
+
 	abstract protected function getName(): string;
+
 
 	protected function isPassive(): bool
 	{
 		return false;
 	}
 
+
 	protected function isDurable(): bool
 	{
 		return false;
 	}
+
 
 	protected function isExclusive(): bool
 	{
 		return false;
 	}
 
+
 	protected function isAutoDelete(): bool
 	{
 		return false;
 	}
+
 
 	protected function isNoWait(): bool
 	{
 		return false;
 	}
 
+
 	protected function getArguments(): array
 	{
 		return [];
 	}
+
 
 	/**
 	 * @return QueueBind[]
@@ -84,4 +93,5 @@ abstract class AbstractQueue
 	{
 		return [];
 	}
+
 }

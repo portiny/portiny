@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Tests\Adapter\Nette\DI;
 
@@ -12,6 +12,7 @@ use Portiny\Doctrine\Tests\Source\IntervalType;
 
 class DoctrineExtensionTest extends AbstractContainerTestCase
 {
+
 	public function testLoadConfiguration(): void
 	{
 		/** @var EntityManager $entityManager */
@@ -22,6 +23,7 @@ class DoctrineExtensionTest extends AbstractContainerTestCase
 		$eventManager = $this->container->getByType(EventManager::class);
 		self::assertInstanceOf(EventManager::class, $eventManager);
 	}
+
 
 	public function testBeforeCompile(): void
 	{
@@ -37,4 +39,5 @@ class DoctrineExtensionTest extends AbstractContainerTestCase
 		self::assertNull($configuration->getCustomStringFunction('nonExistsFunctionName'));
 		self::assertSame(CastFunction::class, $configuration->getCustomStringFunction('cast'));
 	}
+
 }

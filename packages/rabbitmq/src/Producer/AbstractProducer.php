@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ\Producer;
 
@@ -7,22 +7,15 @@ use React\Promise\PromiseInterface;
 
 abstract class AbstractProducer
 {
-	/**
-	 * @var int
-	 */
 	public const DELIVERY_MODE_NON_PERSISTENT = 1;
 
-	/**
-	 * @var int
-	 */
 	public const DELIVERY_MODE_PERSISTENT = 2;
 
-	/**
-	 * @var string
-	 */
 	public const CONTENT_TYPE_APPLICATION_JSON = 'application/json';
 
+
 	/**
+	 * @param mixed $body
 	 * @return bool|int|PromiseInterface
 	 */
 	final public function produce(Channel $channel, $body)
@@ -37,22 +30,28 @@ abstract class AbstractProducer
 		);
 	}
 
+
 	abstract protected function getExchangeName(): string;
 
+
 	abstract protected function getRoutingKey(): string;
+
 
 	protected function getHeaders(): array
 	{
 		return [];
 	}
 
+
 	protected function isMandatory(): bool
 	{
 		return false;
 	}
 
+
 	protected function isImmediate(): bool
 	{
 		return false;
 	}
+
 }

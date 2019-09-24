@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQSymfony\DependencyInjection;
 
@@ -10,6 +9,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 final class PortinyRabbitMQSymfonyExtension extends Extension
 {
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -18,4 +18,5 @@ final class PortinyRabbitMQSymfonyExtension extends Extension
 		$loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../Resources/config'));
 		$loader->load('services.yaml');
 	}
+
 }

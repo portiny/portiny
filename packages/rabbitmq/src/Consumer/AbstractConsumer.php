@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ\Consumer;
 
@@ -13,30 +13,19 @@ use Throwable;
 
 abstract class AbstractConsumer
 {
-	/**
-	 * @var int
-	 */
 	public const MESSAGE_ACK = 1;
 
-	/**
-	 * @var int
-	 */
 	public const MESSAGE_NACK = 2;
 
-	/**
-	 * @var int
-	 */
 	public const MESSAGE_REJECT = 3;
 
-	/**
-	 * @var int
-	 */
 	public const MESSAGE_REJECT_REQUEUE = 4;
 
 	/**
 	 * @var int
 	 */
 	private $consumedMessages = 0;
+
 
 	/**
 	 * @return MethodBasicConsumeOkFrame|PromiseInterface
@@ -88,47 +77,58 @@ abstract class AbstractConsumer
 		);
 	}
 
+
 	abstract protected function process(Message $message): int;
 
+
 	abstract protected function getQueueName(): string;
+
 
 	protected function getConsumerTag(): string
 	{
 		return '';
 	}
 
+
 	protected function isNoLocal(): bool
 	{
 		return false;
 	}
+
 
 	protected function isNoAck(): bool
 	{
 		return false;
 	}
 
+
 	protected function isExclusive(): bool
 	{
 		return false;
 	}
+
 
 	protected function isNoWait(): bool
 	{
 		return false;
 	}
 
+
 	protected function getArguments(): array
 	{
 		return [];
 	}
+
 
 	protected function getPrefetchSize(): int
 	{
 		return 0;
 	}
 
+
 	protected function getPrefetchCount(): int
 	{
 		return 1;
 	}
+
 }

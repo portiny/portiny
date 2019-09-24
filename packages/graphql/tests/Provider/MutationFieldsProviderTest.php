@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Tests\Provider;
 
@@ -18,10 +18,12 @@ class MutationFieldsProviderTest extends TestCase
 	 */
 	private $mutationFieldsProvider;
 
+
 	protected function setUp(): void
 	{
 		$this->mutationFieldsProvider = new MutationFieldsProvider();
 	}
+
 
 	public function testAddField(): void
 	{
@@ -33,6 +35,7 @@ class MutationFieldsProviderTest extends TestCase
 
 		self::assertCount(1, $this->mutationFieldsProvider->getFields());
 	}
+
 
 	public function testAddFieldAlreadyExists(): void
 	{
@@ -47,6 +50,7 @@ class MutationFieldsProviderTest extends TestCase
 		$this->mutationFieldsProvider->addField($mutationField);
 	}
 
+
 	public function testGetFields(): void
 	{
 		$mutationField = $this->getMutationField();
@@ -56,6 +60,7 @@ class MutationFieldsProviderTest extends TestCase
 		self::assertCount(1, $fields);
 		self::assertSame($mutationField, reset($fields));
 	}
+
 
 	public function testConvertFieldsToArray(): void
 	{
@@ -77,9 +82,11 @@ class MutationFieldsProviderTest extends TestCase
 		self::assertEmpty($output);
 	}
 
+
 	private function getMutationField(): MutationFieldInterface
 	{
 		return new class() implements MutationFieldInterface {
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -88,6 +95,7 @@ class MutationFieldsProviderTest extends TestCase
 				return 'Some name';
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -95,6 +103,7 @@ class MutationFieldsProviderTest extends TestCase
 			{
 				return 'Some description';
 			}
+
 
 			/**
 			 * {@inheritdoc}
@@ -108,6 +117,7 @@ class MutationFieldsProviderTest extends TestCase
 				];
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -116,6 +126,7 @@ class MutationFieldsProviderTest extends TestCase
 				return Type::string();
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -123,6 +134,8 @@ class MutationFieldsProviderTest extends TestCase
 			{
 				return 'resolved';
 			}
+
 		};
 	}
+
 }

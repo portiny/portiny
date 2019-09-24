@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Tests\GraphQL\Type\Scalar;
 
@@ -11,6 +11,7 @@ use UnexpectedValueException;
 
 final class EmailTypeTest extends TestCase
 {
+
 	public function testSerialize(): void
 	{
 		$emailType = new EmailType();
@@ -18,12 +19,14 @@ final class EmailTypeTest extends TestCase
 		self::assertSame('test@test.test', $emailType->serialize('test@test.test'));
 	}
 
+
 	public function testParseValue(): void
 	{
 		$emailType = new EmailType();
 
 		self::assertSame('test@test.test', $emailType->parseValue('test@test.test'));
 	}
+
 
 	public function testParseValueNotValidEmail(): void
 	{
@@ -35,6 +38,7 @@ final class EmailTypeTest extends TestCase
 		self::assertSame('test', $emailType->parseValue('test'));
 	}
 
+
 	public function testParseLiteral(): void
 	{
 		$emailType = new EmailType();
@@ -42,6 +46,7 @@ final class EmailTypeTest extends TestCase
 
 		self::assertSame('test@test.test', $emailType->parseLiteral($stringValueNode));
 	}
+
 
 	public function testParseLiteralNotValidEmail(): void
 	{
@@ -54,6 +59,7 @@ final class EmailTypeTest extends TestCase
 		self::assertSame('test', $emailType->parseLiteral($stringValueNode));
 	}
 
+
 	public function testParseLiteralNotValidNode(): void
 	{
 		$this->expectException(Error::class);
@@ -64,4 +70,5 @@ final class EmailTypeTest extends TestCase
 
 		self::assertSame('test', $emailType->parseLiteral($booleanValueNode));
 	}
+
 }

@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Cache;
 
@@ -12,9 +11,6 @@ use ReflectionClass;
 
 final class DefaultCache extends CacheProvider
 {
-	/**
-	 * @var string
-	 */
 	public const CACHE_NS = 'Doctrine';
 
 	/**
@@ -27,11 +23,13 @@ final class DefaultCache extends CacheProvider
 	 */
 	private $cache;
 
+
 	public function __construct(IStorage $storage, string $namespace = self::CACHE_NS, bool $debugMode = false)
 	{
 		$this->cache = new Cache($storage, $namespace);
 		$this->debugMode = $debugMode;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -42,6 +40,7 @@ final class DefaultCache extends CacheProvider
 		return $cached !== null ? $cached : false;
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -49,6 +48,7 @@ final class DefaultCache extends CacheProvider
 	{
 		return $this->cache->load($id) !== null;
 	}
+
 
 	/**
 	 * @param string $id
@@ -80,6 +80,7 @@ final class DefaultCache extends CacheProvider
 		return $this->doSaveDependingOnFiles($id, $data, $files, $lifeTime);
 	}
 
+
 	/**
 	 * @param string $id
 	 * @param mixed $data
@@ -101,6 +102,7 @@ final class DefaultCache extends CacheProvider
 		return true;
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -110,6 +112,7 @@ final class DefaultCache extends CacheProvider
 
 		return true;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -122,6 +125,7 @@ final class DefaultCache extends CacheProvider
 
 		return true;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -137,9 +141,11 @@ final class DefaultCache extends CacheProvider
 		];
 	}
 
+
 	private static function getClassFilename(string $className): string
 	{
 		$reflection = new ReflectionClass($className);
 		return (string) $reflection->getFileName();
 	}
+
 }

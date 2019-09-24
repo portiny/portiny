@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Tests\Converter;
 
@@ -10,6 +10,7 @@ use Portiny\GraphQL\Converter\QueryFieldConverter;
 
 final class QueryFieldConverterTest extends TestCase
 {
+
 	public function testToArray(): void
 	{
 		$queryField = $this->getQueryField();
@@ -26,6 +27,7 @@ final class QueryFieldConverterTest extends TestCase
 		self::assertTrue(is_callable($queryFieldAsArray['resolve']));
 	}
 
+
 	public function testToObject(): void
 	{
 		$queryField = $this->getQueryField();
@@ -41,9 +43,11 @@ final class QueryFieldConverterTest extends TestCase
 		self::assertSame('resolved', $output->resolve([], ['someArg' => '']));
 	}
 
+
 	private function getQueryField(): QueryFieldInterface
 	{
 		return new class() implements QueryFieldInterface {
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -52,6 +56,7 @@ final class QueryFieldConverterTest extends TestCase
 				return 'Some name';
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -59,6 +64,7 @@ final class QueryFieldConverterTest extends TestCase
 			{
 				return 'Some description';
 			}
+
 
 			/**
 			 * {@inheritdoc}
@@ -72,6 +78,7 @@ final class QueryFieldConverterTest extends TestCase
 				];
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -80,6 +87,7 @@ final class QueryFieldConverterTest extends TestCase
 				return Type::string();
 			}
 
+
 			/**
 			 * {@inheritdoc}
 			 */
@@ -87,6 +95,8 @@ final class QueryFieldConverterTest extends TestCase
 			{
 				return 'resolved';
 			}
+
 		};
 	}
+
 }

@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Provider;
 
@@ -16,12 +14,14 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 	 */
 	private $fields = [];
 
+
 	public function __construct(iterable $mutationFields = [])
 	{
 		foreach ($mutationFields as $mutationField) {
 			$this->addField($mutationField);
 		}
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -33,6 +33,7 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 		$this->fields[$mutationField->getName()] = $mutationField;
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -41,10 +42,12 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 		return $this->fields;
 	}
 
+
 	public function getField(string $name): ?MutationFieldInterface
 	{
 		return $this->fields[$name] ?? null;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -63,6 +66,7 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 		return $fields;
 	}
 
+
 	/**
 	 * @throws ExistingMutationFieldException
 	 */
@@ -74,4 +78,5 @@ final class MutationFieldsProvider implements MutationFieldsProviderInterface
 			);
 		}
 	}
+
 }

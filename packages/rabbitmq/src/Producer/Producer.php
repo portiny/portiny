@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ\Producer;
 
@@ -13,13 +13,15 @@ final class Producer
 	 */
 	private $bunnyManager;
 
+
 	public function __construct(BunnyManager $bunnyManager)
 	{
 		$this->bunnyManager = $bunnyManager;
 	}
 
+
 	/**
-	 * @param string $body
+	 * @param mixed $body
 	 * @return bool|int|PromiseInterface
 	 */
 	public function produce(AbstractProducer $abstractProducer, $body)
@@ -28,19 +30,11 @@ final class Producer
 
 		if ($channel instanceof PromiseInterface) {
 			return $channel->then(function (Channel $channel) use ($abstractProducer, $body) {
-				return $this->callPublish($channel, $body, $abstractProducer);
+				return $abstractProducer->produce($channel, $body);
 			});
 		}
 
-		return $this->callPublish($channel, $body, $abstractProducer);
-	}
-
-	/**
-	 * @param string $body
-	 * @return bool|int|PromiseInterface
-	 */
-	private function callPublish(Channel $channel, $body, AbstractProducer $abstractProducer)
-	{
 		return $abstractProducer->produce($channel, $body);
 	}
+
 }

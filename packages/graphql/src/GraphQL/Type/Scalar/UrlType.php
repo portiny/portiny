@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\GraphQL\Type\Scalar;
 
@@ -22,6 +20,7 @@ class UrlType extends ScalarType
 	 */
 	public $description = 'This scalar type represents URL formatted string.';
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -29,6 +28,7 @@ class UrlType extends ScalarType
 	{
 		return $value;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -41,6 +41,7 @@ class UrlType extends ScalarType
 
 		return $value;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -58,4 +59,5 @@ class UrlType extends ScalarType
 
 		return $valueNode->value;
 	}
+
 }

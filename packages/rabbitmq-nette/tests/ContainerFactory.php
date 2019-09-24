@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQNette\Tests;
 
@@ -10,6 +8,7 @@ use Nette\Utils\FileSystem;
 
 final class ContainerFactory
 {
+
 	public static function create(): Container
 	{
 		$tempDir = __DIR__ . '/temp/' . getmypid();
@@ -28,4 +27,5 @@ final class ContainerFactory
 
 		return $configurator->createContainer();
 	}
+
 }

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\ElasticsearchNette\Tracy;
 
@@ -12,29 +12,14 @@ use Tracy\IBarPanel;
 
 final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 {
-	/**
-	 * @var int
-	 */
 	public const DATA_REQUEST_INDEX = 0;
 
-	/**
-	 * @var int
-	 */
 	public const DATA_TIME_INDEX = 1;
 
-	/**
-	 * @var int
-	 */
 	public const DATA_PATH_INDEX = 2;
 
-	/**
-	 * @var int
-	 */
 	public const DATA_TRACE_INDEX = 3;
 
-	/**
-	 * @var int
-	 */
 	public const DATA_METHOD_INDEX = 4;
 
 	/**
@@ -52,10 +37,12 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 	 */
 	private $client;
 
+
 	public function __construct(Client $client)
 	{
 		$this->client = $client;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -80,6 +67,7 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 			. ($this->totalTime ? ' / ' . sprintf('%0.1f', $this->totalTime * 1000) . 'ms' : '')
 			. '</span>';
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -119,11 +107,13 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 			</div>';
 	}
 
+
 	public function bindToBar(): void
 	{
 		$this->client->setLogger($this);
 		Debugger::getBar()->addPanel($this);
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -137,12 +127,14 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 		$this->logRequest($this->client->getLastRequest(), $this->client->getLastResponse());
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function emergency($message, array $context = []): void
 	{
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -151,12 +143,14 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 	{
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function critical($message, array $context = []): void
 	{
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -165,12 +159,14 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 	{
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function warning($message, array $context = []): void
 	{
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -179,6 +175,7 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 	{
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -186,12 +183,14 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 	{
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function log($level, $message, array $context = []): void
 	{
 	}
+
 
 	private function renderStyles(): string
 	{
@@ -203,6 +202,7 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 			#tracy-debug .nette-ElasticsearchPanel tr table { margin: 8px 0; max-height: 150px; overflow:auto }
 			</style>';
 	}
+
 
 	private function logRequest(?Request $request, ?Response $response): void
 	{
@@ -220,4 +220,5 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 			self::DATA_METHOD_INDEX => $request->getMethod(),
 		];
 	}
+
 }

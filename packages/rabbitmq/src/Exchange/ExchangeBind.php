@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\RabbitMQ\Exchange;
 
@@ -24,6 +24,7 @@ final class ExchangeBind
 	 */
 	private $arguments = [];
 
+
 	public function __construct(
 		string $destination,
 		string $routingKey = '',
@@ -36,23 +37,28 @@ final class ExchangeBind
 		$this->arguments = $arguments;
 	}
 
+
 	public function getDestination(): string
 	{
 		return $this->destination;
 	}
+
 
 	public function getRoutingKey(): string
 	{
 		return $this->routingKey;
 	}
 
+
 	public function isNowait(): bool
 	{
 		return $this->nowait;
 	}
 
+
 	public function getArguments(): array
 	{
 		return $this->arguments;
 	}
+
 }

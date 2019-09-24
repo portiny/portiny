@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\GraphQL\Http\Request;
 
@@ -13,10 +11,12 @@ final class JsonRequestParser implements RequestParserInterface
 	 */
 	private $data = [];
 
+
 	public function __construct(string $json)
 	{
 		$this->data = json_decode($json ?: '{}', true);
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -26,6 +26,7 @@ final class JsonRequestParser implements RequestParserInterface
 		return $this->data['query'] ?? '';
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -33,4 +34,5 @@ final class JsonRequestParser implements RequestParserInterface
 	{
 		return $this->data['variables'] ?? [];
 	}
+
 }

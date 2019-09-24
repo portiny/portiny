@@ -36,16 +36,16 @@ Create `bin/console` script for executing console commands.
 
 ```php
 #!/usr/bin/env php
-<?php
+<?php declare(strict_types = 1);
 
-declare(strict_types=1);
+require __DIR__ . '/../vendor/autoload.php';
 
-/** @var \Nette\DI\Container $container */
-$container = require __DIR__ . '/../app/bootstrap.php';
+use Symfony\Component\Console\Application;
 
-/** @var \Symfony\Component\Console\Application $console */
-$console = $container->getByType(\Symfony\Component\Console\Application::class);
-exit($console->run());
+exit(App\Bootstrap::boot()
+    ->createContainer()
+    ->getByType(Application::class)
+    ->run());
 ```
 
 Now we can run console via command `php bin/console` and if we make it executable with `chmod +x bin/console` we can run console only via `bin/console`.

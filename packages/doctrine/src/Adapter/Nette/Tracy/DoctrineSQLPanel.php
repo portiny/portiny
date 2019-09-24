@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace Portiny\Doctrine\Adapter\Nette\Tracy;
 
@@ -22,34 +20,16 @@ use Tracy\IBarPanel;
  */
 final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 {
-	/**
-	 * @var int
-	 */
 	public const DATA_INDEX_SQL = 0;
 
-	/**
-	 * @var int
-	 */
 	public const DATA_INDEX_PARAMS = 1;
 
-	/**
-	 * @var int
-	 */
 	public const DATA_INDEX_TYPES = 2;
 
-	/**
-	 * @var int
-	 */
 	public const DATA_INDEX_TIME = 3;
 
-	/**
-	 * @var int
-	 */
 	public const DATA_INDEX_TRACE = 4;
 
-	/**
-	 * @var int
-	 */
 	public const DATA_INDEX_COUNT = 5;
 
 	/**
@@ -72,10 +52,12 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 	 */
 	private $entityManager;
 
+
 	public function __construct(EntityManager $entityManager)
 	{
 		$this->entityManager = $entityManager;
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -93,6 +75,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		];
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -103,6 +86,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		$this->queries[$key][self::DATA_INDEX_TIME] = Debugger::timer('doctrine');
 		$this->totalTime += $this->queries[$key][self::DATA_INDEX_TIME];
 	}
+
 
 	/**
 	 * {@inheritdoc}
@@ -160,6 +144,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			. '</span>';
 	}
 
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -188,6 +173,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			</div>';
 	}
 
+
 	/**
 	 * Binds panel to debug bar.
 	 */
@@ -201,6 +187,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		Debugger::getBar()->addPanel($this);
 	}
 
+
 	/**
 	 * @param bool $sortQueries
 	 */
@@ -209,10 +196,12 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		$this->sortQueries = $sortQueries;
 	}
 
+
 	public function getQueries(): array
 	{
 		return $this->queries;
 	}
+
 
 	private function sortQueries(array $queries, int $key): array
 	{
@@ -229,6 +218,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 
 		return $queries;
 	}
+
 
 	private function processQuery(array $query): string
 	{
@@ -252,6 +242,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 		return $s;
 	}
 
+
 	private function renderStyles(): string
 	{
 		return '<style>
@@ -264,6 +255,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			#tracy-debug .nette-Doctrine2Panel h2 { font-size: 23px; }
 			</style>';
 	}
+
 
 	private function renderPanelCacheStatistics(): string
 	{
@@ -325,8 +317,10 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			</table>';
 	}
 
+
 	private function isTracyEnabled(): bool
 	{
 		return PHP_SAPI !== 'cli' && Debugger::isEnabled() && ! Debugger::$productionMode;
 	}
+
 }
