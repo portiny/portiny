@@ -8,6 +8,7 @@ doctrine:
 
 	debug: FALSE
 	proxyDir: %tempDir%/proxies
+	sourceDir: %tempDir%/sources
 	dbal:
 		types:
 			interval: Portiny\Doctrine\Tests\Source\IntervalType

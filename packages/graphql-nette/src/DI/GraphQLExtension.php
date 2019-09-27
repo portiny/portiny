@@ -14,17 +14,21 @@ use Portiny\GraphQL\GraphQL\Schema\SchemaCacheProvider;
 use Portiny\GraphQL\Provider\MutationFieldsProvider;
 use Portiny\GraphQL\Provider\QueryFieldsProvider;
 use stdClass;
+use Tracy\IBarPanel;
 
 final class GraphQLExtension extends CompilerExtension
 {
 
 	public function getConfigSchema(): Schema
 	{
+		$params = $this->getContainerBuilder()->parameters;
+		$tempDir = $params['tempDir'] ?? '';
+
 		return Expect::structure([
-			'debug' => Expect::bool(false),
+			'debug' => Expect::bool(interface_exists(IBarPanel::class)),
 			'schemaCache' => Expect::structure([
 				'enabled' => Expect::bool(false),
-				'cacheDir' => Expect::string('%tempDir%/cache/graphql'),
+				'cacheDir' => Expect::string($tempDir . '/cache/graphql'),
 			]),
 		]);
 	}

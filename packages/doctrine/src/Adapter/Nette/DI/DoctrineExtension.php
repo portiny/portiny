@@ -58,6 +58,7 @@ use Portiny\Doctrine\Contract\Provider\EntitySourceProviderInterface;
 use stdClass;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
+use Tracy\IBarPanel;
 
 class DoctrineExtension extends CompilerExtension
 {
@@ -68,10 +69,16 @@ class DoctrineExtension extends CompilerExtension
 	private $entitySources = [];
 
 
+	/**
+	 * {@inheritdoc}
+	 */
 	public function getConfigSchema(): Schema
 	{
+		$params = $this->getContainerBuilder()->parameters;
+		$tempDir = $params['tempDir'] ?? '';
+
 		return Expect::structure([
-			'debug' => Expect::bool(false),
+			'debug' => Expect::bool(interface_exists(IBarPanel::class)),
 			'connection' => Expect::structure([
 				'driver' => Expect::string('pdo_mysql'),
 				'host' => Expect::string('localhost')->nullable(),
@@ -87,9 +94,9 @@ class DoctrineExtension extends CompilerExtension
 				'schema_filter' => Expect::string()->nullable(),
 			]),
 			'prefix' => Expect::string('doctrine.default'),
-			'proxyDir' => Expect::string('%tempDir%/cache/proxies'),
+			'proxyDir' => Expect::string($tempDir . '/cache/proxies'),
 			'proxyNamespace' => Expect::string('DoctrineProxies'),
-			'sourceDir' => Expect::string()->nullable(),
+			'sourceDir' => Expect::string()->required(),
 			'entityManagerClassName' => Expect::string(EntityManager::class),
 			'defaultRepositoryClassName' => Expect::string(EntityRepository::class),
 			'repositoryFactory' => Expect::string()->nullable(),
@@ -99,10 +106,10 @@ class DoctrineExtension extends CompilerExtension
 			'metadata' => Expect::array()->default([]),
 			'functions' => Expect::array()->default([]),
 			// caches
-			'metadataCache' => Expect::string('default'),
-			'queryCache' => Expect::string('default'),
-			'resultCache' => Expect::string('default'),
-			'hydrationCache' => Expect::string('default'),
+			'metadataCache' => Expect::anyOf(Expect::string(), Expect::bool())->default('default'),
+			'queryCache' => Expect::anyOf(Expect::string(), Expect::bool())->default('default'),
+			'resultCache' => Expect::anyOf(Expect::string(), Expect::bool())->default('default'),
+			'hydrationCache' => Expect::anyOf(Expect::string(), Expect::bool())->default('default'),
 			'secondLevelCache' => Expect::structure([
 				'enabled' => Expect::bool(false),
 				'factoryClass' => Expect::string(DefaultCacheFactory::class),
@@ -111,7 +118,7 @@ class DoctrineExtension extends CompilerExtension
 					'defaultLifetime' => Expect::int(3600),
 					'defaultLockLifetime' => Expect::int(60),
 				]),
-				'fileLockRegionDirectory' => Expect::string('%tempDir%/cache/Doctrine.Cache.Locks'),
+				'fileLockRegionDirectory' => Expect::string($tempDir . '/cache/Doctrine.Cache.Locks'),
 				'logging' => Expect::bool(false),
 			]),
 			'cache' => Expect::structure([

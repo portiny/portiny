@@ -9,6 +9,7 @@ use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 use Portiny\ElasticsearchNette\Tracy\ElasticsearchPanel;
 use stdClass;
+use Tracy\IBarPanel;
 
 class ElasticsearchExtension extends CompilerExtension
 {
@@ -18,7 +19,7 @@ class ElasticsearchExtension extends CompilerExtension
 	public function getConfigSchema(): Schema
 	{
 		return Expect::structure([
-			'debug' => Expect::bool(false),
+			'debug' => Expect::bool(interface_exists(IBarPanel::class)),
 			'clientClassName' => Expect::string(Client::class),
 			'connections' => Expect::array()->default([
 				[
