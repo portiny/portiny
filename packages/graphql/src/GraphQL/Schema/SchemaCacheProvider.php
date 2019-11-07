@@ -7,6 +7,7 @@ use GraphQL\Language\AST\DocumentNode;
 use GraphQL\Language\Parser;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
+use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Schema;
 use GraphQL\Utils\AST;
 use GraphQL\Utils\BuildSchema;
@@ -155,6 +156,24 @@ final class SchemaCacheProvider
 				}
 
 				return null;
+			};
+
+			$typeConfig['parseValue'] = function ($value) use ($typeConfig) {
+				$customType = Types::findByName($typeConfig['name']);
+				if ($customType instanceof ScalarType) {
+					return $customType->parseValue($value);
+				}
+
+				return $value;
+			};
+
+			$typeConfig['parseLiteral'] = function ($valueNode, ?array $variables = null) use ($typeConfig) {
+				$customType = Types::findByName($typeConfig['name']);
+				if ($customType instanceof ScalarType) {
+					return $customType->parseLiteral($valueNode, $variables);
+				}
+
+				return AST::valueFromASTUntyped($valueNode, $variables);
 			};
 
 			return $typeConfig;
