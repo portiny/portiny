@@ -59,6 +59,7 @@ parameters:
         Symplify\CodingStandard\Sniffs\ControlStructure\SprintfOverContactSniff:
         Symplify\CodingStandard\Fixer\Php\ClassStringToClassConstantFixer: ~
         Symplify\CodingStandard\Fixer\Naming\PropertyNameMatchingTypeFixer: ~
+        PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer: ~
         Symplify\CodingStandard\Fixer\Solid\FinalInterfaceFixer:
             # contains anonymous class
             - packages/graphql/src/Converter/MutationFieldConverter.php

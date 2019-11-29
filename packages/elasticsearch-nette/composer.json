@@ -9,8 +9,8 @@
 	"require": {
 		"php": ">=7.1",
 		"nette/di": "^3.0",
-		"portiny/elasticsearch": "^4.0",
-		"tracy/tracy": "^2.6"
+		"portiny/elasticsearch": "^5.0",
+		"tracy/tracy": "^2.7"
 	},
 	"require-dev": {
 		"nette/bootstrap": "^3.0",
