@@ -24,9 +24,17 @@ matrix:
         - COMPOSER_FLAGS=""
     - php: 7.3
       env:
+        - PHPSTAN=true
+        - COMPOSER_FLAGS=""
+    - php: 7.4
+      env:
+        - PHPUNIT_FLAGS="--coverage-clover coverage.xml"
+        - COMPOSER_FLAGS=""
+    - php: 7.4
+      env:
         - CODING_STANDARD=true
         - COMPOSER_FLAGS=""
-    - php: 7.3
+    - php: 7.4
       env:
         - PHPSTAN=true
         - COMPOSER_FLAGS=""
