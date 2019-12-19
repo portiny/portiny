@@ -44,12 +44,23 @@ class ConsoleExtension extends CompilerExtension
 	 */
 	public function beforeCompile(): void
 	{
+		if (PHP_SAPI !== 'cli') {
+			return;
+		}
+
+		/** @var stdClass $config */
+		$config = (object) $this->config;
 		$builder = $this->getContainerBuilder();
 		$builder->getDefinitionByType(Application::class)
 			->addSetup('setHelperSet', ['@' . $builder->getByType(HelperSet::class)]);
 
 		$this->registerConsoleCommands();
 		$this->registerHelpers();
+
+		if ($config->url !== null && $builder->hasDefinition('http.request')) {
+			$definition = $builder->getDefinition('http.request');
+			$definition->setFactory(Request::class, [new Statement(UrlScript::class, [$config->url])]);
+		}
 	}
 
 
@@ -66,11 +77,6 @@ class ConsoleExtension extends CompilerExtension
 
 		if ($config->catchExceptions !== null) {
 			$applicationDefinition->addSetup('setCatchExceptions', [(bool) $config->catchExceptions]);
-		}
-
-		if ($config->url !== null && $builder->hasDefinition('http.request')) {
-			$definition = $builder->getDefinition('http.request');
-			$definition->setFactory(Request::class, [new Statement(UrlScript::class, [$config->url])]);
 		}
 	}
 

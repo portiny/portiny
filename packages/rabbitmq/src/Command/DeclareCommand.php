@@ -9,6 +9,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class DeclareCommand extends Command
 {
+
+	/**
+	 * @var string
+	 */
+	protected static $defaultName = 'rabbitmq:declare';
+
 	/**
 	 * @var BunnyManager
 	 */
@@ -25,7 +31,7 @@ final class DeclareCommand extends Command
 
 	protected function configure(): void
 	{
-		$this->setName('rabbitmq:declare')
+		$this->setName(self::$defaultName)
 			->setDescription('Creates all exchanges and queues.');
 	}
 

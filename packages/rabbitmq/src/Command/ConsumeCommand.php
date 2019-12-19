@@ -12,6 +12,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ConsumeCommand extends Command
 {
+
+	/**
+	 * @var string
+	 */
+	protected static $defaultName = 'rabbitmq:consume';
+
 	/**
 	 * @var BunnyManager
 	 */
@@ -31,7 +37,7 @@ final class ConsumeCommand extends Command
 	 */
 	protected function configure(): void
 	{
-		$this->setName('rabbitmq:consume')
+		$this->setName(self::$defaultName)
 			->setDescription('Run a RabbitMQ consumer')
 			->addArgument('consumer', InputArgument::REQUIRED, 'FQDN or alias of the consumer')
 			->addOption('messages', 'm', InputArgument::OPTIONAL, 'Amount of messages to consume')
