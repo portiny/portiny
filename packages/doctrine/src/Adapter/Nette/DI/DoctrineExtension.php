@@ -64,8 +64,14 @@ class DoctrineExtension extends CompilerExtension
 {
 	private const DOCTRINE_SQL_PANEL = DoctrineSQLPanel::class;
 
+	/**
+	 * @var string[]
+	 */
 	private $classMappings = [];
 
+	/**
+	 * @var string[]
+	 */
 	private $entitySources = [];
 
 
@@ -286,7 +292,7 @@ class DoctrineExtension extends CompilerExtension
 	}
 
 
-	protected function processSecondLevelCache($name, stdClass $config): void
+	protected function processSecondLevelCache(string $name, stdClass $config): void
 	{
 		if (! $config->enabled) {
 			return;

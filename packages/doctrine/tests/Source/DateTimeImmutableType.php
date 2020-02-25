@@ -49,9 +49,7 @@ class DateTimeImmutableType extends DateTimeType
 
 
 	/**
-	 * @param DateTimeInterface|null $value
-	 * @return string|null
-	 * @throws ConversionException
+	 * @inheritDoc
 	 */
 	public function convertToDatabaseValue($value, AbstractPlatform $platform)
 	{
@@ -67,7 +65,7 @@ class DateTimeImmutableType extends DateTimeType
 			$value = sprintf('of type %s', gettype($value));
 		}
 
-		throw ConversionException::conversionFailed($value, $this->getName());
+		throw ConversionException::conversionFailed((string) $value, $this->getName());
 	}
 
 

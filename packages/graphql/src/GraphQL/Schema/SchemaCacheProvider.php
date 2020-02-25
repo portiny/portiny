@@ -150,8 +150,6 @@ final class SchemaCacheProvider
 							if (is_callable($resolver)) {
 								return $resolver($value, $args, $context, $info);
 							}
-
-							return null;
 						}
 				}
 

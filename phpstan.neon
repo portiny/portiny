@@ -1,4 +1,6 @@
 parameters:
+	checkMissingIterableValueType: FALSE
+
 	excludes_analyse:
 		- %rootDir%/packages/doctrine/src/Adapter/Nette/Tracy/Helper.php
 		- %rootDir%/packages/*/tests/temp/*
