@@ -55,6 +55,10 @@ final class ConsumeCommand extends Command
 		$numberOfMessages = $this->getNumberOfMessages($input);
 		$secondsToRun = $this->getSecondsToRun($input);
 
+		$output->writeln(
+			sprintf('<comment>[%s]</comment> <info>Staring consumer "%s"...</info>', date('Y-m-d H:i:s'), $consumerName)
+		);
+
 		$consumer = $this->bunnyManager->getConsumerByAlias($consumerName);
 		if ($consumer === null) {
 			$output->writeln('<error>Consumer not found!</error>');
@@ -84,7 +88,7 @@ final class ConsumeCommand extends Command
 	}
 
 
-	protected function getSecondsToRun(InputInterface $input)
+	protected function getSecondsToRun(InputInterface $input): ?int
 	{
 		/** @var string|int $seconds */
 		$seconds = $input->getOption('time');
