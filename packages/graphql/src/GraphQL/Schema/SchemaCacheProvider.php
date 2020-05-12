@@ -101,14 +101,18 @@ final class SchemaCacheProvider
 
 	private function getTypesCacheFile(string $cacheKey): string
 	{
-		@mkdir($this->cacheDir, 0777, true); //@ - may exists
+		if (! file_exists($this->cacheDir)) {
+			mkdir($this->cacheDir, 0777, true);
+		}
 		return $this->cacheDir . '/types-' . $cacheKey . '.php';
 	}
 
 
 	private function getSchemaCacheFile(string $cacheKey): string
 	{
-		@mkdir($this->cacheDir, 0777, true); //@ - may exists
+		if (! file_exists($this->cacheDir)) {
+			mkdir($this->cacheDir, 0777, true);
+		}
 		return $this->cacheDir . '/schema-' . $cacheKey . '.php';
 	}
 
