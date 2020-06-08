@@ -3,6 +3,7 @@
 namespace Portiny\GraphQL\GraphQL\Schema;
 
 use Closure;
+use GraphQL\Executor\Executor;
 use GraphQL\Language\AST\DocumentNode;
 use GraphQL\Language\Parser;
 use GraphQL\Type\Definition\ObjectType;
@@ -150,14 +151,18 @@ final class SchemaCacheProvider
 								}
 							}
 
+							/** @var callable|null $resolver */
 							$resolver = $type->resolveFieldFn;
 							if (is_callable($resolver)) {
 								return $resolver($value, $args, $context, $info);
 							}
-						}
-				}
 
-				return null;
+							$defaultFieldResolver = Executor::getDefaultFieldResolver();
+							return $defaultFieldResolver($value, $args, $context, $info);
+						}
+
+						return null;
+				}
 			};
 
 			$typeConfig['parseValue'] = function ($value) use ($typeConfig) {
