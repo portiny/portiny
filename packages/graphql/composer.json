@@ -9,7 +9,7 @@
 	"require": {
 		"php": ">=7.1",
 		"psr/log": "^1.1",
-		"webonyx/graphql-php": "^0.13"
+		"webonyx/graphql-php": "^14.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^8.3"

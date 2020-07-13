@@ -7,7 +7,7 @@
 		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
 	],
 	"require": {
-		"php": "^7.1",
+		"php": "^7.2",
 		"bunny/bunny": "^0.4",
 		"doctrine/orm": "^2.7",
 		"nette/caching": "^3.0",
@@ -20,7 +20,7 @@
 		"symfony/console": "^4.4|^5.0",
 		"symfony/dependency-injection": "^4.4|^5.0",
 		"tracy/tracy": "^2.7",
-		"webonyx/graphql-php": "^0.13"
+		"webonyx/graphql-php": "^14.0"
 	},
 	"require-dev": {
 		"nette/bootstrap": "^3.0",

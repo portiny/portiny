@@ -2,7 +2,7 @@
 
 namespace Portiny\GraphQL\GraphQL;
 
-use GraphQL\Error\Debug;
+use GraphQL\Error\DebugFlag;
 use GraphQL\Error\FormattedError;
 use GraphQL\Executor\Promise\Promise;
 use GraphQL\Executor\Promise\PromiseAdapter;
@@ -76,6 +76,8 @@ final class RequestProcessor
 		?array $allowedMutations = null,
 		?LoggerInterface $logger = null
 	): array {
+		$debugLevel = $this->detectDebugLevel($logger);
+
 		try {
 			$cacheKey = $this->schemaCacheProvider->getCacheKey($allowedQueries, $allowedMutations);
 			$schema = null;
@@ -97,14 +99,14 @@ final class RequestProcessor
 				$requestParser->getVariables()
 			);
 
-			$output = $result->toArray($this->detectDebugLevel($logger));
+			$output = $result->toArray($debugLevel);
 		} catch (Throwable $throwable) {
 			if ($logger) {
 				$logger->error((string) $throwable, $throwable->getTrace());
 			}
 
 			$output = [
-				'errors' => [FormattedError::createFromException($throwable, false, 'An error occurred.')],
+				'errors' => [FormattedError::createFromException($throwable, $debugLevel, 'An error occurred.')],
 			];
 		}
 
@@ -163,8 +165,8 @@ final class RequestProcessor
 	private function detectDebugLevel(?LoggerInterface $logger): int
 	{
 		return $this->debugMode
-			? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE
-			: ($logger === null ? 0 : Debug::RETHROW_INTERNAL_EXCEPTIONS);
+			? DebugFlag::INCLUDE_DEBUG_MESSAGE | DebugFlag::INCLUDE_TRACE
+			: ($logger === null ? DebugFlag::NONE : DebugFlag::RETHROW_INTERNAL_EXCEPTIONS);
 	}
 
 
