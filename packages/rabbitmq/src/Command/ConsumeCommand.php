@@ -56,7 +56,11 @@ final class ConsumeCommand extends Command
 		$secondsToRun = $this->getSecondsToRun($input);
 
 		$output->writeln(
-			sprintf('<comment>[%s]</comment> <info>Staring consumer "%s"...</info>', date('Y-m-d H:i:s'), $consumerName)
+			sprintf(
+				'<comment>[%s]</comment> <info>Starting consumer "%s"...</info>',
+				date('Y-m-d H:i:s'),
+				$consumerName
+			)
 		);
 
 		$consumer = $this->bunnyManager->getConsumerByAlias($consumerName);
