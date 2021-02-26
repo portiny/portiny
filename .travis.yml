@@ -22,6 +22,14 @@ matrix:
       env:
         - PHPSTAN=true
         - COMPOSER_FLAGS=""
+    - php: 7.4
+      env:
+        - PHPSTAN=true
+        - COMPOSER_FLAGS=""
+    - php: 8.0
+      env:
+        - PHPSTAN=true
+        - COMPOSER_FLAGS=""
 
 install:
   - composer install $COMPOSER_FLAGS

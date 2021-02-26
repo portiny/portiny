@@ -216,7 +216,7 @@ final class ElasticsearchPanel implements IBarPanel, LoggerInterface
 			self::DATA_REQUEST_INDEX => $request->getData(),
 			self::DATA_PATH_INDEX => $request->getPath(),
 			self::DATA_TIME_INDEX => $response->getQueryTime(),
-			self::DATA_TRACE_INDEX => debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false),
+			self::DATA_TRACE_INDEX => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS),
 			self::DATA_METHOD_INDEX => $request->getMethod(),
 		];
 	}

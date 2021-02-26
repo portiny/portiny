@@ -7,13 +7,13 @@
 		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
 	],
 	"require": {
-		"php": ">=7.1",
+		"php": "^7.1 || ^8.0",
 		"nette/di": "^3.0",
 		"portiny/rabbitmq": "^6.0"
 	},
 	"require-dev": {
 		"nette/bootstrap": "^3.0",
-		"phpunit/phpunit": "^8.3"
+		"phpunit/phpunit": "^7.5 || ^8.5 || ^9.3"
 	},
 	"autoload": {
 		"psr-4": {
