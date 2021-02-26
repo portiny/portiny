@@ -71,7 +71,7 @@ final class DoctrineSQLPanel implements IBarPanel, SQLLogger
 			self::DATA_INDEX_PARAMS => $params,
 			self::DATA_INDEX_TYPES => $types,
 			self::DATA_INDEX_TIME => 0,
-			self::DATA_INDEX_TRACE => debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false),
+			self::DATA_INDEX_TRACE => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS),
 		];
 	}
 

@@ -7,15 +7,15 @@
 		{ "name": "Tomáš Pilař", "email": "email@tomaspilar.cz", "homepage": "https://www.tomaspilar.cz/" }
 	],
 	"require": {
-		"php": "^7.2",
-		"bunny/bunny": "^0.4",
+		"php": "^7.2 || ^8.0",
+		"bunny/bunny": "^0.5",
 		"doctrine/orm": "^2.7",
 		"nette/caching": "^3.0",
 		"nette/di": "^3.0",
 		"nette/http": "^3.0",
 		"nette/utils": "^3.0",
 		"psr/log": "^1.1",
-		"ruflin/elastica": "^6.1",
+		"ruflin/elastica": "^6.1 || ^7.1",
 		"symfony/config": "^4.4|^5.0",
 		"symfony/console": "^4.4|^5.0",
 		"symfony/dependency-injection": "^4.4|^5.0",
@@ -25,9 +25,7 @@
 	"require-dev": {
 		"nette/bootstrap": "^3.0",
 		"phpstan/phpstan": "^0.12",
-		"phpunit/phpunit": "^7.5|^8.4",
-		"symplify/easy-coding-standard": "^7.2",
-		"symplify/set-config-resolver": "^7.2"
+		"phpunit/phpunit": "^7.5 || ^8.5 || ^9.3"
 	},
 	"autoload": {
 		"psr-4": {
@@ -60,12 +58,9 @@
 	"scripts": {
 		"complete-check": [
 			"@phpunit",
-			"@check-cs",
 			"@phpstan"
 		],
 		"phpunit": "vendor/bin/phpunit --do-not-cache-result",
-		"check-cs": "vendor/bin/ecs check packages",
-		"fix-cs": "vendor/bin/ecs check packages --fix",
 		"phpstan": "vendor/bin/phpstan analyse packages --level max --configuration phpstan.neon"
 	}
 }
