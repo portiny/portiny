@@ -25,9 +25,7 @@
 	"require-dev": {
 		"nette/bootstrap": "^3.0",
 		"phpstan/phpstan": "^0.12",
-		"phpunit/phpunit": "^7.5 || ^8.5 || ^9.3",
-		"symplify/easy-coding-standard": "^7.2",
-		"symplify/set-config-resolver": "^7.2"
+		"phpunit/phpunit": "^7.5 || ^8.5 || ^9.3"
 	},
 	"autoload": {
 		"psr-4": {
@@ -63,8 +61,6 @@
 			"@phpstan"
 		],
 		"phpunit": "vendor/bin/phpunit --do-not-cache-result",
-		"check-cs": "vendor/bin/ecs check packages",
-		"fix-cs": "vendor/bin/ecs check packages --fix",
 		"phpstan": "vendor/bin/phpstan analyse packages --level max --configuration phpstan.neon"
 	}
 }
