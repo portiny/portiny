@@ -35,7 +35,7 @@ class UrlType extends ScalarType
 	 */
 	public function parseValue($value)
 	{
-		if (! is_string($value) || ! filter_var($value, FILTER_VALIDATE_URL)) {
+		if ($value !== null && $value !== '' && ! filter_var($value, FILTER_VALIDATE_URL)) {
 			throw new UnexpectedValueException('Cannot represent value as URL: ' . Utils::printSafe($value));
 		}
 

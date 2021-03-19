@@ -35,7 +35,7 @@ class EmailType extends ScalarType
 	 */
 	public function parseValue($value)
 	{
-		if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
+		if ($value !== null && $value !== '' && ! filter_var($value, FILTER_VALIDATE_EMAIL)) {
 			throw new UnexpectedValueException('Cannot represent value as email: ' . Utils::printSafe($value));
 		}
 
