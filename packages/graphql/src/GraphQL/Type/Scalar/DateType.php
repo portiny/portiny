@@ -41,7 +41,7 @@ class DateType extends ScalarType
 	 */
 	public function parseValue($value): ?DateTimeImmutable
 	{
-		return DateTimeImmutable::createFromFormat('Y-m-d', $value) ?: null;
+		return DateTimeImmutable::createFromFormat('!Y-m-d', $value) ?: null;
 	}
 
 
