@@ -14,11 +14,6 @@ final class ConsumeCommand extends Command
 {
 
 	/**
-	 * @var string
-	 */
-	protected static $defaultName = 'rabbitmq:consume';
-
-	/**
 	 * @var BunnyManager
 	 */
 	private $bunnyManager;
@@ -37,7 +32,7 @@ final class ConsumeCommand extends Command
 	 */
 	protected function configure(): void
 	{
-		$this->setName(self::$defaultName)
+		$this->setName('rabbitmq:consume')
 			->setDescription('Run a RabbitMQ consumer')
 			->addArgument('consumer', InputArgument::REQUIRED, 'FQDN or alias of the consumer')
 			->addOption('messages', 'm', InputArgument::OPTIONAL, 'Amount of messages to consume')

@@ -11,11 +11,6 @@ final class DeclareCommand extends Command
 {
 
 	/**
-	 * @var string
-	 */
-	protected static $defaultName = 'rabbitmq:declare';
-
-	/**
 	 * @var BunnyManager
 	 */
 	private $bunnyManager;
@@ -31,7 +26,7 @@ final class DeclareCommand extends Command
 
 	protected function configure(): void
 	{
-		$this->setName(self::$defaultName)
+		$this->setName('rabbitmq:declare')
 			->setDescription('Creates all exchanges and queues.');
 	}
 
