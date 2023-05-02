@@ -97,6 +97,15 @@ final class BunnyManager
 	}
 
 
+    /**
+     * @return array<string, mixed>
+     */
+    public function getConnection(): array
+    {
+        return $this->connection;
+    }
+
+
 	/**
 	 * @return Channel|PromiseInterface
 	 */
