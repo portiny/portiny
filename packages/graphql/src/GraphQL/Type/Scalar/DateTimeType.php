@@ -6,6 +6,7 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
 use GraphQL\Error\InvariantViolation;
+use GraphQL\Language\AST\Node;
 use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
@@ -15,12 +16,12 @@ class DateTimeType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public $name = 'DateTime';
+	public string $name = 'DateTime';
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public $description = 'This scalar type represents time data, represented as an ISO-8601 encoded UTC date string.';
+	public ?string $description = 'This scalar type represents time data, represented as an ISO-8601 encoded UTC date string.';
 
 
 	/**
@@ -49,7 +50,7 @@ class DateTimeType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public function parseLiteral($valueNode, ?array $variables = null): ?string
+    public function parseLiteral(Node $valueNode, array $variables = null)
 	{
 		if ($valueNode instanceof StringValueNode) {
 			return $valueNode->value;

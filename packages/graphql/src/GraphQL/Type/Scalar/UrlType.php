@@ -3,6 +3,7 @@
 namespace Portiny\GraphQL\GraphQL\Type\Scalar;
 
 use GraphQL\Error\Error;
+use GraphQL\Language\AST\Node;
 use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
@@ -13,12 +14,12 @@ class UrlType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public $name = 'Url';
+	public string $name = 'Url';
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public $description = 'This scalar type represents URL formatted string.';
+	public ?string $description = 'This scalar type represents URL formatted string.';
 
 
 	/**
@@ -46,7 +47,7 @@ class UrlType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public function parseLiteral($valueNode, ?array $variables = null)
+    public function parseLiteral(Node $valueNode, array $variables = null)
 	{
 		if (! $valueNode instanceof StringValueNode) {
 			$kind = isset($valueNode->kind) ? $valueNode->kind : '';

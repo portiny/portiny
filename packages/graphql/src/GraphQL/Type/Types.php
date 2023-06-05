@@ -2,27 +2,30 @@
 
 namespace Portiny\GraphQL\GraphQL\Type;
 
-use GraphQL\Type\Definition\Type;
 
 final class Types
 {
-	/**
-	 * @var Type[]
-	 */
+    /**
+     * @var array<string, mixed>
+     */
 	private static $types = [];
 
 
-	public static function get(string $className): Type
-	{
-		if (! isset(self::$types[$className])) {
-			self::$types[$className] = new $className();
-		}
+    /**
+     * @template T
+     * @param class-string<T> $className
+     * @return T
+     */
+    public static function get(string $className)
+    {
+        return self::$types[$className] ??= new $className();
+    }
 
-		return self::$types[$className];
-	}
 
-
-	public static function findByName(string $name): ?Type
+    /**
+     * @return mixed|null
+     */
+	public static function findByName(string $name)
 	{
 		foreach (self::$types as $type) {
 			if ($type->name === $name) {
@@ -34,6 +37,9 @@ final class Types
 	}
 
 
+    /**
+     * @return class-string[]
+     */
 	public static function getTypeClasses(): array
 	{
 		$typeClasses = [];

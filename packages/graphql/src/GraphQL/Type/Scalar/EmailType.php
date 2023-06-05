@@ -3,6 +3,7 @@
 namespace Portiny\GraphQL\GraphQL\Type\Scalar;
 
 use GraphQL\Error\Error;
+use GraphQL\Language\AST\Node;
 use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
@@ -13,12 +14,12 @@ class EmailType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public $name = 'Email';
+	public string $name = 'Email';
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public $description = 'This scalar type represents e-mail formatted string.';
+	public ?string $description = 'This scalar type represents e-mail formatted string.';
 
 
 	/**
@@ -46,7 +47,7 @@ class EmailType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public function parseLiteral($valueNode, ?array $variables = null)
+    public function parseLiteral(Node $valueNode, array $variables = null)
 	{
 		if (! $valueNode instanceof StringValueNode) {
 			$kind = isset($valueNode->kind) ? $valueNode->kind : '';
