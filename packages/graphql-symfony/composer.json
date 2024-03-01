@@ -9,8 +9,8 @@
 	"require": {
 		"php": "^7.4 || ^8.0",
 		"portiny/graphql": "^7.0",
-		"symfony/config": "^4.4|^5.0|^6.0",
-		"symfony/dependency-injection": "^4.4|^5.0|^6.0"
+		"symfony/config": "^4.4|^5.0|^6.0|^7.0",
+		"symfony/dependency-injection": "^4.4|^5.0|^6.0|^7.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^7.5 || ^8.5 || ^9.3"
