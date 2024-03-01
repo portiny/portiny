@@ -31,7 +31,7 @@ final class DeclareCommand extends Command
 	}
 
 
-	protected function execute(InputInterface $input, OutputInterface $output): ?int
+	protected function execute(InputInterface $input, OutputInterface $output): int
 	{
 		$output->write('<comment>Declaring...</comment>');
 
