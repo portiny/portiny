@@ -20,6 +20,8 @@ interface QueryFieldInterface
 
 
 	/**
+	 * @param mixed[] $root
+	 * @param mixed[] $args
 	 * @param mixed|null $context
 	 * @return mixed
 	 */
