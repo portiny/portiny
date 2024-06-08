@@ -13,6 +13,9 @@ interface QueryFieldInterface
 	public function getDescription(): string;
 
 
+	/**
+	 * @return mixed[]
+	 */
 	public function getArgs(): array;
 
 

@@ -13,6 +13,9 @@ interface MutationFieldInterface
 	public function getDescription(): string;
 
 
+	/**
+	 * @return mixed[]
+	 */
 	public function getArgs(): array;
 
 
@@ -20,6 +23,8 @@ interface MutationFieldInterface
 
 
 	/**
+	 * @param mixed[] $root
+	 * @param mixed[] $args
 	 * @param mixed|null $context
 	 * @return mixed
 	 */
