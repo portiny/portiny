@@ -174,6 +174,15 @@ final class SchemaCacheProvider
 				return $value;
 			};
 
+			$typeConfig['serialize'] = function ($value) use ($typeConfig) {
+				$customType = Types::findByName($typeConfig['name']);
+				if ($customType instanceof ScalarType) {
+					return $customType->serialize($value);
+				}
+
+				return $value;
+			};
+
 			$typeConfig['parseLiteral'] = function ($valueNode, ?array $variables = null) use ($typeConfig) {
 				$customType = Types::findByName($typeConfig['name']);
 				if ($customType instanceof ScalarType) {
