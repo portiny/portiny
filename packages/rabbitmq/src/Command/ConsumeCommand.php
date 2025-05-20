@@ -5,11 +5,16 @@ namespace Portiny\RabbitMQ\Command;
 use Bunny\Channel;
 use Portiny\RabbitMQ\BunnyManager;
 use Portiny\RabbitMQ\Consumer\AbstractConsumer;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+	name: 'rabbitmq:consume',
+	description: 'Run a RabbitMQ consumer'
+)]
 final class ConsumeCommand extends Command
 {
 

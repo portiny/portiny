@@ -3,10 +3,15 @@
 namespace Portiny\RabbitMQ\Command;
 
 use Portiny\RabbitMQ\BunnyManager;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+	name: 'rabbitmq:declare',
+	description: 'Creates all exchanges and queues.'
+)]
 final class DeclareCommand extends Command
 {
 
