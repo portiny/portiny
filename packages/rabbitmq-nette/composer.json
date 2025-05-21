@@ -9,7 +9,7 @@
 	"require": {
 		"php": "^8.0",
 		"nette/di": "^3.0",
-		"portiny/rabbitmq": "^7.0"
+		"portiny/rabbitmq": "^8.0"
 	},
 	"require-dev": {
 		"nette/bootstrap": "^3.0",
