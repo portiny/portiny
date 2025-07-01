@@ -6,6 +6,7 @@ use Closure;
 use GraphQL\Executor\Executor;
 use GraphQL\Language\AST\DocumentNode;
 use GraphQL\Language\Parser;
+use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\ScalarType;
@@ -167,7 +168,7 @@ final class SchemaCacheProvider
 
 			$typeConfig['parseValue'] = function ($value) use ($typeConfig) {
 				$customType = Types::findByName($typeConfig['name']);
-				if ($customType instanceof ScalarType) {
+				if ($customType instanceof ScalarType || $customType instanceof InputObjectType) {
 					return $customType->parseValue($value);
 				}
 
