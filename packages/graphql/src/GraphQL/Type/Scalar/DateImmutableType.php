@@ -2,7 +2,7 @@
 
 namespace Portiny\GraphQL\GraphQL\Type\Scalar;
 
-use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
 use GraphQL\Error\InvariantViolation;
 use GraphQL\Language\AST\Node;
@@ -10,17 +10,17 @@ use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
 
-class DateTimeType extends ScalarType
+class DateImmutableType extends ScalarType
 {
 	/**
 	 * {@inheritdoc}
 	 */
-	public string $name = 'DateTime';
+	public string $name = 'Date';
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public ?string $description = 'This scalar type represents time data, represented as an ISO-8601 encoded UTC date string.';
+	public ?string $description = 'This scalar type represents date data, represented as an ISO-8601 encoded UTC date string.';
 
 
 	/**
@@ -33,16 +33,16 @@ class DateTimeType extends ScalarType
 			throw new InvariantViolation('DateTime is not an instance of DateTimeInterface: ' . $printedValue);
 		}
 
-		return $value->format(DateTime::ATOM);
+		return $value->format('Y-m-d');
 	}
 
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function parseValue($value): ?DateTime
+	public function parseValue($value): ?DateTimeImmutable
 	{
-		return DateTime::createFromFormat(DateTime::ATOM, $value) ?: null;
+		return DateTimeImmutable::createFromFormat('!Y-m-d', $value) ?: null;
 	}
 
 
