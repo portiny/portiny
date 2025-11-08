@@ -36,9 +36,12 @@ abstract class AbstractConsumer
 
 		return $channel->consume(
 			function (Message $message, Channel $channel, $client) use ($numberOfMessages): void {
+				$this->beforeProcess($message);
 				try {
 					$result = $this->process($message);
+					$this->afterProcess($message);
 				} catch (Throwable $throwable) {
+					$this->errorProcess($message, $throwable);
 					$channel->reject($message);
 					throw $throwable;
 				}
@@ -129,6 +132,20 @@ abstract class AbstractConsumer
 	protected function getPrefetchCount(): int
 	{
 		return 1;
+	}
+
+	protected function beforeProcess(Message $message): void
+	{
+	}
+
+
+	protected function afterProcess(Message $message): void
+	{
+	}
+
+
+	protected function errorProcess(Message $message, Throwable $throwable): void
+	{
 	}
 
 }
