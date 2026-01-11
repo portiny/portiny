@@ -10,10 +10,10 @@ services:
 
     Portiny\GraphQL\Provider\MutationFieldsProvider:
         arguments:
-            - !tagged portiny.graphql.mutation_field
+            - !tagged_iterator portiny.graphql.mutation_field
     Portiny\GraphQL\Provider\QueryFieldsProvider:
         arguments:
-            - !tagged portiny.graphql.query_field
+            - !tagged_iterator portiny.graphql.query_field
     Portiny\GraphQL\GraphQL\RequestProcessor:
         arguments:
             - '%portiny.graphql.settings.debug%'

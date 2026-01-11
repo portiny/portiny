@@ -25,6 +25,6 @@ services:
         arguments:
             - '%portiny.rabbitmq.connection%'
             - '%portiny.rabbitmq.aliases%'
-            - !tagged portiny.rabbitmq.consumer
-            - !tagged portiny.rabbitmq.exchange
-            - !tagged portiny.rabbitmq.queue
+            - !tagged_iterator portiny.rabbitmq.consumer
+            - !tagged_iterator portiny.rabbitmq.exchange
+            - !tagged_iterator portiny.rabbitmq.queue
