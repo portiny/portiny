@@ -49,7 +49,7 @@ class DateTimeImmutableType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-    public function parseLiteral(Node $valueNode, array $variables = null)
+    public function parseLiteral(Node $valueNode, ?array $variables = null)
 	{
 		if ($valueNode instanceof StringValueNode) {
 			return $valueNode->value;
