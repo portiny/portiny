@@ -25,7 +25,7 @@ class UrlType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public function serialize($value)
+	public function serialize($value): mixed
 	{
 		return $value;
 	}
@@ -34,7 +34,7 @@ class UrlType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public function parseValue($value)
+	public function parseValue($value): mixed
 	{
 		if ($value !== null && $value !== '' && ! filter_var($value, FILTER_VALIDATE_URL)) {
 			throw new UnexpectedValueException('Cannot represent value as URL: ' . Utils::printSafe($value));
