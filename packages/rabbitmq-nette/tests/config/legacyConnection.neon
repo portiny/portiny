@@ -1,0 +1,10 @@
+extensions:
+	rabbitmq: Portiny\RabbitMQNette\DI\RabbitMQExtension
+
+rabbitmq:
+	connection:
+		host: rabbit.example.com
+		vhost: /legacy
+
+services:
+	- Portiny\RabbitMQNette\Tests\Fixtures\DefaultConsumer

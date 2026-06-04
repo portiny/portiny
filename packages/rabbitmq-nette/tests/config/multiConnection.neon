@@ -1,0 +1,20 @@
+extensions:
+	rabbitmq: Portiny\RabbitMQNette\DI\RabbitMQExtension
+
+rabbitmq:
+	defaultConnection: default
+	connections:
+		default:
+			host: 127.0.0.1
+			vhost: /default
+		secondary:
+			host: 127.0.0.1
+			vhost: /secondary
+	aliases:
+		default: Portiny\RabbitMQNette\Tests\Fixtures\DefaultConsumer
+		secondary: Portiny\RabbitMQNette\Tests\Fixtures\SecondaryConsumer
+
+services:
+	- Portiny\RabbitMQNette\Tests\Fixtures\DefaultConsumer
+	- Portiny\RabbitMQNette\Tests\Fixtures\SecondaryConsumer
+	- Portiny\RabbitMQNette\Tests\Fixtures\SecondaryQueue

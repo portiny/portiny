@@ -1,3 +1,9 @@
+# Legacy parameter defaults kept for backward compatibility. Applications that set
+# "portiny.rabbitmq.connection" / "portiny.rabbitmq.aliases" (without semantic configuration under
+# "portiny_rabbitmq") keep working: the extension promotes these into the "default" connection.
+#
+# The BunnyManager (one per named connection), ConnectionRegistry, Producer, ConsumeCommand and
+# DeclareCommand services are registered dynamically by PortinyRabbitMQSymfonyExtension.
 parameters:
     portiny.rabbitmq.aliases: []
     portiny.rabbitmq.connection:
@@ -11,20 +17,3 @@ parameters:
         persistent: false
         path: /
         tcp_nodelay: false
-
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-
-    Portiny\RabbitMQ\Command\ConsumeCommand: ~
-    Portiny\RabbitMQ\Command\DeclareCommand: ~
-    Portiny\RabbitMQ\Producer\Producer: ~
-    Portiny\RabbitMQ\BunnyManager:
-        public: true
-        arguments:
-            - '%portiny.rabbitmq.connection%'
-            - '%portiny.rabbitmq.aliases%'
-            - !tagged_iterator portiny.rabbitmq.consumer
-            - !tagged_iterator portiny.rabbitmq.exchange
-            - !tagged_iterator portiny.rabbitmq.queue

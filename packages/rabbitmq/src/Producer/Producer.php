@@ -3,20 +3,20 @@
 namespace Portiny\RabbitMQ\Producer;
 
 use Bunny\Channel;
-use Portiny\RabbitMQ\BunnyManager;
+use Portiny\RabbitMQ\ConnectionRegistry;
 use React\Promise\PromiseInterface;
 
 final class Producer
 {
 	/**
-	 * @var BunnyManager
+	 * @var ConnectionRegistry
 	 */
-	private $bunnyManager;
+	private $connectionRegistry;
 
 
-	public function __construct(BunnyManager $bunnyManager)
+	public function __construct(ConnectionRegistry $connectionRegistry)
 	{
-		$this->bunnyManager = $bunnyManager;
+		$this->connectionRegistry = $connectionRegistry;
 	}
 
 
@@ -26,7 +26,7 @@ final class Producer
 	 */
 	public function produce(AbstractProducer $abstractProducer, $body)
 	{
-		$channel = $this->bunnyManager->getChannel();
+		$channel = $this->connectionRegistry->get($abstractProducer->getConnectionName())->getChannel();
 
 		if ($channel instanceof PromiseInterface) {
 			return $channel->then(function (Channel $channel) use ($abstractProducer, $body) {

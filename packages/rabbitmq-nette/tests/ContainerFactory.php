@@ -9,9 +9,10 @@ use Nette\Utils\FileSystem;
 final class ContainerFactory
 {
 
-	public static function create(): Container
+	public static function create(?string $configFile = null): Container
 	{
-		$tempDir = __DIR__ . '/temp/' . getmypid();
+		$configFile = $configFile ?? __DIR__ . '/config/config.neon';
+		$tempDir = __DIR__ . '/temp/' . getmypid() . '/' . md5($configFile);
 
 		if (! file_exists($tempDir . '/log')) {
 			mkdir($tempDir . '/log', 0777, true);
@@ -23,7 +24,7 @@ final class ContainerFactory
 
 		$configurator = new Configurator();
 		$configurator->setTempDirectory($tempDir);
-		$configurator->addConfig(__DIR__ . '/config/config.neon');
+		$configurator->addConfig($configFile);
 
 		return $configurator->createContainer();
 	}

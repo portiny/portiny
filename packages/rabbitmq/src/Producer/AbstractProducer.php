@@ -31,6 +31,18 @@ abstract class AbstractProducer
 	}
 
 
+	/**
+	 * Name of the RabbitMQ connection this producer belongs to.
+	 *
+	 * Must return a constant value independent of the object state, as integrations read it via reflection
+	 * to assign the component to a connection.
+	 */
+	public function getConnectionName(): string
+	{
+		return 'default';
+	}
+
+
 	abstract protected function getExchangeName(): string;
 
 

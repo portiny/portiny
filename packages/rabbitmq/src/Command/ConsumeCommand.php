@@ -4,11 +4,13 @@ namespace Portiny\RabbitMQ\Command;
 
 use Bunny\Channel;
 use Portiny\RabbitMQ\BunnyManager;
+use Portiny\RabbitMQ\ConnectionRegistry;
 use Portiny\RabbitMQ\Consumer\AbstractConsumer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
@@ -19,16 +21,16 @@ final class ConsumeCommand extends Command
 {
 
 	/**
-	 * @var BunnyManager
+	 * @var ConnectionRegistry
 	 */
-	private $bunnyManager;
+	private $connectionRegistry;
 
 
-	public function __construct(BunnyManager $bunnyManager)
+	public function __construct(ConnectionRegistry $connectionRegistry)
 	{
 		parent::__construct();
 
-		$this->bunnyManager = $bunnyManager;
+		$this->connectionRegistry = $connectionRegistry;
 	}
 
 
@@ -40,8 +42,9 @@ final class ConsumeCommand extends Command
 		$this->setName('rabbitmq:consume')
 			->setDescription('Run a RabbitMQ consumer')
 			->addArgument('consumer', InputArgument::REQUIRED, 'FQDN or alias of the consumer')
-			->addOption('messages', 'm', InputArgument::OPTIONAL, 'Amount of messages to consume')
-			->addOption('time', 't', InputArgument::OPTIONAL, 'Max seconds for consumer to run');
+			->addOption('messages', 'm', InputOption::VALUE_OPTIONAL, 'Amount of messages to consume')
+			->addOption('time', 't', InputOption::VALUE_OPTIONAL, 'Max seconds for consumer to run')
+			->addOption('connection', 'c', InputOption::VALUE_OPTIONAL, 'Name of the RabbitMQ connection');
 	}
 
 
@@ -54,6 +57,7 @@ final class ConsumeCommand extends Command
 		$consumerName = $input->getArgument('consumer');
 		$numberOfMessages = $this->getNumberOfMessages($input);
 		$secondsToRun = $this->getSecondsToRun($input);
+		$connectionName = $this->getConnectionName($input);
 
 		$output->writeln(
 			sprintf(
@@ -63,21 +67,28 @@ final class ConsumeCommand extends Command
 			)
 		);
 
-		$consumer = $this->bunnyManager->getConsumerByAlias($consumerName);
-		if ($consumer === null) {
+		try {
+			$resolved = $this->resolveConsumer($consumerName, $connectionName);
+		} catch (\InvalidArgumentException $exception) {
+			$output->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
+			return -1;
+		}
+
+		if ($resolved === null) {
 			$output->writeln('<error>Consumer not found!</error>');
 			return -1;
 		}
 
+		[$bunnyManager, $consumer] = $resolved;
+
 		/** @var Channel $channel */
-		$channel = $this->bunnyManager->getChannel();
+		$channel = $bunnyManager->getChannel();
 
 		$output->writeln('<info>Consuming...</info>');
 
-		/** @var AbstractConsumer $consumer */
 		$consumer->consume($channel, $numberOfMessages);
 
-		$this->bunnyManager->getClient()->run($secondsToRun);
+		$bunnyManager->getClient()->run($secondsToRun);
 
 		return 0;
 	}
@@ -98,6 +109,38 @@ final class ConsumeCommand extends Command
 		$seconds = $input->getOption('time');
 
 		return $seconds ? (int) $seconds : null;
+	}
+
+
+	protected function getConnectionName(InputInterface $input): ?string
+	{
+		/** @var string|null $connection */
+		$connection = $input->getOption('connection');
+
+		return $connection !== null && $connection !== '' ? (string) $connection : null;
+	}
+
+
+	/**
+	 * @return array{BunnyManager, AbstractConsumer}|null
+	 */
+	private function resolveConsumer(string $consumerName, ?string $connectionName): ?array
+	{
+		if ($connectionName !== null) {
+			$bunnyManager = $this->connectionRegistry->get($connectionName);
+			$consumer = $bunnyManager->getConsumerByAlias($consumerName);
+
+			return $consumer !== null ? [$bunnyManager, $consumer] : null;
+		}
+
+		foreach ($this->connectionRegistry->all() as $bunnyManager) {
+			$consumer = $bunnyManager->getConsumerByAlias($consumerName);
+			if ($consumer !== null) {
+				return [$bunnyManager, $consumer];
+			}
+		}
+
+		return null;
 	}
 
 }
