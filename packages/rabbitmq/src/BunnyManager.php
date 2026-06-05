@@ -86,10 +86,20 @@ final class BunnyManager
 	public function getClient()
 	{
 		if ($this->client === null) {
+			$connection = $this->connection;
+
+			// Bunny cannot apply socket-level options (TCP_NODELAY) to encrypted streams:
+			// socket_import_stream() returns false on a TLS stream, which makes
+			// socket_set_option() throw a TypeError. TCP_NODELAY is already set through the
+			// stream context, so the socket-level option is redundant for SSL connections.
+			if (isset($connection['ssl']) && is_array($connection['ssl'])) {
+				unset($connection['tcp_nodelay']);
+			}
+
 			if ($this->loop === null) {
-				$this->client = new Client($this->connection);
+				$this->client = new Client($connection);
 			} else {
-				$this->client = new AsyncClient($this->loop, $this->connection);
+				$this->client = new AsyncClient($this->loop, $connection);
 			}
 		}
 
