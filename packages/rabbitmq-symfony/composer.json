@@ -8,7 +8,7 @@
 	],
 	"require": {
 		"php": "^8.0",
-		"portiny/rabbitmq": "^8.2",
+		"portiny/rabbitmq": "^8.3",
 		"symfony/config": "^4.4|^5.0|^6.0|^7.0|^8.0",
 		"symfony/dependency-injection": "^4.4|^5.0|^6.0|^7.0|^8.0"
 	},
