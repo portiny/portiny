@@ -13,6 +13,8 @@ use React\Promise\PromiseInterface;
 
 final class BunnyManager
 {
+	public const DELAYS_EXCHANGE = 'delays';
+
 	/**
 	 * @var bool
 	 */
@@ -199,6 +201,8 @@ final class BunnyManager
 
 	private function declareExchanges(Channel $channel): void
 	{
+		$channel->exchangeDeclare(self::DELAYS_EXCHANGE, 'direct', false, true, false, false, false, []);
+
 		/** @var AbstractExchange $exchange */
 		foreach ($this->exchanges as $exchange) {
 			$exchange->declare($channel);

@@ -37,4 +37,25 @@ final class Producer
 		return $abstractProducer->produce($channel, $body);
 	}
 
+
+	/**
+	 * Publish a message with a delay; resolves the channel from the connection registry and
+	 * delegates to AbstractProducer::produceWithDelay().
+	 *
+	 * @param mixed $body
+	 * @return bool|int|PromiseInterface
+	 */
+	public function produceWithDelay(AbstractProducer $abstractProducer, $body, int $delayMs)
+	{
+		$channel = $this->connectionRegistry->get($abstractProducer->getConnectionName())->getChannel();
+
+		if ($channel instanceof PromiseInterface) {
+			return $channel->then(function (Channel $channel) use ($abstractProducer, $body, $delayMs) {
+				return $abstractProducer->produceWithDelay($channel, $body, $delayMs);
+			});
+		}
+
+		return $abstractProducer->produceWithDelay($channel, $body, $delayMs);
+	}
+
 }
