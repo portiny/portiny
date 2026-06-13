@@ -5,6 +5,7 @@ namespace Portiny\RabbitMQ;
 use Bunny\Async\Client as AsyncClient;
 use Bunny\Channel;
 use Bunny\Client;
+use Portiny\RabbitMQ\Client\KeepaliveClient;
 use Portiny\RabbitMQ\Consumer\AbstractConsumer;
 use Portiny\RabbitMQ\Exchange\AbstractExchange;
 use Portiny\RabbitMQ\Queue\AbstractQueue;
@@ -99,7 +100,11 @@ final class BunnyManager
 			}
 
 			if ($this->loop === null) {
-				$this->client = new Client($connection);
+				// KeepaliveClient extends Bunny\Client and behaves identically unless the
+				// "tcp_keepalive" connection option is set, in which case it enables kernel
+				// TCP keepalive on the socket (keeps long-lived/idle connections alive through
+				// an L4 load balancer). The async client does not need it (event-loop driven).
+				$this->client = new KeepaliveClient($connection);
 			} else {
 				$this->client = new AsyncClient($this->loop, $connection);
 			}

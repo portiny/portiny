@@ -113,6 +113,10 @@ final class RabbitMQExtension extends CompilerExtension
 			'persistent' => Expect::bool($defaults['persistent']),
 			'path' => Expect::string($defaults['path']),
 			'tcp_nodelay' => Expect::bool($defaults['tcp_nodelay']),
+			'tcp_keepalive' => Expect::bool($defaults['tcp_keepalive']),
+			'tcp_keepalive_idle' => Expect::int($defaults['tcp_keepalive_idle']),
+			'tcp_keepalive_interval' => Expect::int($defaults['tcp_keepalive_interval']),
+			'tcp_keepalive_count' => Expect::int($defaults['tcp_keepalive_count']),
 		])->castTo('array');
 	}
 
@@ -133,6 +137,10 @@ final class RabbitMQExtension extends CompilerExtension
 			'persistent' => false,
 			'path' => '/',
 			'tcp_nodelay' => false,
+			'tcp_keepalive' => false,
+			'tcp_keepalive_idle' => 60,
+			'tcp_keepalive_interval' => 30,
+			'tcp_keepalive_count' => 4,
 		];
 	}
 

@@ -17,3 +17,7 @@ parameters:
         persistent: false
         path: /
         tcp_nodelay: false
+        tcp_keepalive: false
+        tcp_keepalive_idle: 60
+        tcp_keepalive_interval: 30
+        tcp_keepalive_count: 4

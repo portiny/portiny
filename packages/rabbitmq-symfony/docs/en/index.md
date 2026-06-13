@@ -73,6 +73,10 @@ portiny_rabbitmq:
             persistent: false
             path: /
             tcp_nodelay: false
+            tcp_keepalive: false     # enable kernel SO_KEEPALIVE on the socket
+            tcp_keepalive_idle: 60   # TCP_KEEPIDLE: idle seconds before the first probe
+            tcp_keepalive_interval: 30  # TCP_KEEPINTVL: seconds between probes
+            tcp_keepalive_count: 4   # TCP_KEEPCNT: probes before the connection is dropped
             ssl: false               # bool, or an array of TLS context options
 
         billing:
@@ -96,6 +100,22 @@ portiny_rabbitmq:
     aliases:
         billing-invoices: App\RabbitMQ\Consumer\InvoiceConsumer
 ```
+
+### TCP keepalive (long-lived consumers behind a load balancer)
+
+Bunny is synchronous, so a heartbeat frame is only sent while the consumer is waiting for messages —
+not while a message handler is running. A consumer that sits idle, or whose handler blocks for a long
+time, therefore sends no traffic; an L4 load balancer in front of the broker (e.g. a cloud LB) drops the
+connection on its TCP idle timeout, and the next operation fails with `Broken pipe or closed connection`.
+Lowering the heartbeat is not an option when handlers can run longer than the heartbeat (the broker would
+close the connection mid-job).
+
+Set `tcp_keepalive: true` to enable kernel `SO_KEEPALIVE` on the connection socket. The keepalive probes
+run in the OS independently of PHP, keeping every hop (including the LB) warm during both idle and blocking
+periods, without touching the AMQP heartbeat. Tune `tcp_keepalive_idle` below the LB's idle timeout. It
+works for TLS connections too: the socket is opened over plain TCP, keepalive is applied, then TLS is
+negotiated on the same socket. Requires `ext-sockets` and the Linux `TCP_KEEPIDLE`/`TCP_KEEPINTVL`/
+`TCP_KEEPCNT` socket options.
 
 ### Assigning a component to a connection
 
@@ -171,6 +191,7 @@ parameters:
         persistent: false
         path: /
         tcp_nodelay: false
+        tcp_keepalive: false
 ```
 
 Because components without an overridden `getConnectionName()` resolve to `'default'`, no component or

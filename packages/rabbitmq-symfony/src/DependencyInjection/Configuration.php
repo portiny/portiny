@@ -68,6 +68,20 @@ final class Configuration implements ConfigurationInterface
 					->booleanNode('persistent')->defaultValue(false)->end()
 					->scalarNode('path')->defaultValue('/')->end()
 					->booleanNode('tcp_nodelay')->defaultValue(false)->end()
+					// Kernel TCP keepalive: keeps long-lived/idle connections alive through an L4
+					// load balancer that would otherwise drop them on its TCP idle timeout.
+					->booleanNode('tcp_keepalive')->defaultValue(false)
+						->info('Enable SO_KEEPALIVE on the connection socket.')
+					->end()
+					->integerNode('tcp_keepalive_idle')->defaultValue(60)
+						->info('Seconds of idle before the first keepalive probe (TCP_KEEPIDLE).')
+					->end()
+					->integerNode('tcp_keepalive_interval')->defaultValue(30)
+						->info('Seconds between keepalive probes (TCP_KEEPINTVL).')
+					->end()
+					->integerNode('tcp_keepalive_count')->defaultValue(4)
+						->info('Unacknowledged probes before the connection is dropped (TCP_KEEPCNT).')
+					->end()
 					// ssl accepts either a bool (enable/disable) or an array of TLS context options.
 					->variableNode('ssl')->defaultValue(false)->end()
 				->end()
