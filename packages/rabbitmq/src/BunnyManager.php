@@ -153,6 +153,31 @@ final class BunnyManager
 
 
 	/**
+	 * Reset the memoized client and channel so the next getClient()/getChannel() call
+	 * opens a fresh TCP+AMQP connection.
+	 *
+	 * Call this after a transport error (broken pipe, CONNECTION_FORCED, NOT_FOUND
+	 * while consuming) to let the ConsumeCommand reconnect loop rebuild clean handles.
+	 * A best-effort graceful AMQP disconnect is attempted first; errors are swallowed
+	 * because the connection is likely already dead.
+	 */
+	public function reconnect(): void
+	{
+		if ($this->client !== null && $this->client->isConnected()) {
+			try {
+				$this->client->disconnect();
+			} catch (\Throwable $ignored) {
+				// Connection is already broken; nothing to close gracefully.
+			}
+		}
+
+		$this->client = null;
+		$this->channel = null;
+		$this->isDeclared = false;
+	}
+
+
+	/**
 	 * @return bool|PromiseInterface
 	 */
 	public function declare()
