@@ -104,7 +104,7 @@ final class SchemaCacheProvider
 	private function getTypesCacheFile(string $cacheKey): string
 	{
 		if (! file_exists($this->cacheDir)) {
-			mkdir($this->cacheDir, 0777, true);
+			@mkdir($this->cacheDir, 0777, true);
 		}
 		return $this->cacheDir . '/types-' . $cacheKey . '.php';
 	}
@@ -113,7 +113,7 @@ final class SchemaCacheProvider
 	private function getSchemaCacheFile(string $cacheKey): string
 	{
 		if (! file_exists($this->cacheDir)) {
-			mkdir($this->cacheDir, 0777, true);
+			@mkdir($this->cacheDir, 0777, true);
 		}
 		return $this->cacheDir . '/schema-' . $cacheKey . '.php';
 	}
