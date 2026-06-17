@@ -147,6 +147,93 @@ final class ConsumeCommandReconnectTest extends TestCase
 	}
 
 
+	/**
+	 * A broker-initiated graceful close (CONNECTION_FORCED on a node drain / rolling restart)
+	 * while a consumer channel is still open makes Bunny\Client::disconnect() throw a plain
+	 * \LogicException("All channels have to be closed by now.") — NOT a ClientException. This is
+	 * the exact failure that crashed conviu-core consumers during the nightly kured reboot window:
+	 * the old catch (ClientException) missed it, so it escaped the reconnect loop. It must now be
+	 * recognised as a transport error and follow the same retry path.
+	 */
+	public function testBrokerInitiatedGracefulCloseIsTreatedAsTransportError(): void
+	{
+		/** @var Channel&\PHPUnit\Framework\MockObject\MockObject $channel */
+		$channel = $this->createMock(Channel::class);
+		$channel->method('consume')->willReturn(null);
+		$channel->method('qos')->willReturn(null);
+
+		/** @var Client&\PHPUnit\Framework\MockObject\MockObject $client */
+		$client = $this->createMock(Client::class);
+		$client->method('run')->willThrowException(
+			new \LogicException('All channels have to be closed by now.')
+		);
+
+		$manager = $this->makeManager($client, $channel);
+		$registry = new ConnectionRegistry(['default' => $manager], 'default');
+
+		$command = new ConsumeCommand($registry);
+		$command->setName('rabbitmq:consume');
+
+		$input = new ArrayInput([
+			'consumer' => 'myAlias',
+			'--max-reconnect-attempts' => '1',
+			'--reconnect-base-delay' => '0',
+		]);
+		$input->setInteractive(false);
+
+		$output = new BufferedOutput();
+
+		$exitCode = $command->run($input, $output);
+
+		self::assertSame(1, $exitCode);
+
+		$outputText = $output->fetch();
+		self::assertStringContainsString('Transport error', $outputText);
+		self::assertStringContainsString('All channels have to be closed by now', $outputText);
+		self::assertStringContainsString('Maximum reconnect attempts (1) reached', $outputText);
+	}
+
+
+	/**
+	 * A genuine error raised by the consumer's own message handler (application code, not the
+	 * transport) must NOT be swallowed by the reconnect loop — otherwise a poison message would be
+	 * retried forever. It has to propagate out of the command unchanged.
+	 */
+	public function testApplicationHandlerErrorPropagatesAndIsNotRetried(): void
+	{
+		/** @var Channel&\PHPUnit\Framework\MockObject\MockObject $channel */
+		$channel = $this->createMock(Channel::class);
+		$channel->method('consume')->willReturn(null);
+		$channel->method('qos')->willReturn(null);
+
+		/** @var Client&\PHPUnit\Framework\MockObject\MockObject $client */
+		$client = $this->createMock(Client::class);
+		$client->method('run')->willThrowException(
+			new \RuntimeException('handler blew up on a malformed message')
+		);
+
+		$manager = $this->makeManager($client, $channel);
+		$registry = new ConnectionRegistry(['default' => $manager], 'default');
+
+		$command = new ConsumeCommand($registry);
+		$command->setName('rabbitmq:consume');
+
+		$input = new ArrayInput([
+			'consumer' => 'myAlias',
+			'--max-reconnect-attempts' => '5',
+			'--reconnect-base-delay' => '0',
+		]);
+		$input->setInteractive(false);
+
+		$output = new BufferedOutput();
+
+		$this->expectException(\RuntimeException::class);
+		$this->expectExceptionMessage('handler blew up on a malformed message');
+
+		$command->run($input, $output);
+	}
+
+
 	public function testConsumerNotFoundReturnsMinusOne(): void
 	{
 		/** @var Client&\PHPUnit\Framework\MockObject\MockObject $client */

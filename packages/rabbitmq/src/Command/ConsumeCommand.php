@@ -32,6 +32,18 @@ final class ConsumeCommand extends Command
 	private const RECONNECT_MAX_DELAY = 30;
 
 	/**
+	 * Non-ClientException throwables that Bunny raises from its own teardown path and that we
+	 * must treat as recoverable transport errors. When the broker initiates a graceful close
+	 * (CONNECTION_FORCED on a node drain / rolling restart) while a consumer channel still has
+	 * an in-flight delivery, Bunny\Client::disconnect() throws a plain \LogicException with this
+	 * exact message instead of a ClientException — so the type check alone misses it. This is a
+	 * version-independent fallback; the primary detection is the bunny/bunny origin check.
+	 */
+	private const BUNNY_TRANSPORT_ERROR_MESSAGES = [
+		'All channels have to be closed by now.',
+	];
+
+	/**
 	 * @var ConnectionRegistry
 	 */
 	private $connectionRegistry;
@@ -130,7 +142,15 @@ final class ConsumeCommand extends Command
 				// run() returned normally: either the time budget elapsed or -m was satisfied.
 				return 0;
 
-			} catch (ClientException $exception) {
+			} catch (\Throwable $exception) {
+				// A genuine error from the consumer's own message handler originates in
+				// application code and MUST propagate — never silently retry it forever. Only
+				// transport-layer failures (the AMQP connection broke, including a broker-initiated
+				// graceful close during a node drain) are reconnectable.
+				if (! $this->isReconnectableTransportError($exception)) {
+					throw $exception;
+				}
+
 				$output->writeln(
 					sprintf(
 						'<comment>[%s]</comment> <error>Transport error: %s</error>',
@@ -236,6 +256,36 @@ final class ConsumeCommand extends Command
 		$parsed = (int) $delay;
 
 		return $parsed >= 0 ? $parsed : self::RECONNECT_BASE_DELAY_DEFAULT;
+	}
+
+
+	/**
+	 * Whether a throwable caught around the consume/run() loop is a recoverable transport-layer
+	 * error (the AMQP connection broke) rather than a genuine error raised by the consumer's own
+	 * message handler.
+	 *
+	 * A handler exception originates in application code and must propagate so it is not silently
+	 * retried forever; a transport error originates inside the bunny/bunny client and means the
+	 * dead connection should be dropped and reconnected. The latter is recognised by its type
+	 * (Bunny\Exception\ClientException — "broken pipe"/CONNECTION_FORCED), its origin (thrown from
+	 * within the bunny/bunny package — e.g. the plain \LogicException Bunny raises when the broker
+	 * closes the connection while a channel is still open), or its message as a final fallback.
+	 *
+	 * Note: the connection state cannot be used to discriminate here — Bunny leaves the client in
+	 * the DISCONNECTING state when it throws "All channels have to be closed by now.", and
+	 * isConnected() still reports true for that state.
+	 */
+	private function isReconnectableTransportError(\Throwable $exception): bool
+	{
+		if ($exception instanceof ClientException) {
+			return true;
+		}
+
+		if (strpos($exception->getFile(), 'bunny/bunny') !== false) {
+			return true;
+		}
+
+		return in_array($exception->getMessage(), self::BUNNY_TRANSPORT_ERROR_MESSAGES, true);
 	}
 
 
