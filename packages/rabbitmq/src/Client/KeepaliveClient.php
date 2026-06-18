@@ -4,6 +4,7 @@ namespace Portiny\RabbitMQ\Client;
 
 use Bunny\Client;
 use Bunny\Exception\ClientException;
+use React\Promise\PromiseInterface;
 
 /**
  * Bunny client that enables kernel TCP keepalive on the connection socket.
@@ -34,6 +35,46 @@ class KeepaliveClient extends Client
 	private const DEFAULT_KEEPALIVE_INTERVAL = 30;
 
 	private const DEFAULT_KEEPALIVE_COUNT = 4;
+
+
+	/**
+	 * Tear the client down without ever crashing the worker at GC / process exit.
+	 *
+	 * Bunny\Client::__destruct() finishes a "clean" shutdown by calling disconnect()->done() and
+	 * then re-running the event loop. That is a landmine for a broker-initiated close: when the
+	 * broker closes the connection while a consumer channel is still open (CONNECTION_FORCED on a
+	 * node drain / rolling broker restart), Bunny\Client::disconnect() rejects with a plain
+	 * \LogicException ("All channels have to be closed by now."). React\Promise swallows that into
+	 * a rejected promise rather than propagating it synchronously — so the ConsumeCommand reconnect
+	 * loop never sees it — and then the parent destructor resurfaces it FATALLY: done() rethrows the
+	 * rejection ("All channels have to be closed by now." / "Call to a member function done() on
+	 * null"), and the trailing run() hits the dead socket ("Broken pipe or closed connection.").
+	 * Those uncaught errors fire outside any try/catch (at GC / exit), which is exactly what flooded
+	 * the consumer logs during the nightly maintenance window.
+	 *
+	 * A dying client must never take the worker down, so we attempt the same graceful disconnect but
+	 * consume any rejection here and never re-enter the loop. On the happy path Bunny's synchronous
+	 * disconnect closes the channels and the rejection handler is simply never invoked.
+	 */
+	public function __destruct()
+	{
+		if (! $this->isConnected()) {
+			return;
+		}
+
+		try {
+			$promise = $this->disconnect();
+
+			// disconnect() returns null when it has nothing to wait for; only a promise can reject.
+			if ($promise instanceof PromiseInterface) {
+				$promise->then(null, static function (): void {
+					// Connection is already gone — swallow so the rejection cannot resurface fatally.
+				});
+			}
+		} catch (\Throwable $exception) {
+			// Best-effort teardown; the connection is already broken, nothing left to close.
+		}
+	}
 
 
 	/**
