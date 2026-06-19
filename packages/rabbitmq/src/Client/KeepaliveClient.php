@@ -38,41 +38,54 @@ class KeepaliveClient extends Client
 
 
 	/**
-	 * Tear the client down without ever crashing the worker at GC / process exit.
+	 * Tear the client down gracefully without ever crashing the worker at GC / process exit.
 	 *
-	 * Bunny\Client::__destruct() finishes a "clean" shutdown by calling disconnect()->done() and
-	 * then re-running the event loop. That is a landmine for a broker-initiated close: when the
-	 * broker closes the connection while a consumer channel is still open (CONNECTION_FORCED on a
-	 * node drain / rolling broker restart), Bunny\Client::disconnect() rejects with a plain
-	 * \LogicException ("All channels have to be closed by now."). React\Promise swallows that into
-	 * a rejected promise rather than propagating it synchronously — so the ConsumeCommand reconnect
-	 * loop never sees it — and then the parent destructor resurfaces it FATALLY: done() rethrows the
-	 * rejection ("All channels have to be closed by now." / "Call to a member function done() on
-	 * null"), and the trailing run() hits the dead socket ("Broken pipe or closed connection.").
-	 * Those uncaught errors fire outside any try/catch (at GC / exit), which is exactly what flooded
-	 * the consumer logs during the nightly maintenance window.
+	 * This mirrors Bunny\Client::__destruct() — disconnect() and then pump the event loop with
+	 * run() — with two deliberate hardenings. The run() pump is essential and must NOT be removed:
+	 * a synchronous Bunny disconnect only sends Channel.Close; the channels are removed and the
+	 * final Connection.Close is sent from disconnect()'s promise callback, which only fires once
+	 * run() reads the broker's Close-Ok frames. That clean Connection.Close is the barrier that
+	 * makes the broker route every already-published message before the socket closes; skipping the
+	 * pump tears the TCP connection down abruptly and the broker drops messages still in flight.
 	 *
-	 * A dying client must never take the worker down, so we attempt the same graceful disconnect but
-	 * consume any rejection here and never re-enter the loop. On the happy path Bunny's synchronous
-	 * disconnect closes the channels and the rejection handler is simply never invoked.
+	 * The hardenings cover a broker-initiated close (a channel still open when the broker closes the
+	 * connection, e.g. CONNECTION_FORCED on a node drain): there Bunny\Client::disconnect() rejects
+	 * with a \LogicException ("All channels have to be closed by now.") that React\Promise stores on
+	 * a rejected promise, and the parent destructor resurfaces it FATALLY via done() (and run() then
+	 * hits the dead socket). So we (1) consume any rejection with then() instead of done(), and
+	 * (2) wrap the whole teardown in a catch-all — a dying client must never take the worker down.
 	 */
 	public function __destruct()
 	{
-		if (! $this->isConnected()) {
-			return;
-		}
-
 		try {
-			$promise = $this->disconnect();
+			if (! $this->isConnected()) {
+				return;
+			}
 
-			// disconnect() returns null when it has nothing to wait for; only a promise can reject.
+			// disconnect() returns null when there is nothing to wait for; only a promise can reject.
+			$promise = $this->disconnect();
 			if ($promise instanceof PromiseInterface) {
-				$promise->then(null, static function (): void {
-					// Connection is already gone — swallow so the rejection cannot resurface fatally.
-				});
+				// then() (not done()) consumes a rejection so a broker-initiated close cannot
+				// resurface as a fatal uncaught error; stop() ends the run() pump once disconnect
+				// settles, exactly as the parent destructor does on fulfilment.
+				$promise->then(
+					function (): void {
+						$this->stop();
+					},
+					function (): void {
+						$this->stop();
+					}
+				);
+			}
+
+			// Pump the loop so the Channel.Close/Connection.Close handshake actually completes and
+			// every buffered/in-flight publish is delivered before the socket is closed.
+			if ($this->isConnected()) {
+				$this->run();
 			}
 		} catch (\Throwable $exception) {
-			// Best-effort teardown; the connection is already broken, nothing left to close.
+			// Best-effort teardown; on a broken connection disconnect()/run() throw — swallow so a
+			// dying client can never crash the worker.
 		}
 	}
 
