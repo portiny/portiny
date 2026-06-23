@@ -15,7 +15,7 @@ class DateTimeImmutableType extends ScalarType
 	/**
 	 * {@inheritdoc}
 	 */
-	public string $name = 'DateTime';
+	public string $name = 'DateTimeImmutable';
 
 	/**
 	 * {@inheritdoc}
