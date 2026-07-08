@@ -38,7 +38,7 @@ final class RabbitMQExtension extends CompilerExtension
 			'connections' => Expect::arrayOf($this->getConnectionSchema()),
 			// BC: legacy flat "connection" configuration. When present (and no "connections" provided),
 			// it is mapped to the "default" connection.
-			'connection' => $this->getConnectionSchema()->nullable(),
+			'connection' => Expect::anyOf($this->getConnectionSchema(), Expect::null()),
 			'aliases' => Expect::array(),
 		]);
 	}
@@ -74,7 +74,7 @@ final class RabbitMQExtension extends CompilerExtension
 
 		$managerReferences = [];
 		foreach ($connections as $name => $connection) {
-			$componentsForConnection = $components[$name] ?? [
+			$componentsForConnection = ($components[$name] ?? []) + [
 				'consumers' => [],
 				'exchanges' => [],
 				'queues' => [],
