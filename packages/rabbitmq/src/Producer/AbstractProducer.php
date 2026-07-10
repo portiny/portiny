@@ -16,6 +16,18 @@ abstract class AbstractProducer
 
 	private const DELAY_QUEUE_EXPIRE_SLACK_MS = 10000;
 
+	/**
+	 * Name prefix of the per-delay holding queues declared by produceWithDelay().
+	 *
+	 * "delay-q" (quorum) deliberately differs from the historical "delay" prefix under which
+	 * the holding queues were declared as CLASSIC queues: an existing queue can never change
+	 * its x-queue-type, so redeclaring an old classic "delay_*" queue with 'quorum' would fail
+	 * with PRECONDITION_FAILED. Under a new name, producers running older and newer versions
+	 * of this package coexist safely, and the old classic queues drain their remaining delayed
+	 * messages and then delete themselves via their own x-expires.
+	 */
+	private const DELAY_QUEUE_NAME_PREFIX = 'delay-q';
+
 
 	/**
 	 * @param mixed $body
@@ -39,10 +51,16 @@ abstract class AbstractProducer
 	 * Replicates Symfony Messenger Connection::publishWithDelay semantics.
 	 *
 	 * When $delayMs <= 0 the message is published immediately via the standard produce() path.
-	 * Otherwise a durable holding queue named delay_{exchange}_{routingKey}_{delayMs} is
-	 * declared idempotently with x-message-ttl, x-expires, x-dead-letter-exchange and
+	 * Otherwise a durable QUORUM holding queue named delay-q_{exchange}_{routingKey}_{delayMs}
+	 * is declared idempotently with x-message-ttl, x-expires, x-dead-letter-exchange and
 	 * x-dead-letter-routing-key, and the message is published there.  After the TTL the broker
 	 * dead-letters it into the real exchange with the original routing key.
+	 *
+	 * The holding queue is a quorum queue (Raft-replicated across the broker nodes) so that a
+	 * single-node reboot neither loses the delayed messages nor makes this declare fail: a
+	 * classic holding queue lives on exactly one node, and while that node is down the declare
+	 * raises a NOT_FOUND channel exception ("process is stopped by supervisor"), failing every
+	 * delayed publish for the duration of the reboot.
 	 *
 	 * BunnyManager::declareExchanges() is responsible for declaring the static
 	 * BunnyManager::DELAYS_EXCHANGE ('delays') exchange once at startup — this method
@@ -59,7 +77,7 @@ abstract class AbstractProducer
 
 		$exchange = $this->getExchangeName();
 		$routingKey = $this->getRoutingKey();
-		$delayQueue = sprintf('delay_%s_%s_%d', $exchange, $routingKey, $delayMs);
+		$delayQueue = sprintf('%s_%s_%s_%d', self::DELAY_QUEUE_NAME_PREFIX, $exchange, $routingKey, $delayMs);
 
 		$channel->queueDeclare(
 			$delayQueue,
@@ -69,6 +87,7 @@ abstract class AbstractProducer
 			false,
 			false,
 			[
+				'x-queue-type' => 'quorum',
 				'x-message-ttl' => $delayMs,
 				'x-expires' => $delayMs + self::DELAY_QUEUE_EXPIRE_SLACK_MS,
 				'x-dead-letter-exchange' => $exchange,

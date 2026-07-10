@@ -2,6 +2,7 @@
 
 namespace Portiny\RabbitMQ\Client;
 
+use Bunny\Channel;
 use Bunny\Client;
 use Bunny\Exception\ClientException;
 use React\Promise\PromiseInterface;
@@ -27,6 +28,11 @@ use React\Promise\PromiseInterface;
  *
  * Opt-in via the "tcp_keepalive" connection option; when it is not set the parent connection
  * logic is used unchanged.
+ *
+ * Independently of keepalive, this client also tracks channels closed BY THE SERVER
+ * (see channelCloseOk()) so callers can detect a dead channel handle instead of writing
+ * to it — Bunny itself leaves such channels in place and reusing them escalates to a
+ * connection-level "CHANNEL_ERROR - expected 'channel.open'".
  */
 class KeepaliveClient extends Client
 {
@@ -35,6 +41,64 @@ class KeepaliveClient extends Client
 	private const DEFAULT_KEEPALIVE_INTERVAL = 30;
 
 	private const DEFAULT_KEEPALIVE_COUNT = 4;
+
+	/**
+	 * Channel objects the SERVER has closed (a channel.close frame was received from the
+	 * broker), keyed by object identity (Channel => true). A WeakMap so that discarded
+	 * Channel objects do not accumulate in a long-lived worker.
+	 *
+	 * @var \WeakMap|null
+	 */
+	private ?\WeakMap $channelsClosedByServer = null;
+
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * Bunny invokes this sender in exactly one situation: acknowledging a SERVER-initiated
+	 * channel.close (the generated await* loops in Bunny\ClientMethods and nothing else call
+	 * it). Bunny however leaves the closed Channel object in $this->channels with state READY,
+	 * so any later ack/reject/publish on that handle is written to a channel the broker no
+	 * longer knows — a protocol violation the broker punishes by closing the WHOLE connection
+	 * with "CHANNEL_ERROR - expected 'channel.open'" and requeueing every unacked delivery on
+	 * it (which is how a single failed queue.declare can snowball into a redelivery loop).
+	 *
+	 * Record the dying Channel object so BunnyManager::getChannel() and
+	 * AbstractConsumer can refuse to reuse it, and remove it from the client's channel
+	 * registry so the id can be reused by a future channel() call with a proper channel.open
+	 * handshake.
+	 */
+	public function channelCloseOk($channel)
+	{
+		$channelObject = $this->channels[$channel] ?? null;
+		if ($channelObject instanceof Channel) {
+			$this->getChannelsClosedByServer()->offsetSet($channelObject, true);
+			$this->removeChannel($channel);
+		}
+
+		return parent::channelCloseOk($channel);
+	}
+
+
+	/**
+	 * Whether the given channel handle was closed by the server and MUST NOT be used for any
+	 * further AMQP method (its deliveries have already been requeued by the broker).
+	 */
+	public function isChannelClosedByServer(Channel $channel): bool
+	{
+		return $this->channelsClosedByServer !== null
+			&& $this->channelsClosedByServer->offsetExists($channel);
+	}
+
+
+	private function getChannelsClosedByServer(): \WeakMap
+	{
+		if ($this->channelsClosedByServer === null) {
+			$this->channelsClosedByServer = new \WeakMap();
+		}
+
+		return $this->channelsClosedByServer;
+	}
 
 
 	/**

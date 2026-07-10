@@ -86,7 +86,7 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 	public function testPositiveDelayDeclaresCorrectlyNamedQueue(): void
 	{
 		$delayMs = 60000;
-		$expectedQueueName = sprintf('delay_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
+		$expectedQueueName = sprintf('delay-q_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
 
 		$this->channel->expects(self::once())
 			->method('queueDeclare')
@@ -98,6 +98,7 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 				false,
 				false,
 				[
+					'x-queue-type' => 'quorum',
 					'x-message-ttl' => $delayMs,
 					'x-expires' => $delayMs + 10000,
 					'x-dead-letter-exchange' => 'exchangeName',
@@ -115,7 +116,7 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 	public function testPositiveDelayBindsQueueToDelaysExchange(): void
 	{
 		$delayMs = 5000;
-		$expectedQueueName = sprintf('delay_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
+		$expectedQueueName = sprintf('delay-q_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
 
 		$this->channel->method('queueDeclare');
 
@@ -132,7 +133,7 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 	public function testPositiveDelayPublishesToDelaysExchangeWithQueueAsRoutingKey(): void
 	{
 		$delayMs = 1000;
-		$expectedQueueName = sprintf('delay_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
+		$expectedQueueName = sprintf('delay-q_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
 
 		$this->channel->method('queueDeclare');
 		$this->channel->method('queueBind');
@@ -182,8 +183,9 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 		$this->producer->produceWithDelay($this->channel, 'body', $delayMs);
 
 		self::assertIsArray($capturedQueueArgs);
-		/** @var array<string, int> $assertArgs */
+		/** @var array<string, int|string> $assertArgs */
 		$assertArgs = $capturedQueueArgs;
+		self::assertSame('quorum', $assertArgs['x-queue-type']);
 		self::assertSame($delayMs, $assertArgs['x-message-ttl']);
 		self::assertSame($delayMs + 10000, $assertArgs['x-expires']);
 	}

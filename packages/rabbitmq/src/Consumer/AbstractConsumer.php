@@ -5,9 +5,11 @@ namespace Portiny\RabbitMQ\Consumer;
 use Bunny\Async\Client as AsyncClient;
 use Bunny\Channel;
 use Bunny\Client;
+use Bunny\Exception\ClientException;
 use Bunny\Message;
 use Bunny\Protocol\MethodBasicConsumeOkFrame;
 use InvalidArgumentException;
+use Portiny\RabbitMQ\Client\KeepaliveClient;
 use React\Promise\PromiseInterface;
 use Throwable;
 
@@ -42,9 +44,18 @@ abstract class AbstractConsumer
 					$this->afterProcess($message);
 				} catch (Throwable $throwable) {
 					$this->errorProcess($message, $throwable);
-					$channel->reject($message);
+					// Requeue is best-effort only: when the failure is a transport error, or the
+					// server has closed this channel in the meantime (e.g. a queue.declare issued
+					// by the handler raised a channel exception), the broker requeues the delivery
+					// on its own and writing basic.reject to the dead channel would be a protocol
+					// violation escalating to a connection-level CHANNEL_ERROR.
+					if (! $throwable instanceof ClientException && ! $this->isChannelClosedByServer($channel, $client)) {
+						$channel->reject($message);
+					}
 					throw $throwable;
 				}
+
+				$this->assertChannelIsUsable($channel, $client);
 
 				switch ($result) {
 					case self::MESSAGE_ACK:
@@ -78,6 +89,39 @@ abstract class AbstractConsumer
 			$this->isNoWait(),
 			$this->getArguments()
 		);
+	}
+
+
+	/**
+	 * Refuse to send the message acknowledgement when the server closed the consuming channel
+	 * while the handler was running (a channel exception raised by anything the handler did —
+	 * typically a failed queue.declare from a producer sharing the channel).
+	 *
+	 * On a server-initiated channel.close the broker has already discarded the channel state
+	 * and requeued every unacked delivery, so the ack/reject can no longer be honoured; sending
+	 * it anyway is a protocol violation that escalates to a connection-level
+	 * "CHANNEL_ERROR - expected 'channel.open'". Throwing a ClientException here instead lets
+	 * the ConsumeCommand reconnect loop rebuild clean handles and the requeued delivery arrive
+	 * again on a healthy channel.
+	 */
+	private function assertChannelIsUsable(Channel $channel, $client): void
+	{
+		if ($this->isChannelClosedByServer($channel, $client)) {
+			throw new ClientException(sprintf(
+				'Channel #%d was closed by the server while the message was being processed; '
+				. 'skipping the acknowledgement — the broker has already requeued the delivery.',
+				$channel->getChannelId()
+			));
+		}
+	}
+
+
+	/**
+	 * @param Client|AsyncClient $client
+	 */
+	private function isChannelClosedByServer(Channel $channel, $client): bool
+	{
+		return $client instanceof KeepaliveClient && $client->isChannelClosedByServer($channel);
 	}
 
 

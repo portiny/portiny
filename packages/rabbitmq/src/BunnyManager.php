@@ -128,6 +128,18 @@ final class BunnyManager
 	 */
 	public function getChannel()
 	{
+		if (
+			$this->channel instanceof Channel
+			&& $this->client instanceof KeepaliveClient
+			&& $this->client->isChannelClosedByServer($this->channel)
+		) {
+			// The memoized channel was closed by the SERVER (a channel exception, e.g. a failed
+			// queue.declare). The connection itself is still alive, so just drop the dead handle
+			// and open a fresh channel below with a proper channel.open handshake — reusing the
+			// dead one would escalate to a connection-level CHANNEL_ERROR.
+			$this->channel = null;
+		}
+
 		if ($this->channel === null) {
 			$this->channel = $this->createChannel();
 		}
