@@ -86,7 +86,7 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 	public function testPositiveDelayDeclaresCorrectlyNamedQueue(): void
 	{
 		$delayMs = 60000;
-		$expectedQueueName = sprintf('delay-q_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
+		$expectedQueueName = sprintf('delay_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
 
 		$this->channel->expects(self::once())
 			->method('queueDeclare')
@@ -100,7 +100,6 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 				[
 					'x-queue-type' => 'quorum',
 					'x-message-ttl' => $delayMs,
-					'x-expires' => $delayMs + 10000,
 					'x-dead-letter-exchange' => 'exchangeName',
 					'x-dead-letter-routing-key' => 'routingKey',
 				]
@@ -116,7 +115,7 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 	public function testPositiveDelayBindsQueueToDelaysExchange(): void
 	{
 		$delayMs = 5000;
-		$expectedQueueName = sprintf('delay-q_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
+		$expectedQueueName = sprintf('delay_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
 
 		$this->channel->method('queueDeclare');
 
@@ -133,7 +132,7 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 	public function testPositiveDelayPublishesToDelaysExchangeWithQueueAsRoutingKey(): void
 	{
 		$delayMs = 1000;
-		$expectedQueueName = sprintf('delay-q_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
+		$expectedQueueName = sprintf('delay_%s_%s_%d', 'exchangeName', 'routingKey', $delayMs);
 
 		$this->channel->method('queueDeclare');
 		$this->channel->method('queueBind');
@@ -154,7 +153,7 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 	}
 
 
-	public function testExpiresIsDelayPlusTenSeconds(): void
+	public function testQueueHasNoExpires(): void
 	{
 		$delayMs = 900000;
 
@@ -187,7 +186,10 @@ final class AbstractProducerProduceWithDelayTest extends TestCase
 		$assertArgs = $capturedQueueArgs;
 		self::assertSame('quorum', $assertArgs['x-queue-type']);
 		self::assertSame($delayMs, $assertArgs['x-message-ttl']);
-		self::assertSame($delayMs + 10000, $assertArgs['x-expires']);
+		// On quorum queues nothing (neither redeclare nor publish) refreshes the x-expires
+		// lease, so an expiring holding queue silently drops still-held delayed messages —
+		// the queue must be permanent.
+		self::assertArrayNotHasKey('x-expires', $assertArgs);
 	}
 
 }

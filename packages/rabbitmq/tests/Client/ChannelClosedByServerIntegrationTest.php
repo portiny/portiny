@@ -169,8 +169,8 @@ final class ChannelClosedByServerIntegrationTest extends TestCase
 
 	/**
 	 * produceWithDelay() against a real broker: the quorum holding queue is accepted by the
-	 * broker (x-queue-type + TTL + expiry + DLX arguments together) and the message is
-	 * dead-lettered into the target queue after the delay.
+	 * broker (x-queue-type + TTL + DLX arguments together) and the message is dead-lettered
+	 * into the target queue after the delay.
 	 */
 	public function testProduceWithDelayDeliversViaQuorumHoldingQueue(): void
 	{
@@ -225,6 +225,80 @@ final class ChannelClosedByServerIntegrationTest extends TestCase
 		self::assertSame('delayed-payload', $delivered->content);
 		$channel->ack($delivered);
 
+		// The holding queue is permanent (no x-expires) — remove it explicitly.
+		$channel->queueDelete(sprintf('delay_%s_%s_%d', $exchange, $routingKey, 1000));
+		$channel->queueDelete($queue);
+		$channel->exchangeDelete($exchange);
+
+		$client->disconnect();
+	}
+
+
+	/**
+	 * Regression test for the x-expires message loss on quorum holding queues: on a quorum
+	 * queue neither queue.declare nor basic.publish refreshes the x-expires lease (verified
+	 * against RabbitMQ 4.1 and 4.3.1), so with the former x-expires = delayMs + 10s argument
+	 * the broker deleted the holding queue a fixed 10s + delay after creation and silently
+	 * dropped every delayed message published into it more than 10s after the queue came into
+	 * existence. The holding queue therefore has no x-expires, and a message published long
+	 * after the queue's creation must still be delivered.
+	 */
+	public function testProduceWithDelaySecondPublishLongAfterQueueCreationIsNotLost(): void
+	{
+		$client = $this->connect();
+		$suffix = (string) getmypid();
+		$exchange = 'portiny_it_delaylate_ex_' . $suffix;
+		$routingKey = 'portiny_it_delaylate_rk_' . $suffix;
+		$queue = 'portiny_it_delaylate_target_' . $suffix;
+		$delayMs = 2000;
+
+		/** @var Channel $channel */
+		$channel = $client->channel();
+		$channel->exchangeDeclare($exchange, 'direct', false, false, true);
+		$channel->queueDeclare($queue, false, true, false, false);
+		$channel->queueBind($queue, $exchange, $routingKey);
+		$channel->exchangeDeclare('delays', 'direct', false, true, false);
+
+		$producer = new class($exchange, $routingKey) extends AbstractProducer {
+			public function __construct(
+				private readonly string $exchange,
+				private readonly string $routingKey
+			) {
+			}
+
+			protected function getExchangeName(): string
+			{
+				return $this->exchange;
+			}
+
+			protected function getRoutingKey(): string
+			{
+				return $this->routingKey;
+			}
+		};
+
+		// First publish creates the holding queue and starts what used to be its expiry lease.
+		$producer->produceWithDelay($channel, 'first', $delayMs);
+
+		// Wait beyond the former lease (delayMs + 10s from queue creation), then publish again.
+		sleep(13);
+		$producer->produceWithDelay($channel, 'second', $delayMs);
+
+		$payloads = [];
+		foreach (range(1, 60) as $attempt) {
+			usleep(250_000);
+			while (($message = $channel->get($queue)) instanceof Message) {
+				$payloads[] = $message->content;
+				$channel->ack($message);
+			}
+			if (count($payloads) >= 2) {
+				break;
+			}
+		}
+
+		self::assertSame(['first', 'second'], $payloads);
+
+		$channel->queueDelete(sprintf('delay_%s_%s_%d', $exchange, $routingKey, $delayMs));
 		$channel->queueDelete($queue);
 		$channel->exchangeDelete($exchange);
 
