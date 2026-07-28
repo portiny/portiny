@@ -34,8 +34,9 @@ abstract class AbstractProducer
 	 *   name is reused; that is safe once every classic "delay_*" queue has expired, i.e.
 	 *   delayMs + 10s after the last <= 8.4 producer stopped. Upgrading straight from <= 8.4
 	 *   while classic queues still exist makes the declare fail with PRECONDITION_FAILED
-	 *   until they expire — and rolling back to <= 8.5 while the quorum queues exist fails
-	 *   the same way (delete the "delay_*" queues first).
+	 *   until they expire — and rolling back to < 8.5 while the quorum queues exist fails
+	 *   the same way (delete the "delay_*" queues first; 8.5 itself does not collide — it
+	 *   uses the "delay-q_" prefix — but it re-introduces the x-expires message loss).
 	 */
 	private const DELAY_QUEUE_NAME_PREFIX = 'delay';
 
