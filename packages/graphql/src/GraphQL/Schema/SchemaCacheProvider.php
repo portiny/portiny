@@ -6,6 +6,7 @@ use Closure;
 use GraphQL\Executor\Executor;
 use GraphQL\Language\AST\DocumentNode;
 use GraphQL\Language\Parser;
+use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -122,6 +123,18 @@ final class SchemaCacheProvider
 	private function getTypeConfigDecorator(): Closure
 	{
 		return function (array $typeConfig) {
+			$customType = Types::findByName($typeConfig['name']);
+			if ($customType instanceof EnumType) {
+				$typeConfig['values'] = [];
+				foreach ($customType->getValues() as $value) {
+					$typeConfig['values'][$value->name] = [
+						'value' => $value->value,
+						'description' => $value->description,
+						'deprecationReason' => $value->deprecationReason,
+					];
+				}
+			}
+
 			$typeConfig['resolveField'] = function ($value, $args, $context, ResolveInfo $info) use ($typeConfig) {
 				$fieldName = (string) $info->fieldName;
 
