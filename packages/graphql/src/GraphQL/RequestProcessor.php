@@ -67,6 +67,9 @@ final class RequestProcessor
 	 * @param mixed|null $context
 	 * @param array|null $allowedQueries
 	 * @param array|null $allowedMutations
+	 * @param callable|null $errorsHandler Custom handling of the errors before they are formatted,
+	 *     see \GraphQL\Executor\ExecutionResult::setErrorsHandler(). Receives the raw errors and
+	 *     the formatter, so the application can log them or enrich the formatted output.
 	 */
 	public function process(
 		RequestParserInterface $requestParser,
@@ -74,7 +77,8 @@ final class RequestProcessor
 		$context = null,
 		?array $allowedQueries = null,
 		?array $allowedMutations = null,
-		?LoggerInterface $logger = null
+		?LoggerInterface $logger = null,
+		?callable $errorsHandler = null
 	): array {
 		$debugLevel = $this->detectDebugLevel($logger);
 
@@ -98,6 +102,10 @@ final class RequestProcessor
 				$context,
 				$requestParser->getVariables()
 			);
+
+			if ($errorsHandler !== null) {
+				$result->setErrorsHandler($errorsHandler);
+			}
 
 			$output = $result->toArray($debugLevel);
 		} catch (Throwable $throwable) {
